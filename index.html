@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#120f0c">
+    <meta name="description" content="《英雄之後》— 從記者子軒的視角，重返馬太鞍災後一年。內部互動原型。">
+    <title>英雄之後｜馬太鞍週年回訪</title>
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/prologue.css">
+  </head>
+  <body>
+    <header class="site-bar" aria-label="網站控制列">
+      <a class="wordmark" href="#experience" aria-label="英雄之後首頁">
+        <span>英雄之後</span>
+        <small>AFTER THE HEROES</small>
+      </a>
+      <nav class="site-actions" aria-label="原型控制">
+        <button class="text-button" type="button" data-open-sources>素材來源</button>
+        <button class="icon-button" type="button" aria-pressed="false" aria-label="切換聲音" data-mute>
+          <span aria-hidden="true">◖</span><span class="control-label">聲音</span>
+        </button>
+        <button class="text-button" type="button" data-replay>重播前導</button>
+      </nav>
+    </header>
+
+    <section class="prologue" data-prologue aria-label="故事前導">
+      <figure class="prologue__media">
+        <img data-prologue-image src="assets/images/disaster-guangfu.jpg" alt="">
+        <figcaption data-prologue-credit>
+          <span></span>
+        </figcaption>
+        <a class="prologue__source" data-prologue-source href="#" target="_blank" rel="noreferrer">查看來源</a>
+      </figure>
+
+      <div class="prologue__card" data-prologue-card hidden>
+        <p class="eyebrow" data-prologue-eyebrow></p>
+        <div class="day-line">
+          <strong class="day-count" data-day-count aria-live="polite">0</strong>
+          <h1 data-prologue-title></h1>
+        </div>
+      </div>
+
+      <div class="prologue__controls">
+        <button class="text-button" type="button" data-prologue-skip>跳過前導</button>
+        <div class="prologue__progress" data-prologue-progress aria-hidden="true"></div>
+        <button class="primary-button" type="button" data-prologue-next>繼續 <span aria-hidden="true">→</span></button>
+      </div>
+      <p class="prototype-badge">內部互動原型</p>
+    </section>
+
+    <main id="experience" class="experience" hidden>
+      <section class="experience__placeholder" aria-labelledby="desk-title">
+        <p class="eyebrow">記者子軒的工作桌</p>
+        <h1 id="desk-title">有些故事，在新聞離開之後才真正開始。</h1>
+        <p data-role-welcome>選擇桌上的物件，重新走進光復。</p>
+      </section>
+    </main>
+
+    <dialog class="role-dialog paper-dialog" data-role-dialog aria-labelledby="role-title">
+      <form method="dialog">
+        <p class="eyebrow">在開始之前</p>
+        <h2 id="role-title">你是從哪一個位置，記得那一天？</h2>
+        <p class="dialog-lede">這個選擇只會調整接下來的提問，不會限制你能看到的內容。</p>
+        <div class="role-options" data-role-options></div>
+      </form>
+    </dialog>
+
+    <dialog class="sources-dialog paper-dialog" data-sources-dialog aria-labelledby="sources-title">
+      <form method="dialog">
+        <button class="dialog-close" value="close" aria-label="關閉素材來源">×</button>
+        <p class="eyebrow">原型註記</p>
+        <h2 id="sources-title">照片與內容來源</h2>
+        <p>來源清單將在完整桌面完成後顯示。正式對外發布前，仍需重新確認照片授權。</p>
+      </form>
+    </dialog>
+
+    <div class="save-notice" data-save-notice role="status" hidden>
+      目前瀏覽器不允許保存資料；你仍可完成這次體驗。
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
+
