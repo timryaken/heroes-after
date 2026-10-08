@@ -162,7 +162,19 @@
     <dialog id="dialog-speaker" class="object-dialog" data-object-dialog="speaker" aria-labelledby="speaker-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉聲音播放器">×</button>
       <p class="eyebrow">訪談錄音</p><h2 id="speaker-title">那些沒被寫進報導的聲音</h2>
-      <p>按下播放，隨機聽見一位受訪者的原型旁白。</p>
+      <p class="dialog-lede dialog-lede--dark">按下播放，隨機聽見一位受訪者的原型旁白。聲音不會自動播放。</p>
+      <section class="audio-player" aria-label="原型訪談播放器">
+        <div class="audio-player__meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <p class="prototype-tag">原型示意旁白，非真實受訪者錄音</p>
+        <p data-audio-speaker>等待播放</p>
+        <h3 data-audio-title>選一段聲音，重新靠近這裡</h3>
+        <blockquote data-audio-transcript>即使無法播放語音，這裡仍會顯示完整逐字稿。</blockquote>
+        <p class="audio-status" data-audio-status role="status"></p>
+        <div class="audio-actions">
+          <button class="primary-button" type="button" aria-pressed="false" data-audio-play><span aria-hidden="true">▶</span><span data-play-label>隨機播放一段</span></button>
+          <button class="text-button" type="button" data-audio-stop>停止</button>
+        </div>
+      </section>
     </dialog>
 
     <dialog id="dialog-photo" class="object-dialog" data-object-dialog="photo" aria-labelledby="photo-title">
@@ -199,7 +211,9 @@
         <button class="dialog-close" value="close" aria-label="關閉素材來源">×</button>
         <p class="eyebrow">原型註記</p>
         <h2 id="sources-title">照片與內容來源</h2>
-        <p>來源清單將在完整桌面完成後顯示。正式對外發布前，仍需重新確認照片授權。</p>
+        <p>公開新聞照片僅供內部原型溝通。正式對外發布前，必須逐張重新確認授權、使用範圍與署名方式。</p>
+        <ul class="source-list" data-source-list></ul>
+        <p class="source-note">子軒、搭檔與居民合照及桌面紋理為 AI 生成戲劇示意，不代表真實人物或新聞紀錄。</p>
         <button class="danger-button" type="button" data-reset-prototype>重設這台裝置上的原型資料</button>
       </form>
     </dialog>

@@ -1,5 +1,6 @@
 import { daysSinceDisaster } from './core.js';
-import { NOTEBOOK_PAGES, PLACES, PROLOGUE_SLIDES, REPORTER_PHOTO, ROLES } from './data.js';
+import { createAudioController } from './audio.js';
+import { DESK_TEXTURE, NOTEBOOK_PAGES, PLACES, PROLOGUE_SLIDES, REPORTER_PHOTO, ROLES, VOICE_CLIPS } from './data.js';
 import { createDeskController, createStoryContentController } from './desk.js';
 import { createFormsController } from './forms.js';
 import { createPrologueController } from './prologue.js';
@@ -39,6 +40,25 @@ createStoryContentController(document, {
   reporterPhoto: REPORTER_PHOTO,
 });
 const forms = createFormsController(document, store, { roles: ROLES });
+const audio = createAudioController(document.querySelector('[data-object-dialog="speaker"]'), VOICE_CLIPS);
+
+function renderSources() {
+  const sourceList = document.querySelector('[data-source-list]');
+  const photos = [
+    ...PROLOGUE_SLIDES,
+    ...PLACES.flatMap((place) => [place.before, place.after]),
+    REPORTER_PHOTO,
+    DESK_TEXTURE,
+  ];
+  const unique = [...new Map(photos.map((photo) => [`${photo.src}|${photo.credit}`, photo])).values()];
+  for (const photo of unique) {
+    const item = document.createElement('li');
+    item.innerHTML = `<span>${photo.alt}</span><small>${photo.credit}</small><a href="${photo.sourceUrl}" target="_blank" rel="noreferrer">查看來源 ↗</a>`;
+    sourceList.append(item);
+  }
+}
+
+renderSources();
 
 const prologue = createPrologueController(prologueRoot, {
   slides: PROLOGUE_SLIDES,
@@ -92,6 +112,7 @@ document.querySelector('[data-mute]').addEventListener('click', (event) => {
   const pressed = event.currentTarget.getAttribute('aria-pressed') === 'true';
   event.currentTarget.setAttribute('aria-pressed', String(!pressed));
   event.currentTarget.querySelector('.control-label').textContent = pressed ? '聲音' : '已靜音';
+  audio.setMuted(!pressed);
 });
 
 function updateDeskProgress() {
@@ -105,6 +126,9 @@ drawerToggle.addEventListener('click', () => {
 });
 
 deskRoot.addEventListener('desk:object-opened', updateDeskProgress);
+deskRoot.addEventListener('desk:object-closed', (event) => {
+  if (event.detail.id === 'speaker') audio.stop();
+});
 deskRoot.addEventListener('desk:reset', updateDeskProgress);
 document.addEventListener('forms:reset', () => {
   desk.reset();
