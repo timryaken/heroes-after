@@ -169,3 +169,9 @@ export const DESK_TEXTURE = {
   sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
 };
 
+export const INTERACTIVE_DESK = {
+  src: 'assets/images/interactive-desk.png',
+  alt: '深夜新聞編輯部裡的擬真記者工作桌，桌上有電腦、採訪筆記、回訪地圖、收音機與合照',
+  credit: 'AI 生成互動桌景原型，非真實新聞現場',
+  sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
+};

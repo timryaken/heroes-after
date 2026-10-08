@@ -21,18 +21,16 @@
 
 .desk__stage {
   position: relative;
-  min-height: clamp(40rem, 62vw, 61rem);
+  min-height: 0;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 1px solid rgba(255, 234, 207, 0.14);
-  background:
-    radial-gradient(circle at 49% 36%, rgba(255, 179, 101, 0.19), transparent 25%),
-    linear-gradient(118deg, rgba(9, 7, 5, 0.72), rgba(15, 10, 7, 0.12) 44%, rgba(3, 3, 3, 0.78)),
-    repeating-linear-gradient(92deg, rgba(255,255,255,0.018) 0 1px, transparent 1px 105px),
-    #1b110b;
+  background: #120c08;
   box-shadow: inset 0 0 9rem #050403, 0 2.5rem 7rem rgba(0,0,0,0.48);
   isolation: isolate;
 }
-.desk__stage::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,0.55) 0 10%, transparent 38%, rgba(0,0,0,0.25)); }
+.desk__stage::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,0.16), transparent 45%, rgba(0,0,0,0.3)); pointer-events: none; }
+.desk__photo { position: absolute; inset: 0; z-index: -2; display: block; width: 100%; height: 100%; object-fit: cover; }
 
 .desk-object {
   position: absolute;
@@ -63,18 +61,18 @@
 .desk-object__copy strong { font: 600 1.05rem var(--serif); letter-spacing: 0.08em; }
 .desk-object__copy em { color: var(--ink-muted); font-size: 0.75rem; font-style: normal; }
 
-.desk-object--computer { z-index: 2; top: 15%; left: 31%; width: 40%; }
+.desk-object--computer { z-index: 2; top: 20%; left: 28%; width: 39%; }
 .computer-visual { aspect-ratio: 16 / 10; border: 0.65rem solid #171717; border-bottom-width: 1.6rem; border-radius: 0.55rem; background: linear-gradient(145deg, #dfd7c6, #a9a397); box-shadow: inset 0 0 0 1px #555, 0 1rem 0 -0.5rem #111; transform: perspective(70rem) rotateX(1deg); }
 .computer-visual::before { content: '東岸日報'; position: absolute; inset: 8% 8% auto; padding-bottom: 0.45rem; border-bottom: 2px solid #3a3027; color: #241f1a; font: 700 clamp(1rem, 2vw, 2rem) var(--serif); }
 .computer-visual::after { content: '專題｜花蓮光復的聲訊：\A 被遺忘的土石流風險'; white-space: pre; position: absolute; inset: 27% 8% auto; color: #2a241f; font: 700 clamp(0.85rem, 1.5vw, 1.55rem)/1.5 var(--serif); }
 .computer-visual i { position: absolute; left: 8%; right: 8%; bottom: 8%; height: 34%; background: url('../assets/images/disaster-guangfu.jpg') center / cover; filter: sepia(0.3) contrast(0.88); }
 
-.desk-object--notebook { z-index: 3; left: 27%; bottom: 4%; width: 35%; transform: rotate(-1.5deg); }
+.desk-object--notebook { z-index: 3; left: 18%; bottom: 3%; width: 44%; transform: rotate(-1.5deg); }
 .notebook-visual { aspect-ratio: 2.1 / 1; border: 1px solid #33271f; background: repeating-linear-gradient(#d8c69f 0 1.65rem, #9d947c 1.68rem), #d8c69f; box-shadow: inset 50% 0 rgba(255,255,255,0.08), 0 1rem 1.8rem #000; }
 .notebook-visual::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1px solid rgba(61,45,31,0.55); box-shadow: 0 0 0.55rem rgba(39,28,18,0.5); }
 .notebook-visual i { position: absolute; top: 20%; left: 8%; color: #594535; font: 600 clamp(0.8rem, 1.5vw, 1.3rem)/1.8 var(--serif); transform: rotate(-2deg); }
 
-.desk-object--map { top: 7%; right: 2%; width: 27%; transform: rotate(1deg); }
+.desk-object--map { top: 1%; right: 0; width: 35%; transform: rotate(1deg); }
 .map-visual { aspect-ratio: 1.25 / 1; border: 0.45rem solid #32271e; background: linear-gradient(rgba(218,195,151,0.62), rgba(145,119,83,0.62)), url('../assets/images/wetland-now.jpg') center / cover; box-shadow: 0 1rem 2.5rem #000; }
 .map-visual::after { content: ''; position: absolute; inset: 15%; border: 2px dashed rgba(104,36,25,0.75); transform: rotate(-12deg); }
 .map-visual b { position: absolute; z-index: 1; padding: 0.2rem 0.4rem; color: #3a251a; background: rgba(235,217,181,0.87); font: 600 0.68rem var(--serif); }
@@ -82,11 +80,11 @@
 .map-visual b:nth-child(2) { top: 48%; right: 10%; }
 .map-visual b:nth-child(3) { bottom: 13%; left: 27%; }
 
-.desk-object--speaker { z-index: 3; left: 5%; top: 33%; width: 17%; }
+.desk-object--speaker { z-index: 3; left: 1%; top: 43%; width: 21%; }
 .speaker-visual { aspect-ratio: 1 / 0.72; display: flex; align-items: center; justify-content: center; gap: 0.35rem; border: 0.35rem solid #211a16; border-radius: 0.45rem; background: #302a25; }
 .speaker-visual i { width: 23%; aspect-ratio: 1; border: 3px double #171310; border-radius: 50%; background: repeating-radial-gradient(#1a1816 0 2px, #3a3530 3px 4px); }
 
-.desk-object--photo { z-index: 4; right: 8%; bottom: 5%; width: 19%; transform: rotate(4deg); }
+.desk-object--photo { z-index: 4; right: 10%; bottom: 4%; width: 23%; transform: rotate(4deg); }
 .photo-visual { aspect-ratio: 4 / 3; padding: 0.5rem 0.5rem 2rem; background: #e8dbc1; box-shadow: 0 1rem 1.8rem #000; }
 .photo-visual img { display: block; width: 100%; height: 100%; object-fit: cover; filter: sepia(0.22) saturate(0.78); }
 
@@ -109,6 +107,7 @@
 .dialog-lede--dark { color: var(--ink-muted); }
 
 .story-form { display: grid; gap: 0.8rem; margin-top: 1.5rem; }
+.computer-wish { margin-top: 2.2rem; padding-top: 1.8rem; border-top: 1px solid var(--line); }
 .story-form label { font: 600 1rem var(--serif); }
 .story-form textarea,
 .story-form input[type='email'] {
@@ -185,7 +184,8 @@
   .desk__intro h1 { font-size: clamp(2.25rem, 12vw, 4rem); }
   .desk__intro > p:last-child { margin-top: 1rem; }
   .desk__hint { position: static; width: auto; margin: 1.6rem 1rem 1rem; }
-  .desk__stage { display: grid; min-height: 0; gap: 1rem; padding: 1rem; overflow: visible; border-inline: 0; background: rgba(13, 9, 7, 0.66); box-shadow: inset 0 0 4rem #050403; }
+  .desk__stage { display: grid; min-height: 0; aspect-ratio: auto; gap: 1rem; padding: 1rem; overflow: visible; border-inline: 0; background: rgba(13, 9, 7, 0.66); box-shadow: inset 0 0 4rem #050403; }
+  .desk__photo { display: none; }
   .desk-object { position: relative; inset: auto; width: 100%; transform: none; grid-template-columns: minmax(7rem, 42%) 1fr; align-items: center; gap: 1rem; min-height: 10rem; padding: 0.8rem; border: 1px solid rgba(255,255,255,0.12); background: rgba(31,22,16,0.78); filter: none; }
   .desk-object__copy { opacity: 1; transform: none; }
   .desk-object__visual { max-height: 10rem; }
@@ -211,4 +211,5 @@
 
 @media (min-width: 721px) {
   .object-drawer__toggle { pointer-events: none; }
+  .desk-object__visual { opacity: 0; }
 }

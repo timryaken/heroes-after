@@ -4,7 +4,6 @@ export const DESK_OBJECT_IDS = Object.freeze([
   'map',
   'speaker',
   'photo',
-  'wish',
 ]);
 
 export function mergeExplored(existing = [], nextId) {

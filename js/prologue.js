@@ -61,6 +61,7 @@ export function createPrologueController(root, options) {
   function showText(beat) {
     image.hidden = true;
     credit.hidden = true;
+    source.hidden = true;
     card.hidden = false;
     dayCount.hidden = true;
     if (beat.type === 'count') {
@@ -82,6 +83,7 @@ export function createPrologueController(root, options) {
     card.hidden = true;
     image.hidden = false;
     credit.hidden = false;
+    source.hidden = false;
     image.src = slide.src;
     image.alt = slide.alt;
     image.dataset.phase = slide.phase;
@@ -138,4 +140,3 @@ export function createPrologueController(root, options) {
   root.querySelector('[data-prologue-skip]').addEventListener('click', skip);
   return { start, skip, replay, destroy };
 }
-

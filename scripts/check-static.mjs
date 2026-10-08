@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { DESK_TEXTURE, PLACES, PROLOGUE_SLIDES, REPORTER_PHOTO } from '../js/data.js';
+import { DESK_TEXTURE, INTERACTIVE_DESK, PLACES, PROLOGUE_SLIDES, REPORTER_PHOTO } from '../js/data.js';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(resolve(projectRoot, 'index.html'), 'utf8');
@@ -23,6 +23,7 @@ const photos = [
   ...PLACES.flatMap((place) => [place.before, place.after]),
   REPORTER_PHOTO,
   DESK_TEXTURE,
+  INTERACTIVE_DESK,
 ];
 for (const photo of photos) {
   check(photo.src.startsWith('assets/images/'), `圖片必須使用本機路徑：${photo.src}`);
@@ -33,7 +34,7 @@ for (const photo of photos) {
   check(/^https:\/\//.test(photo.sourceUrl), `來源網址必須是 HTTPS：${photo.src}`);
 }
 
-for (const id of ['computer', 'notebook', 'map', 'speaker', 'photo', 'wish']) {
+for (const id of ['computer', 'notebook', 'map', 'speaker', 'photo']) {
   check(html.includes(`data-desk-object="${id}"`), `缺少桌面物件：${id}`);
   check(html.includes(`data-object-dialog="${id}"`), `缺少物件對話框：${id}`);
 }

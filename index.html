@@ -50,7 +50,7 @@
       <p class="prototype-badge">內部互動原型</p>
     </section>
 
-    <main id="experience" class="experience" hidden>
+    <main id="experience" class="experience" tabindex="-1" hidden>
       <section class="desk" data-desk aria-labelledby="desk-title">
         <header class="desk__intro">
           <p class="eyebrow">記者子軒的工作桌</p>
@@ -60,14 +60,15 @@
 
         <div class="desk__hint" role="note">
           <span aria-hidden="true">＋</span>
-          <p><strong>這張桌子藏著六條線索。</strong><br>點擊發光的位置，打開物件。</p>
+          <p><strong>這張桌子藏著五條線索。</strong><br>點擊發光的位置，打開物件。</p>
         </div>
 
         <div class="desk__stage">
+          <img class="desk__photo" src="assets/images/interactive-desk.png" alt="深夜新聞編輯部裡的擬真記者工作桌，桌上有電腦、採訪筆記、回訪地圖、收音機與合照">
           <button class="desk-object desk-object--computer" type="button" data-desk-object="computer" aria-haspopup="dialog" aria-controls="dialog-computer">
             <span class="object-glow" aria-hidden="true"></span>
             <span class="desk-object__visual computer-visual" aria-hidden="true"><i></i></span>
-            <span class="desk-object__copy"><small>線索 01</small><strong>電腦螢幕</strong><em>留下你的想法與照片</em></span>
+            <span class="desk-object__copy"><small>線索 01</small><strong>電腦螢幕</strong><em>留下想法、照片或祈願</em></span>
           </button>
 
           <button class="desk-object desk-object--notebook" type="button" data-desk-object="notebook" aria-haspopup="dialog" aria-controls="dialog-notebook">
@@ -94,22 +95,16 @@
             <span class="desk-object__copy"><small>線索 05</small><strong>一張合照</strong><em>子軒、搭檔與光復居民</em></span>
           </button>
 
-          <button class="desk-object desk-object--wish" type="button" data-desk-object="wish" aria-haspopup="dialog" aria-controls="dialog-wish">
-            <span class="object-glow" aria-hidden="true"></span>
-            <span class="desk-object__visual wish-visual" aria-hidden="true">給光復的一句話</span>
-            <span class="desk-object__copy"><small>線索 06</small><strong>祈願信</strong><em>留下一句想說的話</em></span>
-          </button>
         </div>
 
         <aside class="object-drawer" aria-label="探索進度">
-          <button class="object-drawer__toggle" type="button" data-drawer-toggle aria-expanded="false">探索物件 <span>0 / 6</span></button>
+          <button class="object-drawer__toggle" type="button" data-drawer-toggle aria-expanded="false">探索物件 <span>0 / 5</span></button>
           <ol data-drawer-list>
             <li data-object-status="computer"><span>電腦</span><small data-status-label>未查看</small></li>
             <li data-object-status="notebook"><span>筆記本</span><small data-status-label>未查看</small></li>
             <li data-object-status="map"><span>地圖</span><small data-status-label>未查看</small></li>
             <li data-object-status="speaker"><span>聲音</span><small data-status-label>未查看</small></li>
             <li data-object-status="photo"><span>合照</span><small data-status-label>未查看</small></li>
-            <li data-object-status="wish"><span>祈願信</span><small data-status-label>未查看</small></li>
           </ol>
         </aside>
       </section>
@@ -131,6 +126,15 @@
         <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
         <div class="form-footer"><small>資料不會送出，只暫存在此裝置。</small><button class="primary-button" type="submit">留下記憶 <span aria-hidden="true">→</span></button></div>
       </form>
+      <div class="computer-wish">
+        <p class="eyebrow">給光復的一句話</p>
+        <form class="story-form" data-wish-form novalidate>
+          <label id="wish-prompt" for="wish-text" data-wish-prompt>你想把哪一句話，留給正在重新開始的人？</label>
+          <textarea id="wish-text" name="wish" rows="4" maxlength="500" aria-describedby="wish-prompt" placeholder="寫下一句祝福、問題，或你還放不下的念頭。"></textarea>
+          <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
+          <div class="form-footer"><small>資料不會送出，只暫存在此裝置。</small><button class="primary-button" type="submit">收進祈願牆 <span aria-hidden="true">→</span></button></div>
+        </form>
+      </div>
     </dialog>
 
     <dialog id="dialog-notebook" class="object-dialog" data-object-dialog="notebook" aria-labelledby="notebook-title">
@@ -154,7 +158,7 @@
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉回訪地圖">×</button>
       <p class="eyebrow">三個回訪地點</p><h2 id="map-title">一張地圖，三種災後時間</h2>
       <div class="place-browser">
-        <nav class="place-tabs" data-place-list aria-label="選擇回訪地點"></nav>
+        <nav class="place-tabs" data-place-list role="tablist" aria-label="選擇回訪地點"></nav>
         <article class="place-panel" data-place-panel aria-live="polite"></article>
       </div>
     </dialog>
@@ -186,17 +190,6 @@
       </button>
     </dialog>
 
-    <dialog id="dialog-wish" class="object-dialog" data-object-dialog="wish" aria-labelledby="wish-title">
-      <button class="dialog-close" type="button" data-close-dialog aria-label="關閉祈願信">×</button>
-      <p class="eyebrow">留給光復</p><h2 id="wish-title">你的關心，想停在哪一句話？</h2>
-      <form class="story-form" data-wish-form novalidate>
-        <label id="wish-prompt" for="wish-text" data-wish-prompt>你想把哪一句話，留給正在重新開始的人？</label>
-        <textarea id="wish-text" name="wish" rows="5" maxlength="500" aria-describedby="wish-prompt" placeholder="寫下一句祝福、問題，或你還放不下的念頭。"></textarea>
-        <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
-        <div class="form-footer"><small>資料不會送出，只暫存在此裝置。</small><button class="primary-button" type="submit">收進信封 <span aria-hidden="true">→</span></button></div>
-      </form>
-    </dialog>
-
     <dialog class="role-dialog paper-dialog" data-role-dialog aria-labelledby="role-title">
       <form method="dialog">
         <p class="eyebrow">在開始之前</p>
@@ -213,7 +206,7 @@
         <h2 id="sources-title">照片與內容來源</h2>
         <p>公開新聞照片僅供內部原型溝通。正式對外發布前，必須逐張重新確認授權、使用範圍與署名方式。</p>
         <ul class="source-list" data-source-list></ul>
-        <p class="source-note">子軒、搭檔與居民合照及桌面紋理為 AI 生成戲劇示意，不代表真實人物或新聞紀錄。</p>
+        <p class="source-note">互動桌景、子軒與搭檔合照及桌面紋理皆為 AI 生成戲劇示意，不代表真實人物、場景或新聞紀錄。</p>
         <button class="danger-button" type="button" data-reset-prototype>重設這台裝置上的原型資料</button>
       </form>
     </dialog>

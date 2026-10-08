@@ -1,7 +1,7 @@
 import { daysSinceDisaster } from './core.js';
 import { createAudioController } from './audio.js';
-import { DESK_TEXTURE, NOTEBOOK_PAGES, PLACES, PROLOGUE_SLIDES, REPORTER_PHOTO, ROLES, VOICE_CLIPS } from './data.js';
-import { createDeskController, createStoryContentController } from './desk.js';
+import { DESK_TEXTURE, INTERACTIVE_DESK, NOTEBOOK_PAGES, PLACES, PROLOGUE_SLIDES, REPORTER_PHOTO, ROLES, VOICE_CLIPS } from './data.js';
+import { createDeskController, createStoryContentController, DESK_OBJECT_IDS } from './desk.js';
 import { createFormsController } from './forms.js';
 import { createPrologueController } from './prologue.js';
 import { createPrototypeStore } from './storage.js';
@@ -49,6 +49,7 @@ function renderSources() {
     ...PLACES.flatMap((place) => [place.before, place.after]),
     REPORTER_PHOTO,
     DESK_TEXTURE,
+    INTERACTIVE_DESK,
   ];
   const unique = [...new Map(photos.map((photo) => [`${photo.src}|${photo.credit}`, photo])).values()];
   for (const photo of unique) {
@@ -117,7 +118,7 @@ document.querySelector('[data-mute]').addEventListener('click', (event) => {
 
 function updateDeskProgress() {
   const count = store.load().explored.length;
-  drawerToggle.querySelector('span').textContent = `${count} / 6`;
+  drawerToggle.querySelector('span').textContent = `${count} / ${DESK_OBJECT_IDS.length}`;
 }
 
 drawerToggle.addEventListener('click', () => {

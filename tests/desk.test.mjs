@@ -3,21 +3,20 @@ import test from 'node:test';
 
 import { DESK_OBJECT_IDS, mergeExplored } from '../js/desk.js';
 
-test('desk exposes the six interactive investigation objects', () => {
+test('desk exposes the five interactive investigation objects', () => {
   assert.deepEqual(DESK_OBJECT_IDS, [
     'computer',
     'notebook',
     'map',
     'speaker',
     'photo',
-    'wish',
   ]);
 });
 
 test('mergeExplored keeps valid unique object ids in desk order', () => {
   assert.deepEqual(
-    mergeExplored(['map', 'computer', 'map', 'unknown'], 'wish'),
-    ['computer', 'map', 'wish'],
+    mergeExplored(['map', 'computer', 'map', 'unknown'], 'photo'),
+    ['computer', 'map', 'photo'],
   );
 });
 
