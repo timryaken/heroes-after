@@ -1,5 +1,6 @@
 import { daysSinceDisaster } from './core.js';
 import { PROLOGUE_SLIDES, ROLES } from './data.js';
+import { createDeskController } from './desk.js';
 import { createPrologueController } from './prologue.js';
 import { createPrototypeStore } from './storage.js';
 
@@ -27,6 +28,10 @@ const roleOptions = document.querySelector('[data-role-options]');
 const roleWelcome = document.querySelector('[data-role-welcome]');
 const sourcesDialog = document.querySelector('[data-sources-dialog]');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const deskRoot = document.querySelector('[data-desk]');
+const drawer = document.querySelector('.object-drawer');
+const drawerToggle = document.querySelector('[data-drawer-toggle]');
+const desk = createDeskController(deskRoot, store);
 
 const prologue = createPrologueController(prologueRoot, {
   slides: PROLOGUE_SLIDES,
@@ -81,6 +86,19 @@ document.querySelector('[data-mute]').addEventListener('click', (event) => {
   event.currentTarget.querySelector('.control-label').textContent = pressed ? '聲音' : '已靜音';
 });
 
+function updateDeskProgress() {
+  const count = store.load().explored.length;
+  drawerToggle.querySelector('span').textContent = `${count} / 6`;
+}
+
+drawerToggle.addEventListener('click', () => {
+  const open = drawer.classList.toggle('is-open');
+  drawerToggle.setAttribute('aria-expanded', String(open));
+});
+
+deskRoot.addEventListener('desk:object-opened', updateDeskProgress);
+deskRoot.addEventListener('desk:reset', updateDeskProgress);
+updateDeskProgress();
+
 if (!store.persistent) document.querySelector('[data-save-notice]').hidden = false;
 prologue.start();
-
