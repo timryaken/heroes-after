@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 import {
   NOTEBOOK_PAGES,
+  PHOTO_STACK,
   PLACES,
   PROLOGUE_SLIDES,
   REPORTER_PHOTO,
@@ -18,7 +19,7 @@ function assertPhotoContract(photo) {
 }
 
 test('content defines the three approved representative places', () => {
-  assert.deepEqual(PLACES.map(({ id }) => id), ['wetland', 'sugar-factory', 'datong']);
+  assert.deepEqual(PLACES.map(({ id }) => id), ['wetland', 'fozu-street', 'datong']);
   assert.equal(new Set(PLACES.map(({ id }) => id)).size, 3);
   for (const place of PLACES) {
     assert.ok(place.name && place.era && place.summary && place.note);
@@ -45,4 +46,7 @@ test('story content includes three roles, 11/15 departure, three prototype voice
   assert.ok(VOICE_CLIPS.every(({ transcript, prototype }) => transcript && prototype === true));
   assertPhotoContract(REPORTER_PHOTO);
   assert.ok(REPORTER_PHOTO.backNote.trim());
+  assert.ok(PHOTO_STACK.length >= 3);
+  assert.equal(PHOTO_STACK[0].src, REPORTER_PHOTO.src);
+  assert.ok(PHOTO_STACK.every(({ src, placeholder, date, note }) => (src || placeholder) && date && note));
 });

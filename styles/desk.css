@@ -112,8 +112,7 @@
 .story-form input[type='file'] { max-width: 100%; color: var(--ink-muted); font-size: 0.8rem; }
 .file-field { display: grid; margin-top: 0.5rem; }
 .file-field small,
-.form-footer small,
-.signup-form > div small { color: var(--ink-muted); font: 400 0.72rem/1.5 var(--sans); }
+.form-footer small { color: var(--ink-muted); font: 400 0.72rem/1.5 var(--sans); }
 .memory-preview { width: min(100%, 26rem); max-height: 18rem; object-fit: cover; border: 1px solid var(--line); }
 .form-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 0.35rem; }
 .form-status { margin: 0; padding: 0.65rem 0.75rem; border-left: 2px solid #8fb58c; color: #c9e3c7; background: rgba(42, 74, 41, 0.24); font-size: 0.82rem; }
@@ -144,9 +143,17 @@
 .notebook-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.3rem 1rem 0.6rem 4rem; color: #6b5a40; font-size: 0.9rem; }
 .notebook-nav button { min-height: 2.75rem; border: 0; color: #26355a; background: transparent; font: 700 1rem var(--hand); cursor: pointer; }
 .notebook-nav button:disabled { opacity: 0.3; cursor: default; }
-.signup-form { grid-template-columns: 1.3fr 1fr auto; align-items: end; margin-top: 2rem; padding-top: 1.3rem; border-top: 1px solid var(--line); }
-.signup-form > div { display: grid; }
-.signup-form .form-status { grid-column: 1 / -1; }
+/* 筆記本內嵌的 Email 欄：寫在橫線上 */
+.note-signup { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: end; column-gap: 0.5rem; margin: 0; }
+.note-signup label { font: 700 1.12rem/var(--rule) var(--hand); }
+.note-signup input { width: 100%; height: var(--rule); padding: 0 0.3rem; border: 0; border-bottom: 1.5px solid #26355a; border-radius: 0; color: #1f3a8a; background: transparent; font: 700 1.2rem/var(--rule) var(--hand); }
+.note-signup input::placeholder { color: rgba(38, 53, 90, 0.35); }
+.note-signup input:focus-visible { outline: 0; background: rgba(255, 214, 72, 0.28); }
+.note-signup button { margin-bottom: 0.25rem; padding: 0 0.6rem; border: 1.5px solid #a3402b; color: #a3402b; background: transparent; font: 700 1rem/1.5rem var(--hand); transform: rotate(-3deg); cursor: pointer; }
+.note-signup button:hover { color: #f4ecd6; background: #a3402b; }
+.note-signup__hint { grid-column: 1 / -1; margin: 0; color: #7a6a52; font-size: 0.8rem; line-height: var(--rule); }
+.note-signup .form-status { grid-column: 1 / -1; padding: 0; border: 0; color: #2f6b3a; background: none; font: 700 1rem/var(--rule) var(--hand); }
+.note-signup .form-status[data-kind='error'] { color: #a3402b; background: none; }
 
 .map-layout { display: grid; gap: clamp(1rem, 3vw, 2rem); margin-top: 1.5rem; }
 .map-layout:has(.place-panel:not([hidden])) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: start; }
@@ -181,15 +188,25 @@
 .comparison-card a { color: var(--ember-bright); }
 .place-panel blockquote { margin: 1rem 0 0; padding: 1rem 1.2rem; border-left: 2px solid var(--ember); color: #d8cab7; background: rgba(255,255,255,0.03); font-family: var(--serif); }
 
-.photo-card { display: grid; width: 100%; min-height: min(55dvh, 34rem); padding: 0; border: 0; color: #403025; background: transparent; cursor: pointer; perspective: 70rem; }
-.photo-card > span { grid-area: 1 / 1; display: grid; backface-visibility: hidden; transition: transform 520ms ease; }
-.photo-card__front { padding: 0.65rem 0.65rem 2.2rem; background: #e5d8be; transform: rotateY(0); }
-.photo-card__front small { align-self: end; padding-top: 0.55rem; }
-.photo-card__back { place-content: center; gap: 1rem; padding: 2rem; background: repeating-linear-gradient(#dfd0ab 0 2rem, #b5aa90 2.05rem); transform: rotateY(180deg); text-align: left; }
-.photo-card__back strong { color: #925239; font-size: 0.75rem; letter-spacing: 0.18em; }
-.photo-card__back span { font: 600 clamp(1.35rem, 4vw, 2.5rem)/1.7 var(--serif); }
-.photo-card.is-flipped .photo-card__front { transform: rotateY(-180deg); }
-.photo-card.is-flipped .photo-card__back { transform: rotateY(0); }
+/* 合照：幾張照片疊在一起，點最上面那張換下一張 */
+.photo-stack { display: grid; place-items: center; margin: 0.5rem auto 0; padding: 1.4rem 1rem 0.6rem; }
+/* 依視窗高度縮放，讓照片、說明與切換鈕在一個畫面內 */
+.stack-card { grid-area: 1 / 1; display: grid; width: min(100%, 32rem, calc((88dvh - 29rem) * 1.33)); padding: 0.65rem 0.65rem 0; border: 0; color: #403025; background: #e8dcc2; box-shadow: 0 1rem 2.2rem rgba(0,0,0,0.6); cursor: pointer; transition: transform 320ms ease, opacity 260ms ease; }
+.stack-card img,
+.stack-card__placeholder { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: sepia(0.18); }
+.stack-card__placeholder { display: grid; place-items: center; color: #8d8579; background: repeating-linear-gradient(45deg, #c9c4bb 0 0.6rem, #c2bdb3 0.6rem 1.2rem); font: 700 1.1rem var(--sans); letter-spacing: 0.1em; filter: none; }
+.stack-card__caption { padding: 0.55rem 0.2rem 0.8rem; text-align: left; font: 700 1.05rem var(--hand); }
+.stack-card[data-depth='0'] { transform: rotate(-1.5deg); }
+.stack-card[data-depth='1'] { transform: translate(0.9rem, -0.5rem) rotate(3.5deg); }
+.stack-card[data-depth='2'] { transform: translate(-0.9rem, -0.8rem) rotate(-5deg); }
+.stack-card:not([data-depth='0']):not([data-depth='1']):not([data-depth='2']) { transform: translate(0.4rem, -1.1rem) rotate(6deg); }
+.stack-card:not([data-depth='0']) { pointer-events: none; filter: brightness(0.82); }
+.stack-card[data-depth='0']:hover { transform: rotate(-1.5deg) translateY(-0.3rem); }
+.stack-card.is-leaving { transform: translateX(70%) rotate(12deg) !important; opacity: 0; }
+.photo-stack__note { max-width: 32rem; min-height: 2rem; margin: 0.5rem auto 0; color: #e7dac3; font: 700 1.25rem/1.6 var(--hand); text-align: center; }
+.photo-stack__nav { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin-top: 0.5rem; color: var(--ink-muted); font-size: 0.85rem; }
+.photo-stack__nav button { width: 2.75rem; height: 2.75rem; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); background: transparent; cursor: pointer; }
+.photo-stack__nav button:hover { border-color: var(--ember-bright); }
 
 .track-list { display: grid; gap: 0.5rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
 .track { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem; width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--line); color: var(--ink); background: transparent; text-align: left; cursor: pointer; transition: border-color 160ms ease, background 160ms ease; }
@@ -237,13 +254,15 @@
   .map-visual b { display: none; }
   .object-glow { right: auto; left: 36%; bottom: 1.1rem; width: 1.15rem; height: 1.15rem; }
   .form-footer { align-items: stretch; flex-direction: column; }
-  .signup-form { grid-template-columns: 1fr; }
-  .signup-form .form-status { grid-column: auto; }
+  .photo-stack { padding-inline: 0.5rem; }
   .map-layout:has(.place-panel:not([hidden])) { grid-template-columns: 1fr; }
   .map-canvas { height: 46dvh; }
   .notebook__paper { padding-left: 3.6rem; padding-right: 1rem; }
   .notebook { background-position: -0.4rem 0, 0 0; }
-  .notebook-nav { padding-left: 3.6rem; }
+  .notebook { margin-top: 2.8rem; }
+  .notebook-nav { padding-left: 1rem; white-space: nowrap; }
+  .note-signup { grid-template-columns: auto minmax(0, 1fr); }
+  .note-signup button { grid-column: 1 / -1; justify-self: end; margin: 0.25rem 0; }
   .note-page p { font-size: 1.02rem; }
   .note-tape { right: 1rem; }
   .comparison-grid { grid-template-columns: 1fr; }

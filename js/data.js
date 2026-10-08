@@ -109,11 +109,11 @@ export const NOTEBOOK_PAGES = [
     date: '2026.11.15（日）',
     title: '11/15，回光復',
     lines: [
-      '路線：光復車站 → 馬太鞍濕地 → 光復糖廠（吃冰！）→ 大同村',
+      '路線：光復車站 → 馬太鞍濕地 → 佛祖街 → 大同村（順路去糖廠吃冰！）',
       '想找幾個當時來過、或當時沒能來的人一起去。',
       '不用帶鏟子，帶著好奇心就好。',
     ],
-    margin: '想一起去的人，在下面留 Email ↓',
+    margin: '想一起去的人，把 Email 寫在這裡 ↓',
   },
 ];
 
@@ -131,13 +131,13 @@ export const PLACES = [
     after: photos.riverNow,
   },
   {
-    id: 'sugar-factory',
-    name: '光復糖廠',
-    lat: 23.6578,
-    lng: 121.4200,
-    era: '鏟子超人的集合地，現在收著大家的心意',
-    summary: '災後這裡是志工報到、物資集散的地方。現在糖廠的冰照樣在賣，鏟子超人館收著大家用過的鏟子與留言。',
-    note: '子軒筆記：那把磨到只剩木柄的鏟子還在，旁邊有人寫著「謝謝你們」。',
+    id: 'fozu-street',
+    name: '佛祖街',
+    lat: 23.6672,
+    lng: 121.4336,
+    era: '泥退了，街坊又坐回門口',
+    summary: '佛祖街是當時泥流灌進最深的街道之一，鏟子超人一戶一戶幫忙把家門清出來。現在店家重新開門，傍晚又有人坐在騎樓聊天。（原型暫用車站志工與鏟子超人館照片，正式版再換入佛祖街今昔照片。）',
+    note: '子軒筆記：阿伯指著牆上的泥痕說：「那條線以下，都是你們幫忙挖出來的。」',
     before: photos.volunteersStation,
     after: photos.museumNow,
   },
@@ -146,6 +146,7 @@ export const PLACES = [
     name: '大同村',
     lat: 23.6666,
     lng: 121.4324,
+    labelSide: 'left',
     era: '店一間一間開了',
     summary: '大同村是當時泥流最深的地方之一。現在書店、早餐店重新開門，田裡又種下新一季的作物。（原型先以光復的公共紀念影像暫代，正式版再換入大同村授權今昔照片。）',
     note: '子軒筆記：復原不是回到原樣，而是大家又能開始安排明天。',
@@ -187,6 +188,39 @@ export const REPORTER_PHOTO = {
   place: '光復｜清完最後一條水溝',
   backNote: '阿姨說：「下次回來，不用帶鏟子，帶胃口就好。」',
 };
+
+// 合照可疊放切換；placeholder 為待補照片的灰色佔位圖。
+export const PHOTO_STACK = [
+  {
+    src: REPORTER_PHOTO.src,
+    alt: REPORTER_PHOTO.alt,
+    credit: REPORTER_PHOTO.credit,
+    date: REPORTER_PHOTO.date,
+    place: '清完最後一條水溝',
+    note: REPORTER_PHOTO.backNote,
+  },
+  {
+    placeholder: true,
+    label: '照片 2（待補）',
+    date: '2025.09.28',
+    place: '光復車站',
+    note: '早上第一班車，月台上全是雨鞋。',
+  },
+  {
+    placeholder: true,
+    label: '照片 3（待補）',
+    date: '2026.09',
+    place: '佛祖街',
+    note: '阿伯的店重新開門那天，騎樓又坐滿了人。',
+  },
+  {
+    placeholder: true,
+    label: '照片 4（待補）',
+    date: '2026.11.15',
+    place: '回光復',
+    note: '這一張，等你回來一起拍。',
+  },
+];
 
 export const DESK_TEXTURE = {
   src: 'assets/images/desk-texture.jpg',

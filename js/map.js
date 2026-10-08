@@ -48,12 +48,11 @@ export function createMapController(root, places, { onSelect } = {}) {
     for (const [placeId, marker] of markers) {
       marker.getElement()?.classList.toggle('is-selected', placeId === id);
     }
-    // 面板出現後地圖會變窄，等版面更新再重算尺寸並移到該點位。
-    requestAnimationFrame(() => {
-      map?.invalidateSize();
-      map?.panTo([place.lat, place.lng], { animate: true });
-      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
+    // 面板出現後地圖會變窄：重算尺寸（會讀到新版面）再移到該點位。
+    // invalidateSize 預設會自己做一段平移動畫，會蓋掉 panTo，所以關掉。
+    map?.invalidateSize({ pan: false });
+    map?.panTo([place.lat, place.lng], { animate: true });
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     onSelect?.(place);
   }
 

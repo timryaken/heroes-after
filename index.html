@@ -132,19 +132,22 @@
       <h2 id="notebook-title" class="visually-hidden">子軒的回訪手記</h2>
       <div class="notebook">
         <div class="notebook__rings" aria-hidden="true"></div>
-        <div class="notebook__paper" data-notebook-pages aria-live="polite"></div>
+        <div class="notebook__paper">
+          <div data-notebook-pages aria-live="polite"></div>
+          <form class="note-signup" data-signup-form novalidate hidden>
+            <label for="signup-email">Email：</label>
+            <input id="signup-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="寫在這裡">
+            <button type="submit">一起去</button>
+            <p class="note-signup__hint">出發前通知你。原型不會真的寄信或送出資料。</p>
+            <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
+          </form>
+        </div>
         <nav class="notebook-nav" aria-label="翻閱筆記">
           <button type="button" data-note-prev>← 前一頁</button>
           <span data-note-count>1 / 3</span>
           <button type="button" data-note-next>下一頁 →</button>
         </nav>
       </div>
-      <form class="story-form signup-form" data-signup-form novalidate>
-        <div><label for="signup-email">11/15 一起回光復？</label><small>留下 Email，出發前通知你。原型不會真的寄信或送出資料。</small></div>
-        <input id="signup-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
-        <button class="primary-button" type="submit">留下 Email</button>
-        <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
-      </form>
     </dialog>
 
     <dialog id="dialog-map" class="object-dialog object-dialog--wide" data-object-dialog="map" aria-labelledby="map-title">
@@ -179,11 +182,14 @@
 
     <dialog id="dialog-photo" class="object-dialog" data-object-dialog="photo" aria-labelledby="photo-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉合照">×</button>
-      <p class="eyebrow">2025.09.29｜光復</p><h2 id="photo-title">那天說好了，要再回來。</h2>
-      <button class="photo-card" type="button" data-photo-flip aria-pressed="false" aria-label="翻到照片背面">
-        <span class="photo-card__front"><img class="dialog-photo" src="assets/images/reporters-photo.jpg" alt="子軒與搭檔和居民在清理工作後的戲劇重現合照"><small>AI 生成戲劇示意圖，非真實新聞照片</small></span>
-        <span class="photo-card__back"><strong>照片背面・子軒的字</strong><span data-photo-note></span><small>點一下翻回正面</small></span>
-      </button>
+      <p class="eyebrow" data-photo-meta>2025.09.29｜光復</p><h2 id="photo-title">那天說好了，要再回來。</h2>
+      <div class="photo-stack" data-photo-stack></div>
+      <p class="photo-stack__note" data-photo-note aria-live="polite"></p>
+      <nav class="photo-stack__nav" aria-label="切換照片">
+        <button type="button" data-photo-prev aria-label="上一張">←</button>
+        <span data-photo-count>1 / 4</span>
+        <button type="button" data-photo-next aria-label="下一張">→</button>
+      </nav>
     </dialog>
 
     <dialog class="role-dialog paper-dialog" data-role-dialog aria-labelledby="role-title">

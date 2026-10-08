@@ -1,6 +1,6 @@
 import { daysSinceDisaster } from './core.js';
 import { createAudioController } from './audio.js';
-import { DESK_TEXTURE, INTERACTIVE_DESK, NOTEBOOK_PAGES, PLACES, PROLOGUE_SLIDES, REPORTER_PHOTO, ROLES, VOICE_CLIPS } from './data.js';
+import { DESK_TEXTURE, INTERACTIVE_DESK, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, REPORTER_PHOTO, ROLES, VOICE_CLIPS } from './data.js';
 import { createDeskController, createStoryContentController } from './desk.js';
 import { createFormsController } from './forms.js';
 import { createMapController } from './map.js';
@@ -36,7 +36,7 @@ const deskRoot = document.querySelector('[data-desk]');
 const desk = createDeskController(deskRoot, store);
 createStoryContentController(document, {
   notebookPages: NOTEBOOK_PAGES,
-  reporterPhoto: REPORTER_PHOTO,
+  photos: PHOTO_STACK,
 });
 const forms = createFormsController(document, store, { roles: ROLES });
 const placeMap = createMapController(document.querySelector('[data-object-dialog="map"]'), PLACES, {
@@ -133,7 +133,7 @@ deskRoot.addEventListener('desk:object-closed', (event) => {
 });
 document.addEventListener('forms:posted', () => desk.markDone('computer'));
 document.addEventListener('forms:email-saved', () => desk.markDone('notebook'));
-document.addEventListener('story:photo-flipped', () => desk.markDone('photo'));
+document.addEventListener('story:photo-viewed', () => desk.markDone('photo'));
 document.addEventListener('forms:reset', () => {
   desk.reset();
   audio.setListened([]);
