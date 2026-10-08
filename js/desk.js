@@ -12,6 +12,88 @@ export function mergeExplored(existing = [], nextId) {
   return DESK_OBJECT_IDS.filter((id) => selected.has(id));
 }
 
+function photoMarkup(photo, label) {
+  return `
+    <figure class="comparison-card">
+      <span>${label}</span>
+      <img src="${photo.src}" alt="${photo.alt}">
+      <figcaption>${photo.credit} · <a href="${photo.sourceUrl}" target="_blank" rel="noreferrer">原始報導</a></figcaption>
+    </figure>
+  `;
+}
+
+export function createStoryContentController(root, { notebookPages = [], places = [], reporterPhoto } = {}) {
+  const notebook = root.querySelector('[data-notebook-pages]');
+  const noteCount = root.querySelector('[data-note-count]');
+  const previousNote = root.querySelector('[data-note-prev]');
+  const nextNote = root.querySelector('[data-note-next]');
+  const placeList = root.querySelector('[data-place-list]');
+  const placePanel = root.querySelector('[data-place-panel]');
+  const photoFlip = root.querySelector('[data-photo-flip]');
+  let noteIndex = 0;
+  let placeId = places[0]?.id;
+
+  function renderNote() {
+    const page = notebookPages[noteIndex];
+    if (!notebook || !page) return;
+    notebook.innerHTML = `<article><p class="eyebrow">${page.eyebrow}</p><h3>${page.title}</h3><p>${page.body}</p></article>`;
+    noteCount.textContent = `${noteIndex + 1} / ${notebookPages.length}`;
+    previousNote.disabled = noteIndex === 0;
+    nextNote.disabled = noteIndex === notebookPages.length - 1;
+  }
+
+  function renderPlace() {
+    const place = places.find((item) => item.id === placeId) ?? places[0];
+    if (!placePanel || !place) return;
+    for (const button of placeList.querySelectorAll('button')) {
+      const selected = button.dataset.placeId === place.id;
+      button.setAttribute('aria-selected', String(selected));
+      button.classList.toggle('is-selected', selected);
+    }
+    placePanel.innerHTML = `
+      <header><p class="eyebrow">${place.era}</p><h3>${place.name}</h3><p>${place.summary}</p></header>
+      <div class="comparison-grid">${photoMarkup(place.before, '那時')}${photoMarkup(place.after, '現在')}</div>
+      <blockquote>${place.note}</blockquote>
+    `;
+  }
+
+  for (const place of places) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.setAttribute('role', 'tab');
+    button.dataset.placeId = place.id;
+    button.textContent = place.name;
+    button.addEventListener('click', () => {
+      placeId = place.id;
+      renderPlace();
+    });
+    placeList?.append(button);
+  }
+
+  previousNote?.addEventListener('click', () => {
+    noteIndex = Math.max(0, noteIndex - 1);
+    renderNote();
+  });
+  nextNote?.addEventListener('click', () => {
+    noteIndex = Math.min(notebookPages.length - 1, noteIndex + 1);
+    renderNote();
+  });
+
+  if (reporterPhoto) {
+    const note = root.querySelector('[data-photo-note]');
+    if (note) note.textContent = reporterPhoto.backNote;
+  }
+  photoFlip?.addEventListener('click', () => {
+    const flipped = photoFlip.classList.toggle('is-flipped');
+    photoFlip.setAttribute('aria-pressed', String(flipped));
+    photoFlip.setAttribute('aria-label', flipped ? '翻回照片正面' : '翻到照片背面查看筆記');
+  });
+
+  renderNote();
+  renderPlace();
+  return { renderNote, renderPlace };
+}
+
 function dispatch(root, name, detail = {}) {
   root.dispatchEvent(new CustomEvent(name, { bubbles: true, detail }));
 }

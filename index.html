@@ -118,19 +118,45 @@
     <dialog id="dialog-computer" class="object-dialog" data-object-dialog="computer" aria-labelledby="computer-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉電腦螢幕">×</button>
       <p class="eyebrow">互動投稿</p><h2 id="computer-title">把你的那一天，留在這裡</h2>
-      <p>你可以留下想法、照片或一段記憶。完整表單將在下一階段放入。</p>
+      <p class="dialog-lede dialog-lede--dark">不論你曾到過現場，或只在遠方關注，都可以留下一段記憶，成為子軒回訪前的線索。</p>
+      <form class="story-form" data-memory-form novalidate>
+        <label for="memory-text">我記得……</label>
+        <textarea id="memory-text" name="memory" rows="5" maxlength="800" placeholder="那一天，你記得什麼？現在又最想知道什麼？"></textarea>
+        <label class="file-field" for="memory-photo">
+          <span>加入一張照片（選填）</span>
+          <small>JPG、PNG 或 WebP，最多 5 MB</small>
+        </label>
+        <input id="memory-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" data-memory-file>
+        <img class="memory-preview" data-memory-preview hidden alt="">
+        <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
+        <div class="form-footer"><small>資料不會送出，只暫存在此裝置。</small><button class="primary-button" type="submit">留下記憶 <span aria-hidden="true">→</span></button></div>
+      </form>
     </dialog>
 
     <dialog id="dialog-notebook" class="object-dialog" data-object-dialog="notebook" aria-labelledby="notebook-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉採訪筆記本">×</button>
       <p class="eyebrow">子軒的採訪筆記</p><h2 id="notebook-title">11/15，出發前往光復</h2>
-      <p>週年報導、搭檔留下的原因，以及同行夥伴募集。</p>
+      <div class="notebook-pages" data-notebook-pages></div>
+      <nav class="notebook-nav" aria-label="翻閱採訪筆記">
+        <button type="button" data-note-prev>← 上一頁</button>
+        <span data-note-count aria-live="polite">1 / 3</span>
+        <button type="button" data-note-next>下一頁 →</button>
+      </nav>
+      <form class="story-form signup-form" data-signup-form novalidate>
+        <div><label for="signup-email">收到同行募集後續</label><small>這是內部原型，不會真的寄信或送出資料。</small></div>
+        <input id="signup-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+        <button class="primary-button" type="submit">記下 Email</button>
+        <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
+      </form>
     </dialog>
 
     <dialog id="dialog-map" class="object-dialog object-dialog--wide" data-object-dialog="map" aria-labelledby="map-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉回訪地圖">×</button>
       <p class="eyebrow">三個回訪地點</p><h2 id="map-title">一張地圖，三種災後時間</h2>
-      <p>馬太鞍濕地、光復糖廠與大同村的今昔對照。</p>
+      <div class="place-browser">
+        <nav class="place-tabs" data-place-list aria-label="選擇回訪地點"></nav>
+        <article class="place-panel" data-place-panel aria-live="polite"></article>
+      </div>
     </dialog>
 
     <dialog id="dialog-speaker" class="object-dialog" data-object-dialog="speaker" aria-labelledby="speaker-title">
@@ -142,13 +168,21 @@
     <dialog id="dialog-photo" class="object-dialog" data-object-dialog="photo" aria-labelledby="photo-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉合照">×</button>
       <p class="eyebrow">2025.09.29｜光復</p><h2 id="photo-title">她說再待幾天，後來沒有一起上車。</h2>
-      <img class="dialog-photo" src="assets/images/reporters-photo.jpg" alt="子軒與搭檔和居民在清理工作後的戲劇重現合照">
+      <button class="photo-card" type="button" data-photo-flip aria-pressed="false" aria-label="翻到照片背面查看筆記">
+        <span class="photo-card__front"><img class="dialog-photo" src="assets/images/reporters-photo.jpg" alt="子軒與搭檔和居民在清理工作後的戲劇重現合照"><small>AI 生成戲劇示意圖，非真實新聞照片</small></span>
+        <span class="photo-card__back"><strong>照片背面</strong><span data-photo-note></span><small>點一下翻回正面</small></span>
+      </button>
     </dialog>
 
     <dialog id="dialog-wish" class="object-dialog" data-object-dialog="wish" aria-labelledby="wish-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉祈願信">×</button>
       <p class="eyebrow">留給光復</p><h2 id="wish-title">你的關心，想停在哪一句話？</h2>
-      <p>角色化的祈願提問與儲存功能將在下一階段放入。</p>
+      <form class="story-form" data-wish-form novalidate>
+        <label id="wish-prompt" for="wish-text" data-wish-prompt>你想把哪一句話，留給正在重新開始的人？</label>
+        <textarea id="wish-text" name="wish" rows="5" maxlength="500" aria-describedby="wish-prompt" placeholder="寫下一句祝福、問題，或你還放不下的念頭。"></textarea>
+        <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
+        <div class="form-footer"><small>資料不會送出，只暫存在此裝置。</small><button class="primary-button" type="submit">收進信封 <span aria-hidden="true">→</span></button></div>
+      </form>
     </dialog>
 
     <dialog class="role-dialog paper-dialog" data-role-dialog aria-labelledby="role-title">
@@ -166,6 +200,7 @@
         <p class="eyebrow">原型註記</p>
         <h2 id="sources-title">照片與內容來源</h2>
         <p>來源清單將在完整桌面完成後顯示。正式對外發布前，仍需重新確認照片授權。</p>
+        <button class="danger-button" type="button" data-reset-prototype>重設這台裝置上的原型資料</button>
       </form>
     </dialog>
 

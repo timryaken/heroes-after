@@ -1,6 +1,7 @@
 import { daysSinceDisaster } from './core.js';
-import { PROLOGUE_SLIDES, ROLES } from './data.js';
-import { createDeskController } from './desk.js';
+import { NOTEBOOK_PAGES, PLACES, PROLOGUE_SLIDES, REPORTER_PHOTO, ROLES } from './data.js';
+import { createDeskController, createStoryContentController } from './desk.js';
+import { createFormsController } from './forms.js';
 import { createPrologueController } from './prologue.js';
 import { createPrototypeStore } from './storage.js';
 
@@ -32,6 +33,12 @@ const deskRoot = document.querySelector('[data-desk]');
 const drawer = document.querySelector('.object-drawer');
 const drawerToggle = document.querySelector('[data-drawer-toggle]');
 const desk = createDeskController(deskRoot, store);
+createStoryContentController(document, {
+  notebookPages: NOTEBOOK_PAGES,
+  places: PLACES,
+  reporterPhoto: REPORTER_PHOTO,
+});
+const forms = createFormsController(document, store, { roles: ROLES });
 
 const prologue = createPrologueController(prologueRoot, {
   slides: PROLOGUE_SLIDES,
@@ -42,6 +49,7 @@ const prologue = createPrologueController(prologueRoot, {
 function enterDesk(roleId) {
   const role = ROLES.find(({ id }) => id === roleId) ?? ROLES[2];
   roleWelcome.textContent = role.invitation;
+  forms.hydrate();
   roleDialog.close();
   experience.hidden = false;
   experience.focus({ preventScroll: true });
@@ -98,6 +106,12 @@ drawerToggle.addEventListener('click', () => {
 
 deskRoot.addEventListener('desk:object-opened', updateDeskProgress);
 deskRoot.addEventListener('desk:reset', updateDeskProgress);
+document.addEventListener('forms:reset', () => {
+  desk.reset();
+  updateDeskProgress();
+  if (sourcesDialog.open) sourcesDialog.close();
+  openDialog(roleDialog);
+});
 updateDeskProgress();
 
 if (!store.persistent) document.querySelector('[data-save-notice]').hidden = false;

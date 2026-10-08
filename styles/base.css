@@ -167,6 +167,17 @@ textarea:focus-visible {
   box-shadow: 0 1rem 3rem rgba(0,0,0,0.4);
 }
 
+.danger-button {
+  min-height: 2.75rem;
+  margin-top: 1rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(126, 51, 35, 0.45);
+  color: #763823;
+  background: transparent;
+  cursor: pointer;
+}
+.danger-button:hover { color: #fff; background: #763823; }
+
 @media (max-width: 650px) {
   .site-bar { min-height: 3.75rem; }
   .control-label, .site-actions .text-button[data-open-sources] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
@@ -178,4 +189,3 @@ textarea:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
-
