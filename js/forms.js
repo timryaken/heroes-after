@@ -79,6 +79,7 @@ export function createFormsController(root, store, { roles = [] } = {}) {
     }
     store.save({ memory });
     announce(status, LOCAL_ONLY_NOTICE);
+    root.dispatchEvent(new CustomEvent('forms:posted', { bubbles: true }));
   }, { signal });
 
   signupForm?.addEventListener('submit', (event) => {
@@ -91,6 +92,7 @@ export function createFormsController(root, store, { roles = [] } = {}) {
     }
     store.save({ signupEmail });
     announce(status, `已記下同行意願。${LOCAL_ONLY_NOTICE}`);
+    root.dispatchEvent(new CustomEvent('forms:email-saved', { bubbles: true }));
   }, { signal });
 
   wishForm?.addEventListener('submit', (event) => {
@@ -103,6 +105,7 @@ export function createFormsController(root, store, { roles = [] } = {}) {
     }
     store.save({ wish });
     announce(status, LOCAL_ONLY_NOTICE);
+    root.dispatchEvent(new CustomEvent('forms:posted', { bubbles: true }));
   }, { signal });
 
   function reset() {

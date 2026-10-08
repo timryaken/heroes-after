@@ -10,6 +10,7 @@
   --ember-bright: #ffae76;
   --line: rgba(242, 237, 226, 0.22);
   --serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --hand: "LXGW WenKai TC", "Kaiti TC", "BiauKai", "DFKai-SB", serif;
   --sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
   --safe-top: max(1rem, env(safe-area-inset-top));
   --safe-right: max(1rem, env(safe-area-inset-right));
@@ -45,6 +46,8 @@ textarea:focus-visible {
 }
 
 [hidden] { display: none !important; }
+
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .site-bar {
   position: fixed;

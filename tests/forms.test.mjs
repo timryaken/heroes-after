@@ -12,7 +12,7 @@ test('rolePrompt returns the selected role question and falls back safely', () =
 test('formDraftFromState returns only persisted form values', () => {
   assert.deepEqual(formDraftFromState({
     role: 'volunteer',
-    explored: ['map'],
+    completed: ['map'],
     memory: '那天的記憶',
     wish: '平安',
     signupEmail: 'demo@example.com',

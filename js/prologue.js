@@ -71,10 +71,10 @@ export function createPrologueController(root, options) {
       animateCount(beat.days);
     } else if (beat.type === 'question') {
       eyebrow.textContent = '一年之後';
-      title.textContent = '你知道，現在變成什麼樣了嗎？';
+      title.textContent = '那些被鏟子超人清出來的街道，現在怎麼樣了？';
     } else {
       eyebrow.textContent = '英雄之後';
-      title.textContent = '現在，讓我們從記者子軒的視角，重返那個你曾經關注的地方——馬太鞍';
+      title.textContent = '因為有你們，光復正在回來。跟著記者子軒，回去看看。';
     }
   }
 

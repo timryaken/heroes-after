@@ -4,8 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#120f0c">
-    <meta name="description" content="《英雄之後》— 從記者子軒的視角，重返馬太鞍災後一年。內部互動原型。">
+    <meta name="description" content="《英雄之後》— 因為鏟子超人，光復正在回來。跟著記者子軒回去看看。內部互動原型。">
     <title>英雄之後｜馬太鞍週年回訪</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb" crossorigin="anonymous">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/prologue.css">
     <link rel="stylesheet" href="styles/desk.css">
@@ -54,69 +59,54 @@
       <section class="desk" data-desk aria-labelledby="desk-title">
         <header class="desk__intro">
           <p class="eyebrow">記者子軒的工作桌</p>
-          <h1 id="desk-title">有些故事，在新聞離開之後才真正開始。</h1>
-          <p data-role-welcome>選擇桌上的物件，重新走進光復。</p>
+          <h1 id="desk-title" data-role-headline>光復，已經不一樣了。</h1>
+          <p data-role-welcome>因為鏟子超人的幫忙，街道、田地和店家都回來了。要不要親自回來看看？</p>
         </header>
-
-        <div class="desk__hint" role="note">
-          <span aria-hidden="true">＋</span>
-          <p><strong>這張桌子藏著五條線索。</strong><br>點擊發光的位置，打開物件。</p>
-        </div>
 
         <div class="desk__stage">
           <img class="desk__photo" src="assets/images/interactive-desk.png" alt="深夜新聞編輯部裡的擬真記者工作桌，桌上有電腦、採訪筆記、回訪地圖、收音機與合照">
           <button class="desk-object desk-object--computer" type="button" data-desk-object="computer" aria-haspopup="dialog" aria-controls="dialog-computer">
             <span class="object-glow" aria-hidden="true"></span>
             <span class="desk-object__visual computer-visual" aria-hidden="true"><i></i></span>
-            <span class="desk-object__copy"><small>線索 01</small><strong>電腦螢幕</strong><em>留下想法、照片或祈願</em></span>
+            <span class="desk-object__copy"><strong>電腦螢幕<span class="visually-hidden" data-done-label></span></strong><em>留下想對光復說的話</em></span>
           </button>
 
           <button class="desk-object desk-object--notebook" type="button" data-desk-object="notebook" aria-haspopup="dialog" aria-controls="dialog-notebook">
             <span class="object-glow" aria-hidden="true"></span>
-            <span class="desk-object__visual notebook-visual" aria-hidden="true"><i>光復採訪手記<br>11/15 出發</i></span>
-            <span class="desk-object__copy"><small>線索 02</small><strong>採訪筆記本</strong><em>打開子軒的採訪計畫</em></span>
+            <span class="desk-object__visual notebook-visual" aria-hidden="true"><i>回光復手記<br>11/15 出發</i></span>
+            <span class="desk-object__copy"><strong>採訪筆記本<span class="visually-hidden" data-done-label></span></strong><em>子軒的回訪手記</em></span>
           </button>
 
           <button class="desk-object desk-object--map" type="button" data-desk-object="map" aria-haspopup="dialog" aria-controls="dialog-map">
             <span class="object-glow" aria-hidden="true"></span>
             <span class="desk-object__visual map-visual" aria-hidden="true"><b>馬太鞍濕地</b><b>光復糖廠</b><b>大同村</b></span>
-            <span class="desk-object__copy"><small>線索 03</small><strong>回訪地圖</strong><em>查看三個回訪地點</em></span>
+            <span class="desk-object__copy"><strong>回訪地圖<span class="visually-hidden" data-done-label></span></strong><em>三個值得回去的地方</em></span>
           </button>
 
           <button class="desk-object desk-object--speaker" type="button" data-desk-object="speaker" aria-haspopup="dialog" aria-controls="dialog-speaker">
             <span class="object-glow" aria-hidden="true"></span>
             <span class="desk-object__visual speaker-visual" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span class="desk-object__copy"><small>線索 04</small><strong>聲音播放器</strong><em>聽見沒有被寫進新聞的話</em></span>
+            <span class="desk-object__copy"><strong>聲音播放器<span class="visually-hidden" data-done-label></span></strong><em>光復現在的聲音</em></span>
           </button>
 
           <button class="desk-object desk-object--photo" type="button" data-desk-object="photo" aria-haspopup="dialog" aria-controls="dialog-photo">
             <span class="object-glow" aria-hidden="true"></span>
             <span class="desk-object__visual photo-visual"><img src="assets/images/reporters-photo.jpg" alt=""></span>
-            <span class="desk-object__copy"><small>線索 05</small><strong>一張合照</strong><em>子軒、搭檔與光復居民</em></span>
+            <span class="desk-object__copy"><strong>一張合照<span class="visually-hidden" data-done-label></span></strong><em>那天說好要再回來</em></span>
           </button>
 
         </div>
 
-        <aside class="object-drawer" aria-label="探索進度">
-          <button class="object-drawer__toggle" type="button" data-drawer-toggle aria-expanded="false">探索物件 <span>0 / 5</span></button>
-          <ol data-drawer-list>
-            <li data-object-status="computer"><span>電腦</span><small data-status-label>未查看</small></li>
-            <li data-object-status="notebook"><span>筆記本</span><small data-status-label>未查看</small></li>
-            <li data-object-status="map"><span>地圖</span><small data-status-label>未查看</small></li>
-            <li data-object-status="speaker"><span>聲音</span><small data-status-label>未查看</small></li>
-            <li data-object-status="photo"><span>合照</span><small data-status-label>未查看</small></li>
-          </ol>
-        </aside>
       </section>
     </main>
 
     <dialog id="dialog-computer" class="object-dialog" data-object-dialog="computer" aria-labelledby="computer-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉電腦螢幕">×</button>
-      <p class="eyebrow">互動投稿</p><h2 id="computer-title">把你的那一天，留在這裡</h2>
-      <p class="dialog-lede dialog-lede--dark">不論你曾到過現場，或只在遠方關注，都可以留下一段記憶，成為子軒回訪前的線索。</p>
+      <p class="eyebrow">留言給光復</p><h2 id="computer-title">把你想說的，留給光復</h2>
+      <p class="dialog-lede dialog-lede--dark">不論你曾經拿著鏟子到過現場，或在遠方默默關心，都可以留下一段話或一張照片。</p>
       <form class="story-form" data-memory-form novalidate>
         <label for="memory-text">我記得……</label>
-        <textarea id="memory-text" name="memory" rows="5" maxlength="800" placeholder="那一天，你記得什麼？現在又最想知道什麼？"></textarea>
+        <textarea id="memory-text" name="memory" rows="5" maxlength="800" placeholder="那時候的光復，你記得什麼？現在最想回去看看什麼？"></textarea>
         <label class="file-field" for="memory-photo">
           <span>加入一張照片（選填）</span>
           <small>JPG、PNG 或 WebP，最多 5 MB</small>
@@ -137,45 +127,51 @@
       </div>
     </dialog>
 
-    <dialog id="dialog-notebook" class="object-dialog" data-object-dialog="notebook" aria-labelledby="notebook-title">
+    <dialog id="dialog-notebook" class="object-dialog object-dialog--notebook" data-object-dialog="notebook" aria-labelledby="notebook-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉採訪筆記本">×</button>
-      <p class="eyebrow">子軒的採訪筆記</p><h2 id="notebook-title">11/15，出發前往光復</h2>
-      <div class="notebook-pages" data-notebook-pages></div>
-      <nav class="notebook-nav" aria-label="翻閱採訪筆記">
-        <button type="button" data-note-prev>← 上一頁</button>
-        <span data-note-count aria-live="polite">1 / 3</span>
-        <button type="button" data-note-next>下一頁 →</button>
-      </nav>
+      <h2 id="notebook-title" class="visually-hidden">子軒的回訪手記</h2>
+      <div class="notebook">
+        <div class="notebook__rings" aria-hidden="true"></div>
+        <div class="notebook__paper" data-notebook-pages aria-live="polite"></div>
+        <nav class="notebook-nav" aria-label="翻閱筆記">
+          <button type="button" data-note-prev>← 前一頁</button>
+          <span data-note-count>1 / 3</span>
+          <button type="button" data-note-next>下一頁 →</button>
+        </nav>
+      </div>
       <form class="story-form signup-form" data-signup-form novalidate>
-        <div><label for="signup-email">收到同行募集後續</label><small>這是內部原型，不會真的寄信或送出資料。</small></div>
+        <div><label for="signup-email">11/15 一起回光復？</label><small>留下 Email，出發前通知你。原型不會真的寄信或送出資料。</small></div>
         <input id="signup-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
-        <button class="primary-button" type="submit">記下 Email</button>
+        <button class="primary-button" type="submit">留下 Email</button>
         <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
       </form>
     </dialog>
 
     <dialog id="dialog-map" class="object-dialog object-dialog--wide" data-object-dialog="map" aria-labelledby="map-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉回訪地圖">×</button>
-      <p class="eyebrow">三個回訪地點</p><h2 id="map-title">一張地圖，三種災後時間</h2>
-      <div class="place-browser">
-        <nav class="place-tabs" data-place-list role="tablist" aria-label="選擇回訪地點"></nav>
-        <article class="place-panel" data-place-panel aria-live="polite"></article>
+      <p class="eyebrow">回訪地圖｜花蓮光復</p><h2 id="map-title">回光復，走這三個地方</h2>
+      <div class="map-layout">
+        <div class="map-frame">
+          <div class="map-canvas" data-map-canvas role="application" aria-label="光復鄉地圖，標有三個回訪地點"></div>
+          <p class="map-fallback">地圖暫時無法載入，請從下方選擇地點。</p>
+          <nav class="place-legend" data-place-list aria-label="回訪地點"></nav>
+        </div>
+        <article class="place-panel" data-place-panel aria-live="polite" hidden></article>
       </div>
     </dialog>
 
     <dialog id="dialog-speaker" class="object-dialog" data-object-dialog="speaker" aria-labelledby="speaker-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉聲音播放器">×</button>
-      <p class="eyebrow">訪談錄音</p><h2 id="speaker-title">那些沒被寫進報導的聲音</h2>
-      <p class="dialog-lede dialog-lede--dark">按下播放，隨機聽見一位受訪者的原型旁白。聲音不會自動播放。</p>
+      <p class="eyebrow">光復現在的聲音</p><h2 id="speaker-title">一年後，他們想跟你說</h2>
+      <ol class="track-list" data-track-list aria-label="三段聲音"></ol>
       <section class="audio-player" aria-label="原型訪談播放器">
         <div class="audio-player__meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <p class="prototype-tag">原型示意旁白，非真實受訪者錄音</p>
-        <p data-audio-speaker>等待播放</p>
-        <h3 data-audio-title>選一段聲音，重新靠近這裡</h3>
-        <blockquote data-audio-transcript>即使無法播放語音，這裡仍會顯示完整逐字稿。</blockquote>
+        <p data-audio-speaker>尚未播放</p>
+        <h3 data-audio-title>選一段聲音</h3>
+        <blockquote data-audio-transcript>播放後，這裡會顯示逐字稿。</blockquote>
         <p class="audio-status" data-audio-status role="status"></p>
         <div class="audio-actions">
-          <button class="primary-button" type="button" aria-pressed="false" data-audio-play><span aria-hidden="true">▶</span><span data-play-label>隨機播放一段</span></button>
           <button class="text-button" type="button" data-audio-stop>停止</button>
         </div>
       </section>
@@ -183,10 +179,10 @@
 
     <dialog id="dialog-photo" class="object-dialog" data-object-dialog="photo" aria-labelledby="photo-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉合照">×</button>
-      <p class="eyebrow">2025.09.29｜光復</p><h2 id="photo-title">她說再待幾天，後來沒有一起上車。</h2>
-      <button class="photo-card" type="button" data-photo-flip aria-pressed="false" aria-label="翻到照片背面查看筆記">
+      <p class="eyebrow">2025.09.29｜光復</p><h2 id="photo-title">那天說好了，要再回來。</h2>
+      <button class="photo-card" type="button" data-photo-flip aria-pressed="false" aria-label="翻到照片背面">
         <span class="photo-card__front"><img class="dialog-photo" src="assets/images/reporters-photo.jpg" alt="子軒與搭檔和居民在清理工作後的戲劇重現合照"><small>AI 生成戲劇示意圖，非真實新聞照片</small></span>
-        <span class="photo-card__back"><strong>照片背面</strong><span data-photo-note></span><small>點一下翻回正面</small></span>
+        <span class="photo-card__back"><strong>照片背面・子軒的字</strong><span data-photo-note></span><small>點一下翻回正面</small></span>
       </button>
     </dialog>
 

@@ -5,7 +5,8 @@ import { createPrototypeStore } from '../js/storage.js';
 
 const EMPTY_STATE = {
   role: '',
-  explored: [],
+  completed: [],
+  listened: [],
   memory: '',
   wish: '',
   signupEmail: '',
@@ -36,14 +37,14 @@ test('store merges updates and persists them', () => {
   const storage = createMemoryStorage();
   const first = createPrototypeStore(storage);
 
-  first.save({ role: 'volunteer', explored: ['map'] });
+  first.save({ role: 'volunteer', completed: ['map'] });
   first.save({ wish: '願每個人都平安回家' });
 
   const second = createPrototypeStore(storage);
   assert.deepEqual(second.load(), {
     ...EMPTY_STATE,
     role: 'volunteer',
-    explored: ['map'],
+    completed: ['map'],
     wish: '願每個人都平安回家',
   });
 });

@@ -1,8 +1,9 @@
 import { daysSinceDisaster } from './core.js';
 import { createAudioController } from './audio.js';
 import { DESK_TEXTURE, INTERACTIVE_DESK, NOTEBOOK_PAGES, PLACES, PROLOGUE_SLIDES, REPORTER_PHOTO, ROLES, VOICE_CLIPS } from './data.js';
-import { createDeskController, createStoryContentController, DESK_OBJECT_IDS } from './desk.js';
+import { createDeskController, createStoryContentController } from './desk.js';
 import { createFormsController } from './forms.js';
+import { createMapController } from './map.js';
 import { createPrologueController } from './prologue.js';
 import { createPrototypeStore } from './storage.js';
 
@@ -27,20 +28,27 @@ const prologueRoot = document.querySelector('[data-prologue]');
 const experience = document.querySelector('#experience');
 const roleDialog = document.querySelector('[data-role-dialog]');
 const roleOptions = document.querySelector('[data-role-options]');
+const roleHeadline = document.querySelector('[data-role-headline]');
 const roleWelcome = document.querySelector('[data-role-welcome]');
 const sourcesDialog = document.querySelector('[data-sources-dialog]');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const deskRoot = document.querySelector('[data-desk]');
-const drawer = document.querySelector('.object-drawer');
-const drawerToggle = document.querySelector('[data-drawer-toggle]');
 const desk = createDeskController(deskRoot, store);
 createStoryContentController(document, {
   notebookPages: NOTEBOOK_PAGES,
-  places: PLACES,
   reporterPhoto: REPORTER_PHOTO,
 });
 const forms = createFormsController(document, store, { roles: ROLES });
-const audio = createAudioController(document.querySelector('[data-object-dialog="speaker"]'), VOICE_CLIPS);
+const placeMap = createMapController(document.querySelector('[data-object-dialog="map"]'), PLACES, {
+  onSelect: () => desk.markDone('map'),
+});
+const audio = createAudioController(document.querySelector('[data-object-dialog="speaker"]'), VOICE_CLIPS, {
+  listened: store.load().listened,
+  onComplete: (id, listened) => {
+    store.save({ listened });
+    if (listened.length === VOICE_CLIPS.length) desk.markDone('speaker');
+  },
+});
 
 function renderSources() {
   const sourceList = document.querySelector('[data-source-list]');
@@ -69,6 +77,7 @@ const prologue = createPrologueController(prologueRoot, {
 
 function enterDesk(roleId) {
   const role = ROLES.find(({ id }) => id === roleId) ?? ROLES[2];
+  roleHeadline.textContent = role.headline;
   roleWelcome.textContent = role.invitation;
   forms.hydrate();
   roleDialog.close();
@@ -116,28 +125,21 @@ document.querySelector('[data-mute]').addEventListener('click', (event) => {
   audio.setMuted(!pressed);
 });
 
-function updateDeskProgress() {
-  const count = store.load().explored.length;
-  drawerToggle.querySelector('span').textContent = `${count} / ${DESK_OBJECT_IDS.length}`;
-}
-
-drawerToggle.addEventListener('click', () => {
-  const open = drawer.classList.toggle('is-open');
-  drawerToggle.setAttribute('aria-expanded', String(open));
+deskRoot.addEventListener('desk:object-opened', (event) => {
+  if (event.detail.id === 'map') placeMap.ensureMap();
 });
-
-deskRoot.addEventListener('desk:object-opened', updateDeskProgress);
 deskRoot.addEventListener('desk:object-closed', (event) => {
   if (event.detail.id === 'speaker') audio.stop();
 });
-deskRoot.addEventListener('desk:reset', updateDeskProgress);
+document.addEventListener('forms:posted', () => desk.markDone('computer'));
+document.addEventListener('forms:email-saved', () => desk.markDone('notebook'));
+document.addEventListener('story:photo-flipped', () => desk.markDone('photo'));
 document.addEventListener('forms:reset', () => {
   desk.reset();
-  updateDeskProgress();
+  audio.setListened([]);
   if (sourcesDialog.open) sourcesDialog.close();
   openDialog(roleDialog);
 });
-updateDeskProgress();
 
 if (!store.persistent) document.querySelector('[data-save-notice]').hidden = false;
 prologue.start();

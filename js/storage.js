@@ -2,14 +2,15 @@ const DEFAULT_KEY = 'heroes-after-prototype';
 
 export const EMPTY_PROTOTYPE_STATE = Object.freeze({
   role: '',
-  explored: [],
+  completed: [],
+  listened: [],
   memory: '',
   wish: '',
   signupEmail: '',
 });
 
 function freshState() {
-  return { ...EMPTY_PROTOTYPE_STATE, explored: [] };
+  return { ...EMPTY_PROTOTYPE_STATE, completed: [], listened: [] };
 }
 
 function normalizeState(value) {
@@ -19,8 +20,10 @@ function normalizeState(value) {
   for (const key of ['role', 'memory', 'wish', 'signupEmail']) {
     if (typeof value[key] === 'string') state[key] = value[key];
   }
-  if (Array.isArray(value.explored)) {
-    state.explored = [...new Set(value.explored.filter((item) => typeof item === 'string'))];
+  for (const key of ['completed', 'listened']) {
+    if (Array.isArray(value[key])) {
+      state[key] = [...new Set(value[key].filter((item) => typeof item === 'string'))];
+    }
   }
   return state;
 }

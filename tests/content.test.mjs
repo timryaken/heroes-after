@@ -22,6 +22,7 @@ test('content defines the three approved representative places', () => {
   assert.equal(new Set(PLACES.map(({ id }) => id)).size, 3);
   for (const place of PLACES) {
     assert.ok(place.name && place.era && place.summary && place.note);
+    assert.ok(Math.abs(place.lat - 23.66) < 0.05 && Math.abs(place.lng - 121.42) < 0.05, `${place.id} 座標應在光復鄉`);
     assertPhotoContract(place.before);
     assertPhotoContract(place.after);
   }
@@ -36,11 +37,12 @@ test('prologue includes sourced disaster, volunteer, and current-day images', ()
   for (const slide of PROLOGUE_SLIDES) assertPhotoContract(slide);
 });
 
-test('story content includes three roles, 11/15 departure, three prototype voices, and photo hook', () => {
+test('story content includes three roles, 11/15 departure, three prototype voices, and photo note', () => {
   assert.equal(ROLES.length, 3);
-  assert.ok(NOTEBOOK_PAGES.some(({ title, body }) => `${title} ${body}`.includes('11/15')));
+  assert.ok(NOTEBOOK_PAGES.some(({ title, lines }) => `${title} ${lines.join('')}`.includes('11/15')));
+  assert.ok(ROLES.every(({ headline, invitation }) => headline && invitation));
   assert.equal(VOICE_CLIPS.length, 3);
   assert.ok(VOICE_CLIPS.every(({ transcript, prototype }) => transcript && prototype === true));
   assertPhotoContract(REPORTER_PHOTO);
-  assert.ok(REPORTER_PHOTO.backNote.endsWith('……'));
+  assert.ok(REPORTER_PHOTO.backNote.trim());
 });

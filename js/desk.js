@@ -6,67 +6,38 @@ export const DESK_OBJECT_IDS = Object.freeze([
   'photo',
 ]);
 
-export function mergeExplored(existing = [], nextId) {
+export function mergeCompleted(existing = [], nextId) {
   const selected = new Set([...existing, nextId]);
   return DESK_OBJECT_IDS.filter((id) => selected.has(id));
 }
 
-function photoMarkup(photo, label) {
+function renderNotePage(page) {
   return `
-    <figure class="comparison-card">
-      <span>${label}</span>
-      <img src="${photo.src}" alt="${photo.alt}">
-      <figcaption>${photo.credit} · <a href="${photo.sourceUrl}" target="_blank" rel="noreferrer">原始報導</a></figcaption>
-    </figure>
+    <article class="note-page">
+      <span class="note-tape" aria-hidden="true"></span>
+      <p class="note-date">${page.date}</p>
+      <h3>${page.title}</h3>
+      ${page.lines.map((line) => `<p>${line}</p>`).join('')}
+      <p class="note-margin">${page.margin}</p>
+    </article>
   `;
 }
 
-export function createStoryContentController(root, { notebookPages = [], places = [], reporterPhoto } = {}) {
+export function createStoryContentController(root, { notebookPages = [], reporterPhoto } = {}) {
   const notebook = root.querySelector('[data-notebook-pages]');
   const noteCount = root.querySelector('[data-note-count]');
   const previousNote = root.querySelector('[data-note-prev]');
   const nextNote = root.querySelector('[data-note-next]');
-  const placeList = root.querySelector('[data-place-list]');
-  const placePanel = root.querySelector('[data-place-panel]');
   const photoFlip = root.querySelector('[data-photo-flip]');
   let noteIndex = 0;
-  let placeId = places[0]?.id;
 
   function renderNote() {
     const page = notebookPages[noteIndex];
     if (!notebook || !page) return;
-    notebook.innerHTML = `<article><p class="eyebrow">${page.eyebrow}</p><h3>${page.title}</h3><p>${page.body}</p></article>`;
+    notebook.innerHTML = renderNotePage(page);
     noteCount.textContent = `${noteIndex + 1} / ${notebookPages.length}`;
     previousNote.disabled = noteIndex === 0;
     nextNote.disabled = noteIndex === notebookPages.length - 1;
-  }
-
-  function renderPlace() {
-    const place = places.find((item) => item.id === placeId) ?? places[0];
-    if (!placePanel || !place) return;
-    for (const button of placeList.querySelectorAll('button')) {
-      const selected = button.dataset.placeId === place.id;
-      button.setAttribute('aria-selected', String(selected));
-      button.classList.toggle('is-selected', selected);
-    }
-    placePanel.innerHTML = `
-      <header><p class="eyebrow">${place.era}</p><h3>${place.name}</h3><p>${place.summary}</p></header>
-      <div class="comparison-grid">${photoMarkup(place.before, '那時')}${photoMarkup(place.after, '現在')}</div>
-      <blockquote>${place.note}</blockquote>
-    `;
-  }
-
-  for (const place of places) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.setAttribute('role', 'tab');
-    button.dataset.placeId = place.id;
-    button.textContent = place.name;
-    button.addEventListener('click', () => {
-      placeId = place.id;
-      renderPlace();
-    });
-    placeList?.append(button);
   }
 
   previousNote?.addEventListener('click', () => {
@@ -85,12 +56,12 @@ export function createStoryContentController(root, { notebookPages = [], places 
   photoFlip?.addEventListener('click', () => {
     const flipped = photoFlip.classList.toggle('is-flipped');
     photoFlip.setAttribute('aria-pressed', String(flipped));
-    photoFlip.setAttribute('aria-label', flipped ? '翻回照片正面' : '翻到照片背面查看筆記');
+    photoFlip.setAttribute('aria-label', flipped ? '翻回照片正面' : '翻到照片背面');
+    dispatch(photoFlip, 'story:photo-flipped');
   });
 
   renderNote();
-  renderPlace();
-  return { renderNote, renderPlace };
+  return { renderNote };
 }
 
 function dispatch(root, name, detail = {}) {
@@ -100,27 +71,22 @@ function dispatch(root, name, detail = {}) {
 export function createDeskController(root, store) {
   const buttons = [...root.querySelectorAll('[data-desk-object]')];
   const dialogs = [...document.querySelectorAll('[data-object-dialog]')];
-  const statusItems = [...root.querySelectorAll('[data-object-status]')];
   let activeTrigger = null;
 
-  function updateExploredUI(explored = store.load().explored) {
+  function updateDoneUI(completed = store.load().completed) {
     for (const button of buttons) {
-      const visited = explored.includes(button.dataset.deskObject);
-      button.classList.toggle('is-explored', visited);
-      button.dataset.explored = String(visited);
-    }
-    for (const item of statusItems) {
-      const visited = explored.includes(item.dataset.objectStatus);
-      item.classList.toggle('is-explored', visited);
-      item.querySelector('[data-status-label]').textContent = visited ? '已查看' : '未查看';
+      const done = completed.includes(button.dataset.deskObject);
+      button.classList.toggle('is-done', done);
+      const label = button.querySelector('[data-done-label]');
+      if (label) label.textContent = done ? '（已完成）' : '';
     }
   }
 
-  function markExplored(id) {
-    const explored = mergeExplored(store.load().explored, id);
-    store.save({ explored });
-    updateExploredUI(explored);
-    return explored;
+  function markDone(id) {
+    const completed = mergeCompleted(store.load().completed, id);
+    store.save({ completed });
+    updateDoneUI(completed);
+    return completed;
   }
 
   function closeObject(id, { restoreFocus = true } = {}) {
@@ -133,7 +99,6 @@ export function createDeskController(root, store) {
     const dialog = dialogs.find((item) => item.dataset.objectDialog === id);
     if (!dialog) return false;
     activeTrigger = trigger ?? buttons.find((button) => button.dataset.deskObject === id);
-    markExplored(id);
     if (!dialog.open) dialog.showModal();
     requestAnimationFrame(() => {
       const target = dialog.querySelector('[autofocus], button, a, input, textarea, select');
@@ -144,8 +109,8 @@ export function createDeskController(root, store) {
   }
 
   function reset() {
-    store.save({ explored: [] });
-    updateExploredUI([]);
+    store.save({ completed: [], listened: [] });
+    updateDoneUI([]);
     dispatch(root, 'desk:reset');
   }
 
@@ -167,6 +132,6 @@ export function createDeskController(root, store) {
     }
   }
 
-  updateExploredUI();
-  return { openObject, closeObject, markExplored, reset };
+  updateDoneUI();
+  return { openObject, closeObject, markDone, reset };
 }
