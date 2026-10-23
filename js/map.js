@@ -2,20 +2,32 @@ const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> 貢獻者';
 
 function photoMarkup(photo, label) {
+  if (photo.placeholder) {
+    return `
+    <figure class="comparison-card">
+      <span>${label}</span>
+      <div class="comparison-card__placeholder">${photo.label}</div>
+      <figcaption>待補照片</figcaption>
+    </figure>
+  `;
+  }
   return `
     <figure class="comparison-card">
       <span>${label}</span>
       <img src="${photo.src}" alt="${photo.alt}">
-      <figcaption>${photo.credit} · <a href="${photo.sourceUrl}" target="_blank" rel="noreferrer">原始報導</a></figcaption>
+      <figcaption>${photo.credit} · <a href="${photo.sourceUrl}" target="_blank" rel="noreferrer">原始圖片</a></figcaption>
     </figure>
   `;
 }
 
 export function placePanelMarkup(place) {
+  const reading = place.reading
+    ? `<p class="place-reading"><a href="${place.reading}" target="_blank" rel="noreferrer">相關報導 ↗</a></p>`
+    : '';
   return `
     <header><p class="eyebrow">${place.era}</p><h3>${place.name}</h3><p>${place.summary}</p></header>
-    <div class="comparison-grid">${photoMarkup(place.before, '那時')}${photoMarkup(place.after, '現在')}</div>
-    <blockquote>${place.note}</blockquote>
+    <div class="comparison-grid">${photoMarkup(place.before, '災害當下')}${photoMarkup(place.after, '災害後')}</div>
+    ${reading}
   `;
 }
 

@@ -11,14 +11,20 @@ export function mergeCompleted(existing = [], nextId) {
   return DESK_OBJECT_IDS.filter((id) => selected.has(id));
 }
 
+const DOODLES = {
+  crown: '<span class="note-doodle note-doodle--crown" aria-hidden="true">♛<i>✓</i><i>✗</i></span>',
+  ticket: '<span class="note-doodle note-doodle--ticket" aria-hidden="true">BOARDING PASS<i>✈</i></span>',
+};
+
 function renderNotePage(page) {
   return `
-    <article class="note-page">
+    <article class="note-page${page.sparse ? ' note-page--sparse' : ''}">
       <span class="note-tape" aria-hidden="true"></span>
+      ${DOODLES[page.doodle] ?? ''}
       <p class="note-date">${page.date}</p>
-      <h3>${page.title}</h3>
-      ${page.lines.map((line) => `<p>${line}</p>`).join('')}
-      <p class="note-margin">${page.margin}</p>
+      ${page.title ? `<h3>${page.title}</h3>` : ''}
+      ${page.lines.map((line) => (line ? `<p>${line}</p>` : '<p class="note-gap" aria-hidden="true"></p>')).join('')}
+      ${page.margin ? `<p class="note-margin">${page.margin}</p>` : ''}
     </article>
   `;
 }
@@ -35,7 +41,6 @@ export function createStoryContentController(root, { notebookPages = [], photos 
   const noteCount = root.querySelector('[data-note-count]');
   const previousNote = root.querySelector('[data-note-prev]');
   const nextNote = root.querySelector('[data-note-next]');
-  const signupForm = root.querySelector('[data-signup-form]');
   const stack = root.querySelector('[data-photo-stack]');
   const photoMeta = root.querySelector('[data-photo-meta]');
   const photoNote = root.querySelector('[data-photo-note]');
@@ -50,8 +55,8 @@ export function createStoryContentController(root, { notebookPages = [], photos 
     noteCount.textContent = `${noteIndex + 1} / ${notebookPages.length}`;
     previousNote.disabled = noteIndex === 0;
     nextNote.disabled = noteIndex === notebookPages.length - 1;
-    // Email 直接寫在最後一頁（同行邀請）的橫線上。
-    if (signupForm) signupForm.hidden = noteIndex !== notebookPages.length - 1;
+    // 讀到英雄出發前的最後一頁，才算翻閱完筆記。
+    if (noteIndex === notebookPages.length - 1) dispatch(notebook, 'story:notebook-finished');
   }
 
   previousNote?.addEventListener('click', () => {
@@ -87,7 +92,7 @@ export function createStoryContentController(root, { notebookPages = [], photos 
       card.setAttribute('aria-label', isTop ? `第 ${photoIndex + 1} 張，共 ${photos.length} 張。點一下換下一張` : '');
     });
     if (photoMeta) photoMeta.textContent = `${photo.date}｜${photo.place}`;
-    if (photoNote) photoNote.textContent = photo.note;
+    if (photoNote) photoNote.textContent = photo.note ?? '';
     if (photoCount) photoCount.textContent = `${photoIndex + 1} / ${photos.length}`;
   }
 

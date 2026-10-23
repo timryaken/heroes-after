@@ -11,7 +11,7 @@
 
 .desk__intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, 29rem); align-items: end; gap: 2rem; margin-bottom: 1.5rem; }
 .desk__intro .eyebrow { grid-column: 1 / -1; margin-bottom: -1.5rem; }
-.desk__intro h1 { max-width: 13em; margin: 0; font: 600 clamp(2.3rem, 4.8vw, 5.7rem)/1.02 var(--serif); letter-spacing: -0.035em; text-wrap: balance; }
+.desk__intro h1 { max-width: 16em; margin: 0; font: 600 clamp(2.1rem, 3.9vw, 4.6rem)/1.1 var(--serif); letter-spacing: -0.035em; text-wrap: balance; }
 .desk__intro > p:last-child { margin: 0 0 0.4rem; padding-left: 1.25rem; border-left: 1px solid var(--ember); color: var(--ink-muted); }
 
 .desk__stage {
@@ -75,6 +75,7 @@
 .map-visual b:nth-child(1) { top: 18%; left: 14%; }
 .map-visual b:nth-child(2) { top: 48%; right: 10%; }
 .map-visual b:nth-child(3) { bottom: 13%; left: 27%; }
+.map-visual b:nth-child(4) { bottom: 30%; right: 18%; }
 
 .desk-object--speaker { z-index: 3; left: 1%; top: 43%; width: 21%; }
 .speaker-visual { aspect-ratio: 1 / 0.72; display: flex; align-items: center; justify-content: center; gap: 0.35rem; border: 0.35rem solid #211a16; border-radius: 0.45rem; background: #302a25; }
@@ -139,6 +140,16 @@
 .note-page p { font-size: 1.12rem; }
 .note-page mark { padding: 0 0.1em; color: inherit; background: linear-gradient(transparent 55%, rgba(255, 214, 72, 0.75) 55%); }
 .note-page s { text-decoration-color: #b8392b; text-decoration-thickness: 2px; color: rgba(38, 53, 90, 0.6); }
+.note-page { position: relative; }
+.note-page .note-gap { height: var(--rule); }
+.note-page--sparse .note-gap { height: calc(var(--rule) * 2); }
+.note-doodle { position: absolute; z-index: 1; top: 0.2rem; right: 0.4rem; color: #a3402b; pointer-events: none; }
+.note-doodle--crown { font: 400 2.6rem/1 var(--hand); transform: rotate(10deg); }
+.note-doodle--crown i { position: absolute; top: 2.8rem; font: 700 1.3rem/1 var(--hand); font-style: normal; }
+.note-doodle--crown i:first-of-type { left: -0.3rem; color: #2f6b3a; }
+.note-doodle--crown i:last-of-type { left: 1.6rem; }
+.note-doodle--ticket { top: auto; bottom: -5.5rem; right: 0.5rem; display: grid; gap: 0.1rem; width: 7.5rem; padding: 0.45rem 0.6rem; border: 1px dashed rgba(38, 53, 90, 0.5); color: #26355a; background: #e3edf2; box-shadow: 0 2px 6px rgba(0,0,0,0.2); font: 700 0.62rem/1.2 var(--sans); letter-spacing: 0.12em; transform: rotate(7deg); }
+.note-doodle--ticket i { font-size: 1.3rem; font-style: normal; }
 .note-page .note-margin { margin-top: var(--rule); color: #a3402b; transform: rotate(-1.2deg); transform-origin: left; }
 .notebook-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.3rem 1rem 0.6rem 4rem; color: #6b5a40; font-size: 0.9rem; }
 .notebook-nav button { min-height: 2.75rem; border: 0; color: #26355a; background: transparent; font: 700 1rem var(--hand); cursor: pointer; }
@@ -184,6 +195,9 @@
 .comparison-card { position: relative; margin: 0; border: 1px solid var(--line); background: #090807; }
 .comparison-card > span { position: absolute; z-index: 1; top: 0.65rem; left: 0.65rem; padding: 0.25rem 0.55rem; color: var(--ink); background: rgba(8,7,6,0.78); font: 700 0.68rem var(--sans); letter-spacing: 0.16em; }
 .comparison-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.comparison-card__placeholder { display: grid; aspect-ratio: 4 / 3; place-items: center; color: #8d8579; background: repeating-linear-gradient(45deg, #c9c4bb 0 0.6rem, #c2bdb3 0.6rem 1.2rem); font: 700 0.95rem var(--sans); letter-spacing: 0.1em; }
+.place-reading { margin: 0.8rem 0 0; font-size: 0.8rem; }
+.place-reading a { color: var(--ember-bright); }
 .comparison-card figcaption { padding: 0.6rem 0.7rem; color: var(--ink-muted); font-size: 0.68rem; }
 .comparison-card a { color: var(--ember-bright); }
 .place-panel blockquote { margin: 1rem 0 0; padding: 1rem 1.2rem; border-left: 2px solid var(--ember); color: #d8cab7; background: rgba(255,255,255,0.03); font-family: var(--serif); }
@@ -233,10 +247,45 @@
 .audio-player > p[data-audio-speaker] { margin-bottom: 0.1rem; color: var(--ink-muted); font-size: 0.78rem; }
 .audio-player h3 { margin: 0; font: 600 clamp(1.5rem, 4vw, 2.6rem) var(--serif); }
 .audio-player blockquote { margin: 1.25rem 0; padding: 1rem 1.2rem; border-left: 2px solid var(--ember); color: #ded1bf; background: rgba(255,255,255,0.03); font-family: var(--serif); }
+.audio-embed { position: relative; margin: 1.25rem 0 0.75rem; aspect-ratio: 16 / 9; background: #000; }
+.audio-embed--vertical { width: min(100%, 20rem, calc((88dvh - 16rem) * 0.5625)); margin-inline: auto; aspect-ratio: 9 / 16; }
+.audio-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.audio-actions a[hidden] { display: none; }
 .audio-status { min-height: 1.5rem; color: var(--ink-muted); font-size: 0.76rem; }
 .audio-actions { display: flex; gap: 0.7rem; align-items: center; }
 
+/* 總編 CHECK LIST：固定在畫面右下角的紙條；桌景下方多留空間，捲到底時右下的照片不會被蓋住 */
+.experience:has(.checklist:not(.is-collapsed)) { padding-bottom: 22rem; }
+.checklist { position: fixed; z-index: 20; right: var(--safe-right); bottom: var(--safe-bottom); width: min(18.5rem, calc(100% - 2rem)); color: var(--paper-ink); background: #efe4cc; box-shadow: 0 1.2rem 3rem rgba(0,0,0,0.6); transform: rotate(-0.6deg); }
+.checklist::before { content: ''; position: absolute; top: -0.6rem; left: 50%; width: 5.5rem; height: 1.4rem; background: rgba(226, 204, 140, 0.8); transform: translateX(-50%) rotate(-3deg); }
+.checklist__toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 3rem; padding: 0.9rem 1.1rem 0.5rem; border: 0; color: inherit; background: transparent; font: 700 1rem var(--sans); letter-spacing: 0.08em; cursor: pointer; }
+.checklist__progress { padding: 0.1rem 0.5rem; border: 1.5px solid #a3402b; color: #a3402b; font: 700 0.8rem var(--sans); }
+.checklist.is-ready .checklist__progress { border-color: #2f6b3a; color: #2f6b3a; }
+.checklist.is-collapsed .checklist__body { display: none; }
+.checklist__body { padding: 0 1.1rem 1rem; }
+.checklist__lede { margin: 0 0 0.6rem; color: #6d5a48; font: 400 0.8rem/1.5 var(--sans); }
+.checklist__items { display: grid; gap: 0.2rem; margin: 0; padding: 0; list-style: none; }
+.checklist__item,
+.checklist__depart { display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 0.65rem; width: 100%; padding: 0.5rem 0.3rem; border: 0; border-bottom: 1px dashed rgba(39, 29, 22, 0.25); color: inherit; background: transparent; text-align: left; font-family: var(--hand); cursor: pointer; }
+.checklist__item:hover { background: rgba(255, 214, 72, 0.22); }
+.checklist__item strong,
+.checklist__depart strong { display: block; font: 700 1.05rem/1.4 var(--hand); }
+.checklist__item small,
+.checklist__depart small { display: block; color: #7a6a52; font: 400 0.75rem/1.4 var(--sans); }
+.checklist__box { position: relative; width: 1.2rem; height: 1.2rem; margin-top: 0.15rem; border: 2px solid #3a2c20; }
+.checklist__item.is-checked .checklist__box::after { content: '✓'; position: absolute; left: 0.05rem; top: -0.55rem; color: #a3402b; font: 800 1.45rem/1 var(--hand); }
+.checklist__item.is-checked strong { text-decoration: line-through; text-decoration-color: rgba(163, 64, 43, 0.7); }
+.checklist__depart { margin-top: 0.5rem; padding: 0.65rem 0.6rem; border: 2px solid #3a2c20; }
+.checklist__depart:disabled { opacity: 0.45; cursor: not-allowed; }
+.checklist__depart:not(:disabled) { color: #f4ecd6; background: #a3402b; border-color: #a3402b; }
+.checklist__depart:not(:disabled) small { color: #f7dccb; }
+.checklist__depart:not(:disabled) .checklist__box { border-color: #f4ecd6; }
+.checklist__depart:not(:disabled):hover { background: #8a3220; }
+
 @media (max-width: 720px) {
+  .experience:has(.checklist:not(.is-collapsed)) { padding-bottom: 6rem; }
+  .checklist { right: 0; bottom: 0; width: 100%; transform: none; }
+  .checklist::before { display: none; }
   .experience { padding: 6.25rem 0 max(6rem, var(--safe-bottom)); background-attachment: scroll; }
   .desk__intro { display: block; padding: 0 1rem; }
   .desk__intro .eyebrow { margin-bottom: 0.65rem; }

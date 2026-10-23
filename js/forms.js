@@ -91,7 +91,7 @@ export function createFormsController(root, store, { roles = [] } = {}) {
       return;
     }
     store.save({ signupEmail });
-    announce(status, `已記下同行意願。${LOCAL_ONLY_NOTICE}`);
+    announce(status, `已記下，正式遊戲開放時通知你。${LOCAL_ONLY_NOTICE}`);
     root.dispatchEvent(new CustomEvent('forms:email-saved', { bubbles: true }));
   }, { signal });
 

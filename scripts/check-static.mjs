@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { DESK_TEXTURE, INTERACTIVE_DESK, PLACES, PROLOGUE_SLIDES, REPORTER_PHOTO } from '../js/data.js';
+import { DESK_TEXTURE, INTERACTIVE_DESK, PHOTO_STACK, PLACES, PROLOGUE_SLIDES } from '../js/data.js';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(resolve(projectRoot, 'index.html'), 'utf8');
@@ -21,10 +21,10 @@ for (const entry of ['styles/base.css', 'styles/prologue.css', 'styles/desk.css'
 const photos = [
   ...PROLOGUE_SLIDES,
   ...PLACES.flatMap((place) => [place.before, place.after]),
-  REPORTER_PHOTO,
+  ...PHOTO_STACK,
   DESK_TEXTURE,
   INTERACTIVE_DESK,
-];
+].filter((photo) => !photo.placeholder);
 for (const photo of photos) {
   check(photo.src.startsWith('assets/images/'), `圖片必須使用本機路徑：${photo.src}`);
   check(!/^https?:/i.test(photo.src), `圖片 src 不得外連：${photo.src}`);
@@ -39,6 +39,7 @@ for (const id of ['computer', 'notebook', 'map', 'speaker', 'photo']) {
   check(html.includes(`data-object-dialog="${id}"`), `缺少物件對話框：${id}`);
 }
 
+check(html.includes('data-checklist') && html.includes('data-depart'), '缺少總編 CHECK LIST 或出發按鈕');
 check(!/<img[^>]+src=["']https?:/i.test(html), 'index.html 不得直接載入外部圖片');
 check(existsSync(resolve(projectRoot, 'README.md')), '缺少 README.md 操作說明');
 

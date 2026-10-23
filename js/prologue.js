@@ -74,7 +74,7 @@ export function createPrologueController(root, options) {
       title.textContent = '那些被鏟子超人清出來的街道，現在怎麼樣了？';
     } else {
       eyebrow.textContent = '英雄之後';
-      title.textContent = '因為有你們，光復正在回來。跟著記者子軒，回去看看。';
+      title.textContent = '因為有你們，光復正在回來。記者谷英雄，也出發去了光復。';
     }
   }
 

@@ -148,6 +148,7 @@ textarea:focus-visible {
 .role-choice:hover { border-color: #8e4428; background: rgba(255, 250, 237, 0.78); }
 .role-choice__index { color: #9b5438; font: 700 0.75rem var(--sans); }
 .role-choice__label { font: 600 1.05rem var(--serif); }
+.role-choice__label small { display: block; margin-top: 0.2rem; color: #6d5a48; font: 400 0.78rem/1.5 var(--sans); }
 
 .experience {
   min-height: 100dvh;

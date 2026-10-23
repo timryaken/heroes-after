@@ -1,25 +1,20 @@
-export function splitSentences(text) {
-  return String(text ?? '').match(/[^。！？]+[。！？]?/g)?.map((part) => part.trim()).filter(Boolean) ?? [];
-}
-
 export function mergeListened(clips, listened = [], nextId) {
   const selected = new Set([...listened, nextId]);
   return clips.map(({ id }) => id).filter((id) => selected.has(id));
 }
 
+// 錄音嵌入原平台的播放器（YouTube／Facebook），按下某一段才載入；載入即視為聽過。
 export function createAudioController(root, clips, options = {}) {
   const trackList = root.querySelector('[data-track-list]');
   const stopButton = root.querySelector('[data-audio-stop]');
   const speaker = root.querySelector('[data-audio-speaker]');
   const title = root.querySelector('[data-audio-title]');
-  const transcript = root.querySelector('[data-audio-transcript]');
+  const embed = root.querySelector('[data-audio-embed]');
+  const sourceLink = root.querySelector('[data-audio-source]');
   const status = root.querySelector('[data-audio-status]');
-  const synth = options.synth ?? window.speechSynthesis;
-  const Utterance = options.Utterance ?? window.SpeechSynthesisUtterance;
   const onComplete = options.onComplete ?? (() => {});
   let listened = [...(options.listened ?? [])];
   let currentId = '';
-  let playToken = 0;
   let muted = false;
 
   const trackButtons = clips.map((clip, index) => {
@@ -55,7 +50,7 @@ export function createAudioController(root, clips, options = {}) {
       button.classList.toggle('is-done', done);
       button.classList.toggle('is-playing', playing);
       button.setAttribute('aria-pressed', String(playing));
-      button.querySelector('[data-track-done]').textContent = done ? '（已聽完）' : '';
+      button.querySelector('[data-track-done]').textContent = done ? '（已聽過）' : '';
     }
   }
 
@@ -64,76 +59,57 @@ export function createAudioController(root, clips, options = {}) {
     renderTracks();
   }
 
-  function finish(clip) {
-    listened = mergeListened(clips, listened, clip.id);
-    setPlaying(false);
-    onComplete(clip.id, listened);
-  }
-
   function stop() {
-    playToken += 1;
-    synth?.cancel?.();
     const wasPlaying = root.dataset.playing === 'true';
+    // 移除播放器才能確實停下嵌入的影音。
+    if (embed) {
+      embed.replaceChildren();
+      embed.hidden = true;
+    }
     setPlaying(false);
-    if (wasPlaying) setStatus('已停止。逐字稿仍可閱讀。');
+    if (wasPlaying) setStatus('已停止。');
   }
 
   function play(id) {
     const clip = clips.find((item) => item.id === id);
     if (!clip) return null;
     if (muted) {
-      setStatus('目前為靜音。請先從右上角開啟聲音；逐字稿仍可閱讀。');
+      setStatus('目前為靜音。請先從右上角開啟聲音。');
       return null;
     }
     stop();
-    const token = playToken;
     currentId = clip.id;
     speaker.textContent = clip.speaker;
     title.textContent = clip.title;
-    transcript.textContent = clip.transcript;
     root.dataset.activeClip = clip.id;
-
-    if (!synth || !Utterance) {
-      setStatus('此瀏覽器無法播放語音，已顯示完整逐字稿。');
-      finish(clip);
-      return clip;
+    if (sourceLink) {
+      sourceLink.href = clip.sourceUrl;
+      sourceLink.hidden = false;
     }
 
-    // 逐句排入佇列，避免部分瀏覽器朗讀長句時中途停住。
-    const sentences = splitSentences(clip.transcript);
-    try {
-      sentences.forEach((sentence, index) => {
-        const utterance = new Utterance(sentence);
-        utterance.lang = 'zh-TW';
-        utterance.rate = 0.86;
-        utterance.pitch = 0.92;
-        if (index === sentences.length - 1) {
-          utterance.onend = () => {
-            if (token !== playToken) return;
-            setStatus('播放完畢。');
-            finish(clip);
-          };
-        }
-        utterance.onerror = (event) => {
-          if (token !== playToken || ['interrupted', 'canceled'].includes(event?.error)) return;
-          setPlaying(false);
-          setStatus('語音播放失敗，已保留完整逐字稿。');
-        };
-        synth.speak(utterance);
-      });
-      setPlaying(true);
-      setStatus('正在播放原型示意旁白。');
-    } catch {
-      setPlaying(false);
-      setStatus('語音播放失敗，已保留完整逐字稿。');
+    const frame = document.createElement('iframe');
+    frame.src = clip.embedUrl;
+    frame.title = clip.title;
+    frame.allow = 'autoplay; encrypted-media; picture-in-picture';
+    frame.allowFullscreen = true;
+    frame.referrerPolicy = 'strict-origin-when-cross-origin';
+    embed?.append(frame);
+    if (embed) {
+      embed.classList.toggle('audio-embed--vertical', Boolean(clip.vertical));
+      embed.hidden = false;
     }
+
+    listened = mergeListened(clips, listened, clip.id);
+    setPlaying(true);
+    setStatus('播放器載入中；如果沒有自動播放，請按播放器上的播放鍵。');
+    onComplete(clip.id, listened);
     return clip;
   }
 
   stopButton?.addEventListener('click', stop);
 
   setPlaying(false);
-  setStatus('按下任一段才會發出聲音。');
+  setStatus('按下任一段才會載入播放器。');
   return {
     play,
     stop,
