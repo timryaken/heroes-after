@@ -11,8 +11,12 @@ const loginSection = document.querySelector('[data-admin-login]');
 const review = document.querySelector('[data-admin-review]');
 const list = document.querySelector('[data-admin-list]');
 const logout = document.querySelector('[data-admin-logout]');
+const tabs = document.querySelector('[data-admin-tabs]');
+const report = document.querySelector('[data-admin-report]');
 let filter = 'pending';
 let posts = [];
+let feedback = [];
+let activeTab = 'review';
 
 const byline = (roleId) => ROLES.find(({ id }) => id === roleId)?.byline ?? roleId;
 
@@ -79,6 +83,8 @@ async function api(path, { method = 'GET', body, headers = {}, raw = false } = {
 function showLogin(message = '') {
   loginSection.hidden = false;
   review.hidden = true;
+  report.hidden = true;
+  tabs.hidden = true;
   logout.hidden = true;
   if (message) say(message);
 }
@@ -134,10 +140,98 @@ async function load() {
   posts = await api('/rest/v1/board_posts?select=*&order=created_at.desc&limit=200');
   say(posts.length ? '' : '目前讀不到任何留言。如果確定有人送出過，請確認這個 Email 已加入 board_admins 審核者名單。');
   loginSection.hidden = true;
-  review.hidden = false;
+  tabs.hidden = false;
   logout.hidden = false;
+  showTab(activeTab);
   await render();
 }
+
+// ── 滿意度與抽獎 ──
+const taipeiDate = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' });
+const taipeiTime = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false });
+const dateOf = (value) => taipeiDate.format(new Date(value)).replaceAll('-', '/');
+const timeOf = (value) => taipeiTime.format(new Date(value)).replaceAll('-', '/');
+const rate = (up, down) => (up + down ? `${Math.round((up / (up + down)) * 100)}%` : '—');
+
+function showTab(name) {
+  activeTab = name;
+  for (const tab of tabs.querySelectorAll('[data-admin-tab]')) {
+    const selected = tab.dataset.adminTab === name;
+    tab.setAttribute('aria-selected', String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+  }
+  review.hidden = name !== 'review';
+  report.hidden = name !== 'report';
+  if (name === 'report') loadFeedback().catch((error) => say(`讀取滿意度失敗：${error.message}`, 'error'));
+}
+
+async function loadFeedback() {
+  say('載入中……');
+  try {
+    feedback = await api('/rest/v1/site_feedback?select=*&order=created_at.desc&limit=10000');
+  } catch (error) {
+    if (/404|42P01|PGRST205/.test(error.message)) {
+      say('還沒建立滿意度資料表：請先在 Supabase 的 SQL Editor 執行 supabase/feedback.sql。', 'error');
+      return;
+    }
+    throw error;
+  }
+  say(feedback.length ? '' : '目前還沒有人送出滿意度。');
+  renderReport();
+}
+
+function renderReport() {
+  const up = feedback.filter((row) => row.satisfied).length;
+  const down = feedback.length - up;
+  report.querySelector('[data-stat="total"]').textContent = feedback.length;
+  report.querySelector('[data-stat="up"]').textContent = up;
+  report.querySelector('[data-stat="down"]').textContent = down;
+  report.querySelector('[data-stat="rate"]').textContent = rate(up, down);
+  report.querySelector('[data-stat-bar]').style.width = feedback.length ? `${(up / feedback.length) * 100}%` : '0%';
+
+  report.querySelector('[data-report-roles]').innerHTML = [...ROLES.map(({ id }) => id), null].map((roleId) => {
+    const rows = feedback.filter((row) => (row.role ?? null) === roleId);
+    const roleUp = rows.filter((row) => row.satisfied).length;
+    if (!rows.length && roleId === null) return '';
+    return `<tr><td>${escapeHtml(roleId ? byline(roleId) : '未選身分')}</td><td class="num">${roleUp}</td><td class="num">${rows.length - roleUp}</td><td class="num">${rate(roleUp, rows.length - roleUp)}</td></tr>`;
+  }).join('');
+
+  const days = new Map();
+  for (const row of feedback) {
+    const day = dateOf(row.created_at);
+    const entry = days.get(day) ?? { up: 0, down: 0 };
+    entry[row.satisfied ? 'up' : 'down'] += 1;
+    days.set(day, entry);
+  }
+  report.querySelector('[data-report-days]').innerHTML = [...days].sort(([a], [b]) => b.localeCompare(a))
+    .map(([day, { up: dayUp, down: dayDown }]) => `<tr><td>${day}</td><td class="num">${dayUp + dayDown}</td><td class="num">${dayUp}</td><td class="num">${dayDown}</td></tr>`).join('')
+    || '<tr><td colspan="4">—</td></tr>';
+
+  report.querySelector('[data-report-emails]').innerHTML = feedback.map((row) => `
+    <tr><td>${escapeHtml(row.email)}</td><td>${row.satisfied ? '👍 滿意' : '👎 不滿意'}</td><td>${escapeHtml(row.role ? byline(row.role) : '—')}</td><td>${timeOf(row.created_at)}</td><td>${timeOf(row.updated_at)}</td></tr>
+  `).join('') || '<tr><td colspan="5">—</td></tr>';
+}
+
+// CSV 開頭加 BOM，Excel 打開中文才不會變亂碼；欄位內容先加引號，避免被當成公式。
+function csvCell(value) {
+  const text = String(value ?? '');
+  return `"${(/^[=+\-@]/.test(text) ? `'${text}` : text).replaceAll('"', '""')}"`;
+}
+
+function downloadCsv() {
+  const rows = [['Email', '評價', '身分', '第一次送出', '最後更新'], ...feedback.map((row) => [
+    row.email, row.satisfied ? '滿意' : '不滿意', row.role ? byline(row.role) : '', timeOf(row.created_at), timeOf(row.updated_at),
+  ])];
+  const blob = new Blob([`\ufeff${rows.map((row) => row.map(csvCell).join(',')).join('\r\n')}`], { type: 'text/csv;charset=utf-8' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `與光赴會-抽獎名單-${dateOf(new Date()).replaceAll('/', '')}.csv`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+for (const tab of tabs.querySelectorAll('[data-admin-tab]')) tab.addEventListener('click', () => showTab(tab.dataset.adminTab));
+report.querySelector('[data-report-csv]').addEventListener('click', downloadCsv);
 
 async function approve(post) {
   if (post.photo_path) {

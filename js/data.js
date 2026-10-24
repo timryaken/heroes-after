@@ -280,6 +280,7 @@ export const PLACES = [
     name: '彼心書店',
     lat: 23.6656,
     lng: 121.4248,
+    labelSide: 'left',
     era: '書被掩埋，祝福從各地寄來',
     summary: '光復鄉唯一的獨立書店，原本開在縣府舊消防隊辦公室的一樓。洪水淹進一樓，來不及搬的書被泥沙埋住；清淤後，書被一本本攤開晾乾，各地寄來的祝福卡片也陸續送到書店。',
     reading: SOURCES.cnaBixin,
@@ -413,6 +414,30 @@ export const RADIO_FRONT = {
   sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
 };
 
+// 筆電正面與 CHECK LIST 板夾（AI 生成示意），介面疊在螢幕與紙張的位置上。
+export const LAPTOP_FRONT = {
+  src: 'assets/images/laptop-front.webp',
+  alt: '銀色筆電的正面',
+  credit: 'AI 生成示意圖（筆電外框）',
+  sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
+};
+
+export const CLIPBOARD = {
+  src: 'assets/images/clipboard.webp',
+  alt: '夾著一張米色紙的舊木板夾',
+  credit: 'AI 生成示意圖（CHECK LIST 板夾）',
+  sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
+};
+
+// 紙本地圖底圖：依 OpenStreetMap 光復鄉一帶的地圖由 AI 重新繪製；bounds 是參考圖的經緯度範圍，用來換算點位。
+export const GUANGFU_MAP = {
+  src: 'assets/images/guangfu-map.webp',
+  alt: '光復鄉一帶的紙本地圖示意：馬太鞍溪從上方流過，光復市區在中央，左側是山',
+  credit: 'AI 生成示意圖，依 OpenStreetMap 貢獻者的地圖資料重新繪製（ODbL）',
+  sourceUrl: 'https://www.openstreetmap.org/copyright',
+  bounds: { north: 23.69028, south: 23.63996, west: 121.38614, east: 121.46853 },
+};
+
 export const DESK_TEXTURE = {
   src: 'assets/images/desk-texture.jpg',
   alt: '深色木質桌面紋理',
@@ -421,14 +446,14 @@ export const DESK_TEXTURE = {
 };
 
 export const INTERACTIVE_DESK_MOBILE = {
-  src: 'assets/images/interactive-desk-mobile.jpg',
+  src: 'assets/images/interactive-desk-mobile.webp',
   alt: '手機版直式桌景：周思遠的辦公桌，牆上有地圖，桌上有收音機、筆電、採訪筆記與照片',
   credit: 'AI 生成互動桌景原型（手機版），非真實新聞現場',
   sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
 };
 
 export const INTERACTIVE_DESK = {
-  src: 'assets/images/interactive-desk.png',
+  src: 'assets/images/interactive-desk.webp',
   alt: '深夜新聞編輯部裡周思遠的辦公桌，桌上有電腦、採訪筆記、地圖、收音機與照片',
   credit: 'AI 生成互動桌景原型，非真實新聞現場',
   sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',

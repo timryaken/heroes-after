@@ -9,8 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb" crossorigin="anonymous">
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/prologue.css">
     <link rel="stylesheet" href="styles/desk.css">
@@ -72,8 +70,8 @@
         <div class="desk__viewport" data-desk-viewport>
         <div class="desk__stage" data-desk-stage>
           <picture>
-            <source media="(max-aspect-ratio: 4/5)" srcset="assets/images/interactive-desk-mobile.jpg">
-            <img class="desk__photo" src="assets/images/interactive-desk.png" alt="深夜新聞編輯部裡周思遠的辦公桌，桌上有電腦、採訪筆記、地圖、收音機與照片" draggable="false">
+            <source media="(max-aspect-ratio: 4/5)" srcset="assets/images/interactive-desk-mobile.webp">
+            <img class="desk__photo" src="assets/images/interactive-desk.webp" alt="深夜新聞編輯部裡周思遠的辦公桌，桌上有電腦、採訪筆記、地圖、收音機與照片" draggable="false">
           </picture>
           <button class="desk-object desk-object--computer" type="button" data-desk-object="computer" aria-haspopup="dialog" aria-controls="dialog-computer">
             <span class="object-glow" aria-hidden="true"></span>
@@ -101,7 +99,7 @@
 
           <button class="desk-object desk-object--photo" type="button" data-desk-object="photo" aria-haspopup="dialog" aria-controls="dialog-photo">
             <span class="object-glow" aria-hidden="true"></span>
-            <span class="desk-object__visual photo-visual"><img src="assets/images/reporters-photo.jpg" alt=""></span>
+            <span class="desk-object__visual photo-visual" aria-hidden="true"></span>
             <span class="desk-object__copy"><strong>桌上的照片<span class="visually-hidden" data-done-label></span></strong><em>思遠留下的幾張照片</em></span>
           </button>
 
@@ -131,7 +129,6 @@
       <button class="stage-close" type="button" data-close-dialog aria-label="把電腦放回桌上">放回桌上 <span aria-hidden="true">×</span></button>
       <div class="stage" data-stage-backdrop>
         <div class="laptop" data-lift data-lift-from="perspective(1600px) rotateX(10deg)">
-          <div class="laptop__lid">
             <div class="laptop__screen">
               <header class="laptop__bar">
                 <span class="laptop__dots" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -181,8 +178,6 @@
                 </form>
               </section>
             </div>
-          </div>
-          <div class="laptop__base" aria-hidden="true"></div>
         </div>
       </div>
     </dialog>
@@ -241,15 +236,17 @@
       <button class="stage-close" type="button" data-close-dialog aria-label="把地圖放回牆上">放回牆上 <span aria-hidden="true">×</span></button>
       <div class="stage" data-stage-backdrop>
         <div class="map-sheet" data-lift data-lift-from="rotate(1deg)">
-          <span class="map-pin map-pin--tl" aria-hidden="true"></span><span class="map-pin map-pin--tr" aria-hidden="true"></span>
-          <span class="map-pin map-pin--bl" aria-hidden="true"></span><span class="map-pin map-pin--br" aria-hidden="true"></span>
           <header class="map-sheet__title"><p class="eyebrow">光復地圖｜災害當下與災後</p><h2 id="map-title">光復的四個地方</h2></header>
-          <div class="map-frame">
-            <div class="map-canvas" data-map-canvas role="application" aria-label="光復鄉地圖，標有四個地點"></div>
-            <p class="map-fallback">地圖暫時無法載入，請從下方選擇地點。</p>
+          <div class="map-body">
+            <div class="map-frame">
+              <span class="map-pin map-pin--tl" aria-hidden="true"></span><span class="map-pin map-pin--tr" aria-hidden="true"></span>
+              <span class="map-pin map-pin--bl" aria-hidden="true"></span><span class="map-pin map-pin--br" aria-hidden="true"></span>
+              <div class="map-scroll" data-map-scroll><div class="map-canvas" data-map-canvas><img class="map-canvas__paper" alt="" draggable="false"></div></div>
+            </div>
             <article class="place-panel" data-place-panel aria-live="polite" hidden></article>
           </div>
           <nav class="place-legend" data-place-list aria-label="地點"></nav>
+          <p class="map-credit">底圖依 <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> 貢獻者的地圖資料，由 AI 重新繪製示意；點位為大略位置。</p>
         </div>
       </div>
     </dialog>
@@ -312,15 +309,24 @@
       </div>
     </dialog>
 
-    <dialog id="dialog-depart" class="object-dialog" data-depart-dialog aria-labelledby="depart-title">
-      <button class="dialog-close" type="button" data-close-depart aria-label="關閉出發確認">×</button>
-      <p class="eyebrow">總編 CHECK LIST｜整理完成</p><h2 id="depart-title">整理完成，可以出發。</h2>
-      <p class="dialog-lede dialog-lede--dark">思遠留下的錄音、光復的照片和他出發前的最後一頁筆記，都整理好交給知行了。接下來的故事，在光復。</p>
-      <form class="story-form" data-signup-form novalidate>
-        <label for="signup-email">正式遊戲開放時，通知我</label>
-        <input id="signup-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com">
+    <dialog id="dialog-depart" class="paper-dialog depart-dialog" data-depart-dialog aria-labelledby="depart-title">
+      <form class="feedback" data-feedback-form novalidate>
+        <button class="dialog-close" type="button" data-close-depart aria-label="關閉出發確認">×</button>
+        <p class="eyebrow">總編 CHECK LIST｜整理完成</p>
+        <h2 id="depart-title">整理完成，可以出發。</h2>
+        <p class="dialog-lede">思遠留下的錄音、光復的照片和他出發前的最後一頁筆記，都整理好交給知行了。接下來的故事，在光復。</p>
+        <p class="feedback__lottery"><span aria-hidden="true">✦</span> 留下 Email，就可以參加抽獎！</p>
+        <fieldset class="feedback__vote">
+          <legend>你對本網站的體驗滿意嗎？</legend>
+          <button class="vote-button vote-button--up" type="button" data-vote="up" aria-pressed="false" aria-label="讚：滿意"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg><span>滿意</span></button>
+          <button class="vote-button vote-button--down" type="button" data-vote="down" aria-pressed="false" aria-label="倒讚：不滿意"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg><span>不滿意</span></button>
+        </fieldset>
+        <label class="feedback__label" for="feedback-email">Email（抽獎通知用）</label>
+        <input id="feedback-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="name@example.com" required>
+        <label class="feedback__consent"><input name="consent" type="checkbox" required> 我同意以這個 Email 參加抽獎，並接收得獎通知。</label>
+        <p class="feedback__privacy">個資告知：Email 只用於本次抽獎與得獎通知，不會公開或另作他用，活動結束後刪除。同一個 Email 只算一次抽獎資格。抽獎辦法另行公告。</p>
         <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
-        <div class="form-footer"><small>原型不會真的寄信或送出資料。</small><button class="primary-button" type="submit">通知我 <span aria-hidden="true">→</span></button></div>
+        <div class="form-footer"><small data-feedback-mode></small><button class="primary-button" type="submit" data-feedback-submit>送出並參加抽獎 <span aria-hidden="true">→</span></button></div>
       </form>
     </dialog>
 

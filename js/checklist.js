@@ -18,7 +18,7 @@ export function createChecklistController(root, items, { onOpenItem, onDepart } 
     button.className = 'checklist__item';
     button.dataset.checklistId = item.id;
     button.innerHTML = `
-      <span class="checklist__box" aria-hidden="true"></span>
+      <span class="checklist__box" aria-hidden="true"><svg class="checklist__tick" viewBox="0 0 24 24"><path d="M3 13.5c2.2 1.6 4 3.6 5.6 6.2C11.4 12.4 16 6.6 22 2.5"/></svg></span>
       <span><strong>${item.label}</strong><small>${item.hint}</small></span>
       <span class="visually-hidden" data-check-label></span>
     `;

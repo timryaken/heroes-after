@@ -16,14 +16,16 @@ python3 -m http.server 4173
 
 1. 播放或跳過前導，確認災後天數會從 `2025-09-23` 自動計算。
 2. 選擇三種身分之一，桌景上方的大標題會換成該身分的結果頁標語，電腦的祈願提問也會不同。
-3. 進桌面時先看到「總編的便條」（身分標語＋說明），按「開始整理」收成左上角的小便條。桌景滿版鋪滿畫面，點發光點打開物件；畫面放不下時可以拖曳桌面（手機版用直式桌景 `interactive-desk-mobile.jpg`，放大 1.2 倍，需要拖曳才看得到全部物件）。
+3. 進桌面時先看到「總編的便條」（身分標語＋說明），按「開始整理」收成左上角的小便條。桌景滿版鋪滿畫面，點發光的物件打開；畫面放不下時可以拖曳桌面（手機版用直式桌景 `interactive-desk-mobile.webp`，放大 1.2 倍，需要拖曳才看得到全部物件）。
 4. 右下角的總編 CHECK LIST（手機版在畫面底部，可收合）會依下面三項自動打勾，三項都完成才解鎖「出發」：
    - 收音機：轉到正面後，按 ▶ 播放任一段錄音（載入播放器即算聽過）；◀◀ ▶▶ 或左旋鈕換台，右旋鈕切換靜音。
    - 地圖：點開任一個地點。
    - 筆記本：點封面翻開，翻到最後一頁（9/25）。
 5. 「出發」視窗可留 Email（正式遊戲開放時通知）；電腦留言與桌上的照片是選看項目，完成後一樣會打勾。
 6. 電腦是留言板：筆電放大後先看到「讀者版」（報紙排版的已上架留言與讚數，另有三篇標示「示意」的假文）；右下角「投稿我的留言」打開投稿視窗，依身分顯示一個題目，可附一張照片與署名。
-7. 點桌上的物件時，物件會從桌上的位置拿起來放到畫面中央（收音機邊轉邊轉到正面、地圖從牆上移到中間），按「放回桌上」或 Esc 會放回原位；照片可以點一下翻到背面。
+7. 桌景、收音機、筆電外框、紙本地圖與 CHECK LIST 板夾都是 AI 生成的擬真示意圖；還沒看過的物件會罩著一圈暖光，看過之後光熄掉，板夾上的項目用紅筆打勾。板夾可以收到畫面下緣。
+8. 按「出發」後，玩家選「讚／倒讚」回答「你對本網站的體驗滿意嗎？」，並留下 Email 參加抽獎（一定要留 Email 才能投票；同一個 Email 只算一次）。後台審核頁的「滿意度與抽獎」分頁有統計報表與名單，可下載 CSV。
+9. 點桌上的物件時，物件會從桌上的位置拿起來放到畫面中央（收音機邊轉邊轉到正面、地圖從牆上移到中間），按「放回桌上」或 Esc 會放回原位；照片可以點一下翻到背面。
 
 ## 留言板後台（Supabase）
 
@@ -41,7 +43,7 @@ python3 -m http.server 4173
 ## 外部資源
 
 - 收音機的兩段影音是示意素材，嵌入 YouTube／Facebook 原平台播放器，需連網，不下載檔案。螢幕上的示波器是模擬波形（網頁讀不到外部播放器的聲音）。收音機正面圖 `assets/images/radio-front.webp` 為 AI 生成示意。
-- 地圖使用 Leaflet 1.9.4（cdnjs）與 OpenStreetMap 圖磚，需連網；離線時會改顯示地點按鈕。
+- 地圖是一張本機的紙本地圖圖片（不再使用 Leaflet 與線上圖磚），點位為大略位置；手機上可以左右拖著看。
 - 筆記本手寫字型為 Google Fonts 的霞鶩文楷 TC（LXGW WenKai TC）。
 
 ## 重設原型
@@ -60,8 +62,11 @@ python3 -m http.server 4173
 
 ## 更換內容與素材
 
+- 滿意度與抽獎：前台在 `js/feedback.js`，資料表與送出函式在 `supabase/feedback.sql`（要在 Supabase 的 SQL Editor 執行一次），報表在 `admin.html` 的「滿意度與抽獎」分頁。
 - 留言板：連線設定在 `js/board-config.js`，資料存取在 `js/board-api.js`，畫面在 `js/board.js`；示意文是 `js/data.js` 的 `BOARD_SAMPLE_POSTS`；後台結構在 `supabase/schema.sql`；審核頁是 `admin.html` 與 `js/admin.js`。
 - 桌面：滿版與拖曳在 `js/desk-view.js`；物件熱區位置在 `styles/desk.css`（直式畫面另有一組位置）。
+- 地圖：底圖 `assets/images/guangfu-map.webp` 由 AI 依 OpenStreetMap 光復鄉一帶的地圖重繪，點位用 `js/data.js` 的 `GUANGFU_MAP.bounds` 由經緯度換算；換底圖時要一起更新 bounds。
+- 筆電外框 `assets/images/laptop-front.webp` 用 border-image 九宮格切（螢幕區域 98–1413 × 42–781 px）；板夾 `assets/images/clipboard.webp` 的紙張位置寫在 `styles/objects.css`。
 - 物件拿起來的動畫：`js/lift.js`（起點角度寫在各物件的 `data-lift-from`）；收音機、筆電、地圖、筆記本、照片與 CHECK LIST 板夾的外觀在 `styles/objects.css`。
 - 收音機：按鍵與選台在 `js/audio.js`，示波器在 `js/scope.js`；按鍵與螢幕疊在正面圖上的位置（百分比）在 `styles/objects.css`，換圖時要一起對齊。
 - 遊戲名與主角名：`index.html`（標題、wordmark、桌面說明）、`js/prologue.js`（前導最後一句）、`js/data.js`（筆記、CHECK LIST、替代文字）。

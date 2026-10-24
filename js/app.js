@@ -4,9 +4,10 @@ import { createBoardController } from './board.js';
 import { createBoardApi } from './board-api.js';
 import { BOARD_CONFIG } from './board-config.js';
 import { createChecklistController } from './checklist.js';
-import { BOARD_SAMPLE_POSTS, CHECKLIST, DESK_TEXTURE, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, ROLES, SPEAKER_PHOTO, VOICE_CLIPS } from './data.js';
+import { BOARD_SAMPLE_POSTS, CHECKLIST, CLIPBOARD, DESK_TEXTURE, GUANGFU_MAP, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, LAPTOP_FRONT, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, ROLES, SPEAKER_PHOTO, VOICE_CLIPS } from './data.js';
 import { createDeskController, createStoryContentController } from './desk.js';
 import { createDeskView } from './desk-view.js';
+import { createFeedbackApi, createFeedbackController } from './feedback.js';
 import { createFormsController } from './forms.js';
 import { createMapController } from './map.js';
 import { createPrologueController } from './prologue.js';
@@ -44,13 +45,16 @@ const story = createStoryContentController(document, {
   photos: PHOTO_STACK,
   reducedMotion,
 });
-const forms = createFormsController(document, store);
+createFormsController(document, store);
 const deskView = createDeskView(deskRoot);
 const board = createBoardController(
   document.querySelector('[data-object-dialog="computer"]'),
   createBoardApi(BOARD_CONFIG, { storage: browserStorage() }),
   { roles: ROLES, samples: BOARD_SAMPLE_POSTS, showSamples: BOARD_CONFIG.showSamples, getRole: () => store.load().role },
 );
+const feedback = createFeedbackController(departDialog, createFeedbackApi(BOARD_CONFIG, { storage: browserStorage() }), {
+  getRole: () => store.load().role,
+});
 const checklist = createChecklistController(document.querySelector('[data-checklist]'), CHECKLIST, {
   onOpenItem: (id, trigger) => desk.openObject(id, trigger),
   onDepart: () => openDialog(departDialog),
@@ -60,7 +64,7 @@ function complete(id) {
   checklist.update(desk.markDone(id));
 }
 
-const placeMap = createMapController(document.querySelector('[data-object-dialog="map"]'), PLACES, {
+const placeMap = createMapController(document.querySelector('[data-object-dialog="map"]'), PLACES, GUANGFU_MAP, {
   onSelect: () => complete('map'),
 });
 // CHECK LIST 只要求至少聽過一段錄音。
@@ -83,6 +87,9 @@ function renderSources() {
     ...PHOTO_STACK,
     SPEAKER_PHOTO,
     RADIO_FRONT,
+    LAPTOP_FRONT,
+    CLIPBOARD,
+    GUANGFU_MAP,
     ...BOARD_SAMPLE_POSTS.filter((post) => post.photo).map((post) => ({ ...post.photo, credit: 'AI 生成示意圖（讀者版示意留言）', sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/' })),
     DESK_TEXTURE,
     INTERACTIVE_DESK,
@@ -121,7 +128,6 @@ const prologue = createPrologueController(prologueRoot, {
 function enterDesk(roleId) {
   const role = ROLES.find(({ id }) => id === roleId) ?? ROLES[2];
   roleHeadline.textContent = role.headline;
-  forms.hydrate();
   board.hydrate();
   roleDialog.close();
   experience.hidden = false;
@@ -170,7 +176,7 @@ document.querySelector('[data-mute]').addEventListener('click', (event) => {
 });
 
 deskRoot.addEventListener('desk:object-opened', (event) => {
-  if (event.detail.id === 'map') placeMap.ensureMap();
+  if (event.detail.id === 'map') placeMap.reveal();
   if (event.detail.id === 'computer') board.load();
   if (event.detail.id === 'speaker') audio.setActive(true);
 });
@@ -187,6 +193,7 @@ document.addEventListener('forms:reset', () => {
   board.reset();
   audio.setListened([]);
   story.setBookOpen(false);
+  feedback.reset();
   checklist.update([]);
   if (sourcesDialog.open) sourcesDialog.close();
   if (departDialog.open) departDialog.close();

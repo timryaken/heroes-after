@@ -84,9 +84,17 @@
 }
 
 /* ── 筆電：螢幕先顯示讀者版，右下角投稿 ── */
-.laptop { display: grid; justify-items: center; width: min(80rem, 92%); }
-.laptop__lid { width: 100%; padding: clamp(0.4rem, 1.1vw, 0.95rem); border-radius: clamp(0.7rem, 1.4vw, 1.2rem) clamp(0.7rem, 1.4vw, 1.2rem) 0.3rem 0.3rem; background: linear-gradient(#272727, #101010); box-shadow: inset 0 0 0 1px #3c3c3c, 0 2rem 4rem rgba(0, 0, 0, 0.7); }
-.laptop__screen { position: relative; display: flex; flex-direction: column; height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 7.5rem); min-height: 22rem; overflow: hidden; border-radius: 0.3rem; background: #d9d1c0; }
+/* 外框是筆電正面照（AI 生成），用 border-image 九宮格切：螢幕黑色區域（98–1413 × 42–781 px）留給讀者版，邊框隨畫面伸縮 */
+.stage-dialog--laptop .stage { container-type: inline-size; }
+.laptop {
+  --lw: min(84rem, 100cqw);
+  width: var(--lw);
+  border-style: solid;
+  border-width: calc(var(--lw) * 42 / 1511) calc(var(--lw) * 98 / 1511) calc(var(--lw) * 70 / 1511);
+  border-image: url('../assets/images/laptop-front.webp') 42 98 70 stretch;
+  filter: drop-shadow(0 2rem 2.4rem rgba(0, 0, 0, 0.7));
+}
+.laptop__screen { position: relative; display: flex; flex-direction: column; height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 4rem - var(--lw) * 112 / 1511); min-height: 20rem; overflow: hidden; background: #d9d1c0; }
 .laptop__bar { display: flex; align-items: center; gap: 0.8rem; padding: 0.45rem 0.8rem; color: #cfc5b4; background: #2b2723; font: 600 0.74rem var(--sans); }
 .laptop__dots { display: flex; gap: 0.35rem; }
 .laptop__dots i { width: 0.62rem; height: 0.62rem; border-radius: 50%; background: #d86f42; }
@@ -104,39 +112,41 @@
 .compose__close { min-height: 2.5rem; padding: 0 0.6rem; border: 0; color: var(--ink-muted); background: transparent; font: 600 0.85rem var(--sans); cursor: pointer; }
 .compose__close:hover { color: var(--ink); }
 .compose__form { margin: 0; padding: 1rem 1.1rem 1.1rem; overflow: auto; }
-.laptop__base { position: relative; width: 112%; height: clamp(0.7rem, 1.4vw, 1.2rem); margin-top: -1px; border-radius: 0 0 1.2rem 1.2rem / 0 0 0.9rem 0.9rem; background: linear-gradient(#d1ccc4, #8d8880 60%, #5d5953); box-shadow: 0 1.2rem 2rem rgba(0, 0, 0, 0.6); }
-.laptop__base::before { content: ''; position: absolute; top: 0; left: 50%; width: 12%; height: 45%; border-radius: 0 0 0.5rem 0.5rem; background: rgba(0, 0, 0, 0.2); transform: translateX(-50%); }
 
 /* ── 地圖：從牆上取下、釘在畫面中央；對照照片是釘在地圖上的拍立得 ── */
-.map-sheet { position: relative; width: min(80rem, 100%); padding: clamp(0.9rem, 2.2vw, 1.6rem); color: var(--paper-ink); background: linear-gradient(170deg, #efe4cc, #e0cfac); box-shadow: 0 2.4rem 4.5rem rgba(0, 0, 0, 0.7), inset 0 0 4rem rgba(120, 90, 50, 0.25); }
-.map-pin { position: absolute; z-index: 3; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff9a80, #b4301d 60%, #6e160b); box-shadow: 0 0.35rem 0.5rem rgba(0, 0, 0, 0.45); }
-.map-pin--tl { top: 0.45rem; left: 0.45rem; }
-.map-pin--tr { top: 0.45rem; right: 0.45rem; }
-.map-pin--bl { bottom: 0.45rem; left: 0.45rem; }
-.map-pin--br { bottom: 0.45rem; right: 0.45rem; }
-.map-sheet__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 1rem; margin: 0 0 0.7rem; padding-inline: 0.6rem; }
-.map-sheet__title .eyebrow { margin: 0; color: #a3402b; }
-.map-sheet__title h2 { margin: 0; font: 600 clamp(1.4rem, 3vw, 2.2rem)/1.2 var(--serif); }
-.map-frame { position: relative; border: 1px solid rgba(58, 40, 26, 0.45); }
-.map-canvas { height: max(18rem, min(46rem, calc(100dvh - var(--safe-top) - var(--safe-bottom) - 14rem))); background: #f2efe9; }
-.map-canvas .leaflet-tile-pane { filter: sepia(0.35) saturate(0.85) brightness(0.95); }
-/* 圖磚邊緣落在小數像素時會露出底色；底色改成與 OSM 陸地同色就看不出接縫 */
-.map-canvas.leaflet-container { background: #f2efe9; }
-.map-canvas .leaflet-control-attribution { font-size: 0.6rem; }
-.map-fallback { display: none; margin: 0; padding: 1rem; color: #6b5a44; }
-[data-map-unavailable] .map-canvas { display: none; }
-[data-map-unavailable] .map-fallback { display: block; }
-.place-legend { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
-.place-legend button { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.6rem; padding: 0.4rem 0.85rem 0.4rem 0.45rem; border: 1px solid rgba(58, 40, 26, 0.35); border-radius: 999px; color: #4d3d2f; background: rgba(255, 252, 244, 0.5); font-weight: 600; cursor: pointer; }
+/* 地圖本身是一張紙本地圖照片（AI 依 OpenStreetMap 重繪），四角用圖釘釘著 */
+.map-sheet { position: relative; display: grid; justify-items: center; gap: 0.7rem; width: min(80rem, 100%); }
+.map-sheet__title { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0.2rem 1rem; margin: 0; }
+.map-sheet__title .eyebrow { margin: 0; color: var(--ember-bright); }
+.map-sheet__title h2 { margin: 0; color: var(--ink); font: 600 clamp(1.4rem, 3vw, 2.1rem)/1.2 var(--serif); }
+.map-sheet { container-type: inline-size; }
+.map-body { display: grid; justify-content: center; align-items: start; gap: 1.4rem; width: 100%; }
+.map-frame { --map-h: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 12rem); position: relative; width: min(100cqw, var(--map-h) * 1.5); box-shadow: 0 2.4rem 4rem rgba(0, 0, 0, 0.7); transition: width 380ms ease; }
+.map-pin { z-index: 4; }
+.map-canvas { position: relative; aspect-ratio: 3 / 2; }
+.map-canvas__paper { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; }
+.map-pin { position: absolute; z-index: 3; width: 1.15rem; height: 1.15rem; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff9a80, #b4301d 60%, #6e160b); box-shadow: 0.25rem 0.45rem 0.4rem rgba(0, 0, 0, 0.45); }
+.map-pin--tl { top: 0.6rem; left: 0.6rem; }
+.map-pin--tr { top: 0.6rem; right: 0.6rem; }
+.map-pin--bl { bottom: 0.6rem; left: 0.6rem; }
+.map-pin--br { bottom: 0.6rem; right: 0.6rem; }
+.map-credit { margin: 0; color: var(--ink-muted); font-size: 0.66rem; text-align: center; }
+.map-credit a { color: inherit; }
+.place-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; }
+.place-legend button { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.6rem; padding: 0.4rem 0.85rem 0.4rem 0.45rem; border: 0; border-radius: 0.2rem; color: #2b1d13; background: #efe4cc; box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.4); font: 700 1rem var(--hand); cursor: pointer; }
 .place-legend button b { display: grid; width: 1.6rem; height: 1.6rem; place-items: center; border-radius: 50%; color: #fff; background: var(--ember); font-size: 0.75rem; }
 .place-legend button[aria-pressed='true'] { border-color: #a3402b; color: #f4ecd6; background: #a3402b; }
 .place-legend button[aria-pressed='true'] b { color: #a3402b; background: #f4ecd6; }
-.place-pin { cursor: pointer; }
-.place-pin__dot { display: grid; width: 28px; height: 28px; place-items: center; border: 2px solid #fff6e4; border-radius: 50%; color: #fff; background: var(--ember); box-shadow: 0 0 0 4px rgba(216,111,66,0.3), 0 4px 10px rgba(0,0,0,0.45); font: 800 13px/1 var(--sans); transition: transform 160ms ease; }
-.place-pin__name { position: absolute; top: 3px; left: 34px; padding: 1px 7px; white-space: nowrap; color: #2b1d13; background: rgba(255, 248, 232, 0.94); box-shadow: 0 2px 6px rgba(0,0,0,0.3); font: 700 12px/20px var(--sans); }
-.place-pin--left .place-pin__name { right: 34px; left: auto; }
+/* 地點：紅色圖釘＋手寫標籤，按得到的按鈕 */
+.place-pin { position: absolute; z-index: 2; display: block; width: 2.75rem; height: 2.75rem; margin: -1.375rem 0 0 -1.375rem; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.place-pin__dot { display: grid; width: 1.8rem; height: 1.8rem; margin: 0.475rem; place-items: center; border-radius: 50%; color: #fff6e4; background: radial-gradient(circle at 35% 30%, #ff9a80, #b4301d 58%, #6e160b); box-shadow: 0.3rem 0.55rem 0.5rem rgba(0, 0, 0, 0.45); font: 800 0.8rem/1 var(--sans); text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5); transition: transform 160ms ease; }
+.place-pin__name { position: absolute; top: 0.7rem; left: 2.6rem; padding: 0.05rem 0.5rem; white-space: nowrap; color: #2b1d13; background: #fbf6ea; box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.3); font: 700 1rem/1.4 var(--hand); transform: rotate(-2deg); }
+.place-pin--left .place-pin__name { right: 2.6rem; left: auto; transform: rotate(2deg); }
 .place-pin:hover .place-pin__dot,
-.place-pin.is-selected .place-pin__dot { transform: scale(1.25); background: #9e3b1f; }
+.place-pin.is-selected .place-pin__dot { transform: scale(1.2); }
+.place-pin.is-selected .place-pin__name { color: #f4ecd6; background: #a3402b; }
+.place-pin:focus-visible { outline: none; }
+.place-pin:focus-visible .place-pin__dot { outline: 2px solid var(--ember-bright); outline-offset: 3px; }
 
 .place-panel { position: relative; display: grid; align-content: start; gap: 1rem; margin-top: 1rem; animation: panel-in 300ms ease; }
 @keyframes panel-in { from { opacity: 0; transform: translateY(0.8rem) rotate(1deg); } }
@@ -158,8 +168,11 @@
 .polaroid figcaption { color: #7a6a52; font-size: 0.58rem; line-height: 1.4; }
 .polaroid a { color: inherit; }
 /* 寬螢幕：照片釘在地圖右側；地圖點位會往左移，不被擋住 */
+/* 寬螢幕：選了地點後，地圖往左讓出位置，照片釘在地圖右邊 */
 @media (min-width: 900px) {
-  .place-panel { position: absolute; z-index: 500; top: 1rem; right: 1rem; bottom: 1rem; width: min(25rem, 40%); margin: 0; overflow: auto; padding: 0.6rem 0.4rem 1rem; scrollbar-width: thin; }
+  .map-body:has(.place-panel:not([hidden])) { grid-template-columns: auto minmax(17rem, 23rem); }
+  .map-body:has(.place-panel:not([hidden])) .map-frame { width: min(100cqw - 24.4rem, var(--map-h) * 1.5); }
+  .place-panel { max-height: calc(var(--map-h) + 1rem); margin: 0; overflow: auto; padding: 0.6rem 0.4rem 1rem; scrollbar-width: none; }
   .place-panel__close { top: 0.2rem; right: 0.2rem; }
 }
 
@@ -279,19 +292,38 @@
 .photo-stack__nav button { width: 2.75rem; height: 2.75rem; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); background: transparent; cursor: pointer; }
 .photo-stack__nav button:hover { border-color: var(--ember-bright); }
 
-/* ── 總編 CHECK LIST：夾在板夾上的紙 ── */
-.checklist { padding: 1.55rem 0.55rem 0.55rem; border-radius: 0.7rem; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 45%), repeating-linear-gradient(96deg, rgba(0, 0, 0, 0.05) 0 2px, transparent 2px 7px), #7a5436; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35), inset 0 -0.3rem 0.5rem rgba(0, 0, 0, 0.25), 0 1.2rem 3rem rgba(0, 0, 0, 0.6); }
-.checklist::before { top: -0.55rem; width: 6.5rem; height: 2.3rem; border-radius: 0.5rem 0.5rem 0.9rem 0.9rem; background: radial-gradient(circle at 50% 30%, #6b6b66 0 0.28rem, transparent 0.32rem), linear-gradient(#f0f0ec, #9d9d97 55%, #cfcfca); box-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.45), inset 0 -2px 0 rgba(0, 0, 0, 0.2); transform: translateX(-50%); }
+/* ── 總編 CHECK LIST：板夾照片（AI 生成）上的紙；收起時板夾滑到畫面下緣，只露出夾子和標題 ── */
+.checklist {
+  --peek: 8.6rem;
+  --cw: min(19rem, calc(100vw - 2rem));
+  width: var(--cw);
+  aspect-ratio: 564 / 900;
+  /* 紙張在板夾照片裡的位置（以板夾寬度換算；padding 的 % 會以視窗為準，所以不用 %） */
+  padding: calc(var(--cw) * 0.286) calc(var(--cw) * 0.075) calc(var(--cw) * 0.1);
+  border-radius: 0;
+  background: url('../assets/images/clipboard.webp') center / 100% 100% no-repeat;
+  box-shadow: none;
+  filter: drop-shadow(0 1.2rem 1.4rem rgba(0, 0, 0, 0.6));
+  transform: rotate(-1.2deg);
+  transition: transform 450ms cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+.checklist::before { content: none; }
+.checklist.is-collapsed { transform: rotate(-1.2deg) translateY(calc(100% - var(--peek))); }
+.checklist.is-collapsed .checklist__body { display: block; visibility: hidden; transition: visibility 0s 450ms; }
 .checklist__toggle,
-.checklist__body { background: #f1e7d0; }
-.checklist__toggle { padding-top: 1.1rem; }
-.checklist__body { padding-bottom: 1rem; }
+.checklist__body { background: transparent; }
+.checklist__toggle { min-height: 2.6rem; padding: 0 0.2rem 0.3rem; }
+.checklist__toggle::after { content: '收起 ▾'; margin-left: 0.4rem; color: #8a7458; font: 400 0.68rem var(--sans); letter-spacing: 0; }
+.checklist__toggle[aria-expanded='false']::after { content: '展開 ▴'; }
+.checklist__body { padding: 0 0.2rem; }
+/* 紅筆打勾：看完物件後，勾勾一筆畫上去 */
+.checklist__tick { position: absolute; top: -0.55rem; left: -0.15rem; width: 1.7rem; height: 1.7rem; overflow: visible; fill: none; stroke: #b8392b; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 34; stroke-dashoffset: 34; transition: stroke-dashoffset 520ms cubic-bezier(0.6, 0, 0.3, 1) 120ms; }
+.checklist__item.is-checked .checklist__tick { stroke-dashoffset: 0; }
+.checklist__item.is-checked .checklist__box::after { content: none; }
 
 @media (max-width: 900px) {
   .radio-stage { grid-template-columns: 1fr; align-content: start; }
   .radio-side { grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); align-items: start; }
-  .laptop { width: 100%; }
-  .laptop__base { width: 104%; }
 }
 
 @media (max-width: 720px) {
@@ -301,16 +333,17 @@
   .radio { width: 232%; margin-left: -130%; filter: none; }
   .radio-side { grid-template-columns: 1fr; }
   .radio-postcard { width: 82%; justify-self: center; }
-  .laptop__lid { padding: 0.35rem; border-radius: 0.8rem 0.8rem 0.3rem 0.3rem; }
+  .laptop { --lw: 100cqw; border-width: 0.7rem 1.1rem 1.1rem; }
   .laptop__screen { height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 5.6rem); }
-  .laptop__base { height: 0.6rem; }
   .laptop__url { margin-right: 0; }
   .laptop__compose { right: 0.7rem; bottom: 0.7rem; }
   .compose { inset: auto 0.35rem 0.35rem; width: auto; max-height: calc(100% - 0.7rem); }
   .board-form__row { grid-template-columns: 1fr; }
   .paper-post:first-child { display: block; }
-  .map-sheet { padding: 0.8rem 0.6rem; }
-  .map-canvas { height: 52dvh; }
+  /* 手機：地圖放大到可以左右拖著看 */
+  .map-frame { width: 100%; box-shadow: none; }
+  .map-scroll { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; box-shadow: 0 1.6rem 3rem rgba(0, 0, 0, 0.7); }
+  .map-canvas { width: 170%; }
   .journal { --page-w: min(82vw, calc((100dvh - var(--safe-top) - var(--safe-bottom) - 9rem) * 0.72)); }
   /* 手機放不下跨頁：封面翻開後收起來，只看右頁 */
   .journal[data-open='true'] .journal__book { transform: none; }
@@ -322,9 +355,10 @@
   .journal__page { padding: var(--rule) 1rem var(--rule) 1.4rem; }
   .note-page p { font-size: 1.02rem; }
   .note-tape { right: 1rem; }
-  .checklist { padding: 1rem 0.4rem 0.4rem; border-radius: 0.8rem 0.8rem 0 0; }
-  .checklist::before { display: block; top: -0.45rem; width: 4.8rem; height: 1.5rem; }
-  .checklist__toggle { padding-top: 0.6rem; }
+  .checklist { --peek: 7.6rem; --cw: min(17rem, 82vw); right: 0.5rem; bottom: 0; transform: rotate(-1.2deg); }
+  .checklist__toggle { gap: 0.4rem; font-size: 0.86rem; letter-spacing: 0.03em; white-space: nowrap; }
+  .checklist__toggle::after { content: none; }
+  .checklist__toggle[aria-expanded='false']::after { content: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -335,3 +369,23 @@
   .radio__knob { transition-duration: 1ms; }
   .lcd__ticker.is-scrolling span { animation: none; }
 }
+
+/* ── 出發：抽獎登記＋滿意度（一定要留 Email 才能投票） ── */
+.feedback__lottery { display: inline-flex; align-items: center; gap: 0.45rem; margin: 0 0 1.4rem; padding: 0.45rem 0.95rem; color: #f4ecd6; background: #a3402b; box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.25); font: 700 1.05rem var(--sans); letter-spacing: 0.04em; transform: rotate(-1.5deg); }
+.feedback__vote { display: flex; flex-wrap: wrap; gap: 0.9rem; margin: 0 0 1.3rem; padding: 0; border: 0; }
+.feedback__vote legend { width: 100%; margin-bottom: 0.7rem; padding: 0; color: var(--paper-ink); font: 600 1.25rem var(--serif); }
+.vote-button { display: grid; justify-items: center; gap: 0.3rem; width: 6.6rem; padding: 0.9rem 0.5rem 0.7rem; border: 2px solid #3a2c20; border-radius: 0.8rem; color: #3a2c20; background: transparent; font: 700 0.9rem var(--sans); cursor: pointer; transition: background 150ms ease, color 150ms ease, transform 150ms ease; }
+.vote-button svg { width: 2.4rem; height: 2.4rem; fill: currentColor; }
+.vote-button--down svg { transform: rotate(180deg); }
+.vote-button:hover { transform: translateY(-2px); }
+.vote-button--up[aria-pressed='true'] { border-color: #2f6b3a; color: #f4ecd6; background: #2f6b3a; }
+.vote-button--down[aria-pressed='true'] { border-color: #a3402b; color: #f4ecd6; background: #a3402b; }
+.feedback__label { display: block; margin-bottom: 0.35rem; color: var(--paper-ink); font: 600 1rem var(--serif); }
+.feedback input[type='email'] { width: 100%; min-height: 3rem; padding: 0 0.9rem; border: 1px solid rgba(39, 29, 22, 0.35); border-radius: 0; color: var(--paper-ink); background: #fbf6ea; }
+.feedback__consent { display: flex; align-items: flex-start; gap: 0.55rem; margin: 0.9rem 0 0.4rem; color: #4d3d2f; font-size: 0.9rem; cursor: pointer; }
+.feedback__consent input { flex: none; width: 1.15rem; height: 1.15rem; margin-top: 0.2rem; accent-color: #a3402b; }
+.feedback__privacy { margin: 0 0 0.9rem; color: #7a6a52; font-size: 0.74rem; line-height: 1.65; }
+.feedback .form-status { color: #2f5a2c; background: rgba(143, 181, 140, 0.25); }
+.feedback .form-status[data-kind='error'] { border-color: #a3402b; color: #8a2a18; background: rgba(163, 64, 43, 0.12); }
+.feedback .form-footer small { color: #7a6a52; }
+.depart-dialog .eyebrow { color: #a3402b; }

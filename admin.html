@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#120f0c">
-    <title>留言審核｜與光赴會</title>
+    <title>後台｜與光赴會</title>
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/admin.css">
   </head>
   <body class="admin">
     <header class="admin__bar">
       <div>
-        <p class="eyebrow">與光赴會｜讀者版</p>
-        <h1>留言審核</h1>
+        <p class="eyebrow">與光赴會｜後台</p>
+        <h1>留言審核與滿意度</h1>
       </div>
       <button class="text-button" type="button" data-admin-logout hidden>登出</button>
     </header>
@@ -31,7 +31,34 @@
         </form>
       </section>
 
-      <section class="admin__review" data-admin-review hidden aria-label="留言列表">
+      <nav class="admin__tabs" data-admin-tabs role="tablist" aria-label="後台分頁" hidden>
+        <button type="button" role="tab" id="tab-review" aria-controls="panel-review" aria-selected="true" data-admin-tab="review">留言審核</button>
+        <button type="button" role="tab" id="tab-report" aria-controls="panel-report" aria-selected="false" tabindex="-1" data-admin-tab="report">滿意度與抽獎</button>
+      </nav>
+
+      <section class="report" id="panel-report" role="tabpanel" aria-labelledby="tab-report" data-admin-report hidden>
+        <div class="report__cards">
+          <div class="report__card"><small>回應人數（＝抽獎資格數）</small><strong data-stat="total">0</strong></div>
+          <div class="report__card report__card--up"><small>👍 滿意</small><strong data-stat="up">0</strong></div>
+          <div class="report__card report__card--down"><small>👎 不滿意</small><strong data-stat="down">0</strong></div>
+          <div class="report__card"><small>滿意度</small><strong data-stat="rate">—</strong><span class="report__bar" aria-hidden="true"><i data-stat-bar style="width: 0%"></i></span></div>
+        </div>
+
+        <h2>依身分</h2>
+        <div class="report__scroll"><table><thead><tr><th>身分</th><th class="num">👍</th><th class="num">👎</th><th class="num">滿意度</th></tr></thead><tbody data-report-roles></tbody></table></div>
+
+        <h2>每日統計（依第一次送出日期）</h2>
+        <div class="report__scroll"><table><thead><tr><th>日期</th><th class="num">新增人數</th><th class="num">👍</th><th class="num">👎</th></tr></thead><tbody data-report-days></tbody></table></div>
+
+        <div class="report__actions">
+          <h2>抽獎名單</h2>
+          <button class="primary-button" type="button" data-report-csv>下載 CSV</button>
+        </div>
+        <p class="admin__empty">同一個 Email 只會出現一次；重複送出時保留最新的一票。名單含個人資料，請勿外流，活動結束後刪除。</p>
+        <div class="report__scroll"><table><thead><tr><th>Email</th><th>評價</th><th>身分</th><th>第一次送出</th><th>最後更新</th></tr></thead><tbody data-report-emails></tbody></table></div>
+      </section>
+
+      <section class="admin__review" id="panel-review" role="tabpanel" aria-labelledby="tab-review" data-admin-review hidden aria-label="留言列表">
         <nav class="admin__filters" aria-label="篩選">
           <button type="button" data-filter="pending" aria-pressed="true">待審核 <span data-count="pending"></span></button>
           <button type="button" data-filter="approved" aria-pressed="false">已上架 <span data-count="approved"></span></button>

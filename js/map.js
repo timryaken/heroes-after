@@ -1,5 +1,10 @@
-const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> 貢獻者';
+// 紙本地圖：底圖是依 OpenStreetMap 資料由 AI 重新繪製的一張圖，四個地點用經緯度換算成圖上的百分比位置釘上去。
+export function mapPosition({ lat, lng }, bounds) {
+  return {
+    x: ((lng - bounds.west) / (bounds.east - bounds.west)) * 100,
+    y: ((bounds.north - lat) / (bounds.north - bounds.south)) * 100,
+  };
+}
 
 // 對照照片做成釘在地圖上的拍立得。
 function photoMarkup(photo, label) {
@@ -29,23 +34,49 @@ export function placePanelMarkup(place) {
   `;
 }
 
-function pinIcon(L, place, index) {
-  return L.divIcon({
-    className: place.labelSide === 'left' ? 'place-pin place-pin--left' : 'place-pin',
-    html: `<span class="place-pin__dot">${index + 1}</span><span class="place-pin__name">${place.name}</span>`,
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-  });
-}
-
-export function createMapController(root, places, { onSelect } = {}) {
+export function createMapController(root, places, base, { onSelect } = {}) {
   const canvas = root.querySelector('[data-map-canvas]');
   const panel = root.querySelector('[data-place-panel]');
   const legend = root.querySelector('[data-place-list]');
-  const markers = new Map();
   const overlayPanel = window.matchMedia('(min-width: 900px)');
-  let map = null;
   let selectedId = '';
+
+  const paper = canvas.querySelector('img');
+  paper.src = base.src;
+  paper.alt = base.alt;
+
+  const pins = places.map((place, index) => {
+    const { x, y } = mapPosition(place, base.bounds);
+    const pin = document.createElement('button');
+    pin.type = 'button';
+    pin.className = place.labelSide === 'left' ? 'place-pin place-pin--left' : 'place-pin';
+    pin.dataset.placeId = place.id;
+    pin.style.left = `${x.toFixed(2)}%`;
+    pin.style.top = `${y.toFixed(2)}%`;
+    pin.setAttribute('aria-pressed', 'false');
+    pin.innerHTML = `<span class="place-pin__dot" aria-hidden="true">${index + 1}</span><span class="place-pin__name">${place.name}</span>`;
+    pin.addEventListener('click', () => select(place.id));
+    canvas.append(pin);
+    return pin;
+  });
+
+  const chips = places.map((place, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.dataset.placeId = place.id;
+    button.setAttribute('aria-pressed', 'false');
+    button.innerHTML = `<b>${index + 1}</b>${place.name}`;
+    button.addEventListener('click', () => select(place.id));
+    legend.append(button);
+    return button;
+  });
+
+  function markSelected(id) {
+    for (const button of [...pins, ...chips]) {
+      button.setAttribute('aria-pressed', String(button.dataset.placeId === id));
+      button.classList.toggle('is-selected', button.dataset.placeId === id);
+    }
+  }
 
   function select(id) {
     const place = places.find((item) => item.id === id);
@@ -53,78 +84,26 @@ export function createMapController(root, places, { onSelect } = {}) {
     selectedId = id;
     panel.innerHTML = placePanelMarkup(place);
     panel.hidden = false;
-    for (const button of legend.querySelectorAll('button')) {
-      button.setAttribute('aria-pressed', String(button.dataset.placeId === id));
-    }
-    for (const [placeId, marker] of markers) {
-      marker.getElement()?.classList.toggle('is-selected', placeId === id);
-    }
-    centerOn(place);
+    markSelected(id);
     if (!overlayPanel.matches) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     onSelect?.(place);
-  }
-
-  // 寬螢幕上照片釘在地圖右側，點位要移到左邊沒被擋住的地方；窄螢幕照片排在地圖下面。
-  function centerOn(place) {
-    if (!map) return;
-    map.invalidateSize({ pan: false });
-    const shift = overlayPanel.matches && !panel.hidden ? panel.offsetWidth / 2 : 0;
-    const zoom = map.getZoom();
-    const point = map.project([place.lat, place.lng], zoom).add([shift, 0]);
-    map.panTo(map.unproject(point, zoom), { animate: true });
-  }
-
-  function clearSelection() {
-    selectedId = '';
-    panel.hidden = true;
-    panel.replaceChildren();
-    for (const button of legend.querySelectorAll('button')) button.setAttribute('aria-pressed', 'false');
-    for (const marker of markers.values()) marker.getElement()?.classList.remove('is-selected');
   }
 
   panel.addEventListener('click', (event) => {
     if (!event.target.closest('[data-place-close]')) return;
     const id = selectedId;
-    clearSelection();
-    legend.querySelector(`[data-place-id="${id}"]`)?.focus({ preventScroll: true });
+    selectedId = '';
+    panel.hidden = true;
+    panel.replaceChildren();
+    markSelected('');
+    chips.find((button) => button.dataset.placeId === id)?.focus({ preventScroll: true });
   });
 
-  function ensureMap() {
-    if (map) {
-      map.invalidateSize();
-      return;
-    }
-    const L = window.L;
-    if (!L || !canvas) {
-      root.dataset.mapUnavailable = 'true';
-      return;
-    }
-    map = L.map(canvas, { scrollWheelZoom: false, zoomControl: true });
-    L.tileLayer(TILE_URL, { maxZoom: 18, attribution: TILE_ATTRIBUTION }).addTo(map);
-    places.forEach((place, index) => {
-      const marker = L.marker([place.lat, place.lng], {
-        icon: pinIcon(L, place, index),
-        title: place.name,
-        alt: place.name,
-        keyboard: true,
-      }).addTo(map);
-      marker.on('click', () => select(place.id));
-      markers.set(place.id, marker);
-    });
-    // 左右多留空間，讓點位旁的地名不會被地圖邊緣切掉。
-    map.fitBounds(places.map(({ lat, lng }) => [lat, lng]), { paddingTopLeft: [80, 48], paddingBottomRight: [80, 48] });
-    if (selectedId) select(selectedId);
+  // 手機上地圖比畫面寬：打開時先捲到市區（四個地點大約在中間偏左）。
+  function reveal() {
+    const scroller = root.querySelector('[data-map-scroll]');
+    if (scroller.scrollWidth > scroller.clientWidth) scroller.scrollLeft = (scroller.scrollWidth - scroller.clientWidth) * 0.4;
   }
 
-  places.forEach((place, index) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.dataset.placeId = place.id;
-    button.setAttribute('aria-pressed', 'false');
-    button.innerHTML = `<b>${index + 1}</b>${place.name}`;
-    button.addEventListener('click', () => select(place.id));
-    legend?.append(button);
-  });
-
-  return { ensureMap, select };
+  return { select, reveal };
 }
