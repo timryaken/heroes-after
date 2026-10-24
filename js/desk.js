@@ -1,3 +1,5 @@
+import { animateLift } from './lift.js';
+
 export const DESK_OBJECT_IDS = Object.freeze([
   'computer',
   'notebook',
@@ -33,20 +35,46 @@ function stackCardMarkup(photo) {
   const media = photo.placeholder
     ? `<span class="stack-card__placeholder">${photo.label}</span>`
     : `<img src="${photo.src}" alt="${photo.alt}">`;
-  return `${media}<span class="stack-card__caption">${photo.date}｜${photo.place}</span>`;
+  return `
+    <span class="stack-card__inner">
+      <span class="stack-card__face stack-card__face--front">${media}<span class="stack-card__caption">${photo.date}｜${photo.place}</span></span>
+      <span class="stack-card__face stack-card__face--back">
+        <span class="stack-card__date">${photo.date}</span>
+        <span class="stack-card__note">${photo.note || '（背面沒有寫字）'}</span>
+        <span class="stack-card__place">${photo.place}</span>
+      </span>
+    </span>
+  `;
 }
 
-export function createStoryContentController(root, { notebookPages = [], photos = [] } = {}) {
+export function createStoryContentController(root, { notebookPages = [], photos = [], reducedMotion = false } = {}) {
+  const book = root.querySelector('[data-journal]');
+  const cover = root.querySelector('[data-journal-cover]');
+  const leaf = root.querySelector('[data-journal-leaf]');
   const notebook = root.querySelector('[data-notebook-pages]');
   const noteCount = root.querySelector('[data-note-count]');
   const previousNote = root.querySelector('[data-note-prev]');
   const nextNote = root.querySelector('[data-note-next]');
   const stack = root.querySelector('[data-photo-stack]');
   const photoMeta = root.querySelector('[data-photo-meta]');
-  const photoNote = root.querySelector('[data-photo-note]');
   const photoCount = root.querySelector('[data-photo-count]');
   let noteIndex = 0;
   let photoIndex = 0;
+  let turning = false;
+
+  function setBookOpen(open) {
+    if (!book) return;
+    book.dataset.open = String(open);
+    cover.setAttribute('aria-expanded', String(open));
+    cover.setAttribute('aria-label', open ? '闔上筆記本' : '翻開筆記本');
+    for (const button of [previousNote, nextNote]) button.tabIndex = open ? 0 : -1;
+  }
+
+  cover?.addEventListener('click', () => {
+    const open = book.dataset.open !== 'true';
+    setBookOpen(open);
+    if (open) nextNote.focus({ preventScroll: true });
+  });
 
   function renderNote() {
     const page = notebookPages[noteIndex];
@@ -55,18 +83,39 @@ export function createStoryContentController(root, { notebookPages = [], photos 
     noteCount.textContent = `${noteIndex + 1} / ${notebookPages.length}`;
     previousNote.disabled = noteIndex === 0;
     nextNote.disabled = noteIndex === notebookPages.length - 1;
+    // 翻過第一頁後，左邊露出前一頁的背面。
+    if (book) book.dataset.turned = String(noteIndex > 0);
     // 讀到思遠出發前的最後一頁，才算翻閱完筆記。
     if (noteIndex === notebookPages.length - 1) dispatch(notebook, 'story:notebook-finished');
   }
 
-  previousNote?.addEventListener('click', () => {
-    noteIndex = Math.max(0, noteIndex - 1);
-    renderNote();
-  });
-  nextNote?.addEventListener('click', () => {
-    noteIndex = Math.min(notebookPages.length - 1, noteIndex + 1);
-    renderNote();
-  });
+  // 翻頁：往後翻時，舊的一頁沿著書背翻到左邊；往前翻時，前一頁從左邊翻回來。
+  function turnPage(step) {
+    const next = Math.min(notebookPages.length - 1, Math.max(0, noteIndex + step));
+    if (next === noteIndex || turning) return;
+    if (reducedMotion || !leaf?.animate) {
+      noteIndex = next;
+      renderNote();
+      return;
+    }
+    const forward = step > 0;
+    const leaving = notebook.innerHTML;
+    noteIndex = next;
+    leaf.querySelector('[data-leaf-front]').innerHTML = forward ? leaving : renderNotePage(notebookPages[noteIndex]);
+    leaf.hidden = false;
+    turning = true;
+    if (forward) renderNote();
+    const frames = [{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(-180deg)' }];
+    leaf.animate(forward ? frames : frames.reverse(), { duration: 720, easing: 'cubic-bezier(0.45, 0.05, 0.3, 1)' })
+      .finished.catch(() => {}).then(() => {
+        leaf.hidden = true;
+        turning = false;
+        if (!forward) renderNote();
+      });
+  }
+
+  previousNote?.addEventListener('click', () => turnPage(-1));
+  nextNote?.addEventListener('click', () => turnPage(1));
 
   const cards = photos.map((photo, index) => {
     const card = document.createElement('button');
@@ -74,10 +123,18 @@ export function createStoryContentController(root, { notebookPages = [], photos 
     card.className = 'stack-card';
     card.dataset.index = String(index);
     card.innerHTML = stackCardMarkup(photo);
-    card.addEventListener('click', () => showPhoto(photoIndex + 1));
+    card.addEventListener('click', () => {
+      const flipped = card.classList.toggle('is-flipped');
+      card.setAttribute('aria-label', cardLabel(flipped));
+      dispatch(stack, 'story:photo-viewed');
+    });
     stack?.append(card);
     return card;
   });
+
+  function cardLabel(flipped) {
+    return `第 ${photoIndex + 1} 張，共 ${photos.length} 張。點一下${flipped ? '翻回正面' : '翻到背面'}`;
+  }
 
   function renderStack() {
     const photo = photos[photoIndex];
@@ -86,13 +143,13 @@ export function createStoryContentController(root, { notebookPages = [], photos 
       const depth = (index - photoIndex + photos.length) % photos.length;
       card.dataset.depth = String(depth);
       card.style.zIndex = String(photos.length - depth);
+      card.classList.remove('is-flipped');
       const isTop = depth === 0;
       card.tabIndex = isTop ? 0 : -1;
       card.setAttribute('aria-hidden', String(!isTop));
-      card.setAttribute('aria-label', isTop ? `第 ${photoIndex + 1} 張，共 ${photos.length} 張。點一下換下一張` : '');
+      card.setAttribute('aria-label', isTop ? cardLabel(false) : '');
     });
     if (photoMeta) photoMeta.textContent = `${photo.date}｜${photo.place}`;
-    if (photoNote) photoNote.textContent = photo.note ?? '';
     if (photoCount) photoCount.textContent = `${photoIndex + 1} / ${photos.length}`;
   }
 
@@ -117,18 +174,20 @@ export function createStoryContentController(root, { notebookPages = [], photos 
   root.querySelector('[data-photo-prev]')?.addEventListener('click', () => showPhoto(photoIndex - 1));
   root.querySelector('[data-photo-next]')?.addEventListener('click', () => showPhoto(photoIndex + 1));
 
+  setBookOpen(false);
   renderNote();
   renderStack();
-  return { renderNote, showPhoto };
+  return { renderNote, showPhoto, setBookOpen };
 }
 
 function dispatch(root, name, detail = {}) {
   root.dispatchEvent(new CustomEvent(name, { bubbles: true, detail }));
 }
 
-export function createDeskController(root, store) {
+export function createDeskController(root, store, { reducedMotion = false } = {}) {
   const buttons = [...root.querySelectorAll('[data-desk-object]')];
   const dialogs = [...document.querySelectorAll('[data-object-dialog]')];
+  const closing = new Set();
   let activeTrigger = null;
 
   function updateDoneUI(completed = store.load().completed) {
@@ -147,17 +206,30 @@ export function createDeskController(root, store) {
     return completed;
   }
 
-  function closeObject(id, { restoreFocus = true } = {}) {
+  // 動畫的起點／終點永遠是桌上的那個物件，即使是從 CHECK LIST 打開的。
+  function sourceFor(id) {
+    const button = buttons.find((item) => item.dataset.deskObject === id);
+    return button?.querySelector('.desk-object__visual') ?? button;
+  }
+
+  async function closeObject(id) {
     const dialog = dialogs.find((item) => item.dataset.objectDialog === id);
-    if (dialog?.open) dialog.close();
-    if (restoreFocus && activeTrigger?.isConnected) activeTrigger.focus({ preventScroll: true });
+    if (!dialog?.open || closing.has(id)) return;
+    closing.add(id);
+    const animations = await animateLift(dialog, sourceFor(id), { closing: true, reducedMotion });
+    dialog.close();
+    animations.forEach((animation) => animation.cancel());
+    closing.delete(id);
   }
 
   function openObject(id, trigger = null) {
     const dialog = dialogs.find((item) => item.dataset.objectDialog === id);
     if (!dialog) return false;
     activeTrigger = trigger ?? buttons.find((button) => button.dataset.deskObject === id);
-    if (!dialog.open) dialog.showModal();
+    if (!dialog.open) {
+      dialog.showModal();
+      animateLift(dialog, sourceFor(id), { reducedMotion });
+    }
     requestAnimationFrame(() => {
       const target = dialog.querySelector('[autofocus], button, a, input, textarea, select');
       target?.focus({ preventScroll: true });
@@ -182,8 +254,13 @@ export function createDeskController(root, store) {
       if (activeTrigger?.isConnected) activeTrigger.focus({ preventScroll: true });
       dispatch(root, 'desk:object-closed', { id });
     });
+    // 按 Esc 也要播放「放回桌上」的動畫。
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closeObject(id);
+    });
     dialog.addEventListener('click', (event) => {
-      if (event.target === dialog) closeObject(id);
+      if (event.target === dialog || event.target.hasAttribute?.('data-stage-backdrop')) closeObject(id);
     });
     for (const close of dialog.querySelectorAll('[data-close-dialog]')) {
       close.addEventListener('click', () => closeObject(id));

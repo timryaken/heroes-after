@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { BOARD_SAMPLE_POSTS, DESK_TEXTURE, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, SPEAKER_PHOTO } from '../js/data.js';
+import { BOARD_SAMPLE_POSTS, DESK_TEXTURE, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, SPEAKER_PHOTO } from '../js/data.js';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(resolve(projectRoot, 'index.html'), 'utf8');
@@ -23,6 +23,7 @@ const photos = [
   ...PLACES.flatMap((place) => [place.before, place.after]),
   ...PHOTO_STACK,
   SPEAKER_PHOTO,
+  RADIO_FRONT,
   DESK_TEXTURE,
   INTERACTIVE_DESK,
   INTERACTIVE_DESK_MOBILE,
@@ -47,6 +48,7 @@ for (const id of ['computer', 'notebook', 'map', 'speaker', 'photo']) {
 
 check(html.includes('data-checklist') && html.includes('data-depart'), '缺少總編 CHECK LIST 或出發按鈕');
 check(html.includes('data-board-form') && html.includes('data-paper-posts'), '缺少留言板或讀者版');
+check(html.includes('data-radio-scope') && html.includes('data-board-compose') && html.includes('data-journal-cover'), '缺少收音機螢幕、投稿按鈕或筆記本封面');
 check(html.includes('data-editor-note') && html.includes('data-desk-viewport'), '缺少總編便條或滿版桌面');
 check(!/<img[^>]+src=["']https?:/i.test(html), 'index.html 不得直接載入外部圖片');
 check(existsSync(resolve(projectRoot, 'README.md')), '缺少 README.md 操作說明');

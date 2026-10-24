@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/prologue.css">
     <link rel="stylesheet" href="styles/desk.css">
+    <link rel="stylesheet" href="styles/objects.css">
   </head>
   <body>
     <header class="site-bar" aria-label="網站控制列">
@@ -126,112 +127,189 @@
       </aside>
     </main>
 
-    <dialog id="dialog-computer" class="object-dialog object-dialog--wide object-dialog--board" data-object-dialog="computer" aria-labelledby="computer-title">
-      <button class="dialog-close" type="button" data-close-dialog aria-label="關閉電腦螢幕">×</button>
-      <p class="eyebrow">留言給光復</p><h2 id="computer-title">把你想說的，留給光復</h2>
-      <div class="board-tabs" role="tablist" aria-label="留言板">
-        <button type="button" role="tab" id="board-tab-write" aria-controls="board-panel-write" aria-selected="true" data-board-tab="write">寫留言</button>
-        <button type="button" role="tab" id="board-tab-read" aria-controls="board-panel-read" aria-selected="false" tabindex="-1" data-board-tab="read">讀者版</button>
-      </div>
+    <dialog id="dialog-computer" class="stage-dialog stage-dialog--laptop" data-object-dialog="computer" aria-labelledby="computer-title">
+      <button class="stage-close" type="button" data-close-dialog aria-label="把電腦放回桌上">放回桌上 <span aria-hidden="true">×</span></button>
+      <div class="stage" data-stage-backdrop>
+        <div class="laptop" data-lift data-lift-from="perspective(1600px) rotateX(10deg)">
+          <div class="laptop__lid">
+            <div class="laptop__screen">
+              <header class="laptop__bar">
+                <span class="laptop__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <p class="laptop__url">光復讀者版｜與光赴會</p>
+              </header>
+              <div class="laptop__view">
+                <h2 id="computer-title" class="visually-hidden">光復讀者版：大家留給光復的話</h2>
+                <article class="paper" aria-label="讀者版">
+                  <header class="paper__masthead">
+                    <p class="paper__meta"><span data-paper-date></span><span>讀者來函</span><span>與光赴會</span></p>
+                    <h3 class="paper__title">光復讀者版</h3>
+                    <p class="paper__sub">鏟子超人、想去卻沒能去的人、在遠方關心的人，留給光復的話。</p>
+                  </header>
+                  <p class="paper__status" data-paper-status role="status"></p>
+                  <div class="paper__columns" data-paper-posts></div>
+                </article>
+              </div>
 
-      <section class="board-panel" id="board-panel-write" role="tabpanel" aria-labelledby="board-tab-write" data-board-panel="write">
-        <form class="story-form" data-board-form novalidate>
-          <label id="board-prompt" for="board-text" data-board-prompt>你想把哪一句話，留給正在重新開始的人？</label>
-          <textarea id="board-text" name="body" rows="5" maxlength="500" aria-describedby="board-prompt board-privacy" placeholder="寫下一段記憶、一句祝福，或你還放不下的念頭。"></textarea>
-          <div class="board-form__row">
-            <div>
-              <label for="board-name">署名（選填）</label>
-              <input id="board-name" name="name" type="text" maxlength="20" autocomplete="nickname" placeholder="暱稱即可，不必填真名">
-            </div>
-            <div>
-              <label class="file-field" for="board-photo">
-                <span>加入一張照片（選填）</span>
-                <small>JPG、PNG 或 WebP，最多 5 MB</small>
-              </label>
-              <input id="board-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" data-board-file>
+              <button class="laptop__compose" type="button" data-board-compose aria-controls="board-compose" aria-expanded="false"><span aria-hidden="true">✎</span> 投稿我的留言</button>
+
+              <section class="compose" id="board-compose" data-board-compose-panel aria-labelledby="compose-title" hidden>
+                <header class="compose__bar">
+                  <h3 id="compose-title">投稿給讀者版</h3>
+                  <button class="compose__close" type="button" data-board-compose-close>回讀者版 <span aria-hidden="true">×</span></button>
+                </header>
+                <form class="story-form compose__form" data-board-form novalidate>
+                  <label id="board-prompt" for="board-text" data-board-prompt>你想把哪一句話，留給正在重新開始的人？</label>
+                  <textarea id="board-text" name="body" rows="5" maxlength="500" aria-describedby="board-prompt board-privacy" placeholder="寫下一段記憶、一句祝福，或你還放不下的念頭。"></textarea>
+                  <div class="board-form__row">
+                    <div>
+                      <label for="board-name">署名（選填）</label>
+                      <input id="board-name" name="name" type="text" maxlength="20" autocomplete="nickname" placeholder="暱稱即可，不必填真名">
+                    </div>
+                    <div>
+                      <label class="file-field" for="board-photo">
+                        <span>加入一張照片（選填）</span>
+                        <small>JPG、PNG 或 WebP，最多 5 MB</small>
+                      </label>
+                      <input id="board-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" data-board-file>
+                    </div>
+                  </div>
+                  <img class="memory-preview" data-board-preview hidden alt="">
+                  <label class="board-honeypot" aria-hidden="true">請留空<input name="website" type="text" tabindex="-1" autocomplete="off"></label>
+                  <p class="board-privacy" id="board-privacy" data-board-privacy>送出後會先由編輯部審核，通過後才會刊登在讀者版，所有人都看得到。照片上傳前會縮小並移除拍攝地點等資訊；請不要寫電話、地址等個人資料。</p>
+                  <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
+                  <div class="form-footer"><small data-board-mode></small><button class="primary-button" type="submit" data-board-submit>送出留言 <span aria-hidden="true">→</span></button></div>
+                </form>
+              </section>
             </div>
           </div>
-          <img class="memory-preview" data-board-preview hidden alt="">
-          <label class="board-honeypot" aria-hidden="true">請留空<input name="website" type="text" tabindex="-1" autocomplete="off"></label>
-          <p class="board-privacy" id="board-privacy" data-board-privacy>送出後會先由編輯部審核，通過後才會刊登在讀者版，所有人都看得到。照片上傳前會縮小並移除拍攝地點等資訊；請不要寫電話、地址等個人資料。</p>
-          <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
-          <div class="form-footer"><small data-board-mode></small><button class="primary-button" type="submit" data-board-submit>送出留言 <span aria-hidden="true">→</span></button></div>
-        </form>
-      </section>
-
-      <section class="board-panel" id="board-panel-read" role="tabpanel" aria-labelledby="board-tab-read" data-board-panel="read" hidden>
-        <article class="paper" aria-label="讀者版">
-          <header class="paper__masthead">
-            <p class="paper__meta"><span data-paper-date></span><span>讀者來函</span><span>與光赴會</span></p>
-            <h3 class="paper__title">光復讀者版</h3>
-            <p class="paper__sub">鏟子超人、想去卻沒能去的人、在遠方關心的人，留給光復的話。</p>
-          </header>
-          <p class="paper__status" data-paper-status role="status"></p>
-          <div class="paper__columns" data-paper-posts></div>
-        </article>
-      </section>
-    </dialog>
-
-    <dialog id="dialog-notebook" class="object-dialog object-dialog--notebook" data-object-dialog="notebook" aria-labelledby="notebook-title">
-      <button class="dialog-close" type="button" data-close-dialog aria-label="關閉採訪筆記本">×</button>
-      <h2 id="notebook-title" class="visually-hidden">周思遠的採訪筆記</h2>
-      <div class="notebook">
-        <div class="notebook__rings" aria-hidden="true"></div>
-        <div class="notebook__paper">
-          <div data-notebook-pages aria-live="polite"></div>
+          <div class="laptop__base" aria-hidden="true"></div>
         </div>
-        <nav class="notebook-nav" aria-label="翻閱筆記">
-          <button type="button" data-note-prev>← 前一頁</button>
-          <span data-note-count>1 / 7</span>
-          <button type="button" data-note-next>下一頁 →</button>
-        </nav>
       </div>
     </dialog>
 
-    <dialog id="dialog-map" class="object-dialog object-dialog--wide" data-object-dialog="map" aria-labelledby="map-title">
-      <button class="dialog-close" type="button" data-close-dialog aria-label="關閉光復地圖">×</button>
-      <p class="eyebrow">光復地圖｜災害當下與災後</p><h2 id="map-title">光復的四個地方</h2>
-      <div class="map-layout">
-        <div class="map-frame">
-          <div class="map-canvas" data-map-canvas role="application" aria-label="光復鄉地圖，標有四個地點"></div>
-          <p class="map-fallback">地圖暫時無法載入，請從下方選擇地點。</p>
+    <dialog id="dialog-notebook" class="stage-dialog stage-dialog--notebook" data-object-dialog="notebook" aria-labelledby="notebook-title">
+      <button class="stage-close" type="button" data-close-dialog aria-label="把筆記本放回桌上">放回桌上 <span aria-hidden="true">×</span></button>
+      <div class="stage" data-stage-backdrop>
+        <h2 id="notebook-title" class="visually-hidden">周思遠的採訪筆記</h2>
+        <div class="journal" data-lift data-lift-from="rotate(-1.5deg)" data-journal data-open="false" data-turned="false">
+          <div class="journal__book">
+            <div class="journal__verso" aria-hidden="true"></div>
+            <div class="journal__page"><div data-notebook-pages aria-live="polite"></div></div>
+            <div class="journal__leaf" data-journal-leaf aria-hidden="true" hidden>
+              <div class="journal__leaf-front" data-leaf-front></div>
+              <div class="journal__leaf-back"></div>
+            </div>
+            <button class="journal__cover" type="button" data-journal-cover aria-controls="notebook-nav" aria-expanded="false" aria-label="翻開筆記本">
+              <span class="journal__front">
+                <svg class="journal__shovel" viewBox="0 0 40 100" aria-hidden="true">
+                  <defs><linearGradient id="journal-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7dd8f"/><stop offset="0.55" stop-color="#c4913b"/><stop offset="1" stop-color="#e8c46c"/></linearGradient></defs>
+                  <path d="M13.5 3.5h13l-2.6 9h-7.8z" fill="none" stroke="url(#journal-gold)" stroke-width="2.6" stroke-linejoin="round"/>
+                  <rect x="18.4" y="12.5" width="3.2" height="49" fill="url(#journal-gold)"/>
+                  <rect x="16" y="60" width="8" height="5" rx="1" fill="url(#journal-gold)"/>
+                  <path d="M9 65h22v13c0 9-4.5 15.5-11 20-6.5-4.5-11-11-11-20z" fill="url(#journal-gold)"/>
+                </svg>
+                <span class="journal__motto">Be with Fata’an.</span>
+                <span class="journal__band" aria-hidden="true"></span>
+              </span>
+              <span class="journal__inside" aria-hidden="true"><span class="journal__label">採訪筆記<br>周思遠</span></span>
+            </button>
+          </div>
+          <svg class="journal__pen" viewBox="0 0 28 300" aria-hidden="true">
+            <defs><linearGradient id="pen-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2d487"/><stop offset="1" stop-color="#b98634"/></linearGradient></defs>
+            <rect x="9" y="0" width="10" height="16" rx="3" fill="#151515"/>
+            <rect x="6" y="14" width="16" height="200" rx="7" fill="#1b1b1b"/>
+            <rect x="1" y="22" width="7" height="92" rx="3" fill="#232323"/>
+            <path d="M2.5 40l2-5 2 5z" fill="url(#pen-gold)"/>
+            <path d="M4.5 62v-7m0 2c-2 0-2.6-1.6-2.6-2.6 1.6 0 2.6.8 2.6 2.6zm0 0c2 0 2.6-1.6 2.6-2.6-1.6 0-2.6.8-2.6 2.6z" stroke="url(#pen-gold)" stroke-width="0.8" fill="url(#pen-gold)"/>
+            <path d="M4.5 88v-10m0 3-2-2m2 4 2-2m-2-4-1.5-2m1.5 2 1.5-2" stroke="url(#pen-gold)" stroke-width="0.8" fill="none"/>
+            <circle cx="4.5" cy="77" r="2.4" fill="none" stroke="url(#pen-gold)" stroke-width="0.7"/>
+            <path d="M6 212h16l-3 44h-10z" fill="#202020"/>
+            <path d="M10 256h8l-2.6 30h-2.8z" fill="#1b1b1b"/>
+            <path d="M13 286h2l-.6 12h-.8z" fill="#c9c9c9"/>
+          </svg>
+          <nav class="notebook-nav journal__nav" id="notebook-nav" aria-label="翻閱筆記">
+            <button type="button" data-note-prev>← 前一頁</button>
+            <span data-note-count>1 / 7</span>
+            <button type="button" data-note-next>下一頁 →</button>
+          </nav>
+          <p class="journal__hint">點封面翻開筆記本</p>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="dialog-map" class="stage-dialog stage-dialog--map" data-object-dialog="map" aria-labelledby="map-title">
+      <button class="stage-close" type="button" data-close-dialog aria-label="把地圖放回牆上">放回牆上 <span aria-hidden="true">×</span></button>
+      <div class="stage" data-stage-backdrop>
+        <div class="map-sheet" data-lift data-lift-from="rotate(1deg)">
+          <span class="map-pin map-pin--tl" aria-hidden="true"></span><span class="map-pin map-pin--tr" aria-hidden="true"></span>
+          <span class="map-pin map-pin--bl" aria-hidden="true"></span><span class="map-pin map-pin--br" aria-hidden="true"></span>
+          <header class="map-sheet__title"><p class="eyebrow">光復地圖｜災害當下與災後</p><h2 id="map-title">光復的四個地方</h2></header>
+          <div class="map-frame">
+            <div class="map-canvas" data-map-canvas role="application" aria-label="光復鄉地圖，標有四個地點"></div>
+            <p class="map-fallback">地圖暫時無法載入，請從下方選擇地點。</p>
+            <article class="place-panel" data-place-panel aria-live="polite" hidden></article>
+          </div>
           <nav class="place-legend" data-place-list aria-label="地點"></nav>
         </div>
-        <article class="place-panel" data-place-panel aria-live="polite" hidden></article>
       </div>
     </dialog>
 
-    <dialog id="dialog-speaker" class="object-dialog" data-object-dialog="speaker" aria-labelledby="speaker-title">
-      <button class="dialog-close" type="button" data-close-dialog aria-label="關閉收音機">×</button>
-      <p class="eyebrow">收音機</p><h2 id="speaker-title">思遠留下的錄音</h2>
-      <figure class="speaker-photo" data-speaker-photo>
-        <img alt="">
-        <figcaption></figcaption>
-      </figure>
-      <ol class="track-list" data-track-list aria-label="錄音列表"></ol>
-      <section class="audio-player" aria-label="錄音播放器">
-        <p class="prototype-tag">嵌入原平台播放器｜授權確認中</p>
-        <p data-audio-speaker>尚未播放</p>
-        <h3 data-audio-title>選一段錄音</h3>
-        <div class="audio-embed" data-audio-embed hidden></div>
-        <p class="audio-status" data-audio-status role="status"></p>
-        <div class="audio-actions">
-          <button class="text-button" type="button" data-audio-stop>停止</button>
-          <a class="text-button" data-audio-source href="#" target="_blank" rel="noreferrer" hidden>在原平台開啟 ↗</a>
+    <dialog id="dialog-speaker" class="stage-dialog stage-dialog--radio" data-object-dialog="speaker" aria-labelledby="speaker-title">
+      <button class="stage-close" type="button" data-close-dialog aria-label="把收音機放回桌上">放回桌上 <span aria-hidden="true">×</span></button>
+      <div class="stage radio-stage" data-stage-backdrop>
+        <h2 id="speaker-title" class="visually-hidden">收音機：思遠留下的錄音</h2>
+        <div class="radio-window" data-lift data-lift-from="perspective(1600px) rotateY(36deg) rotateX(8deg)">
+          <div class="radio">
+            <img class="radio__body" src="assets/images/radio-front.webp" alt="" draggable="false">
+            <div class="radio__lcd" data-radio-lcd data-playing="false">
+              <p class="lcd__row"><span data-radio-channel>CH 01/02</span><span data-radio-state>READY</span></p>
+              <p class="lcd__ticker" data-radio-ticker><span data-audio-title>選一段錄音</span></p>
+              <canvas class="lcd__scope" data-radio-scope aria-hidden="true"></canvas>
+            </div>
+            <div class="radio__keys" role="group" aria-label="收音機按鍵">
+              <button class="radio__key" type="button" data-radio="prev" aria-label="上一台"><span aria-hidden="true">◀◀</span></button>
+              <button class="radio__key" type="button" data-radio="play" aria-label="播放" aria-pressed="false"><span aria-hidden="true">▶</span></button>
+              <button class="radio__key" type="button" data-radio="stop" aria-label="停止"><span aria-hidden="true">■</span></button>
+              <button class="radio__key" type="button" data-radio="next" aria-label="下一台"><span aria-hidden="true">▶▶</span></button>
+            </div>
+            <p class="radio__print radio__print--keys" aria-hidden="true"><span>選台</span><span>播放</span><span>停止</span><span>選台</span></p>
+            <button class="radio__knob radio__knob--tune" type="button" data-radio="tune" aria-label="調台旋鈕：換下一台"></button>
+            <button class="radio__knob radio__knob--volume" type="button" data-radio="volume" aria-label="音量旋鈕：切換靜音" aria-pressed="false"></button>
+            <p class="radio__print radio__print--knobs" aria-hidden="true"><span>TUNING</span><span>VOLUME</span></p>
+          </div>
         </div>
-      </section>
+        <aside class="radio-side">
+          <section class="radio-monitor" aria-label="錄音播放器">
+            <p class="prototype-tag">示意錄音｜嵌入原平台播放器</p>
+            <p class="radio-monitor__speaker" data-audio-speaker></p>
+            <div class="audio-embed" data-audio-embed hidden></div>
+            <p class="radio-monitor__idle" data-audio-idle>按收音機上的 ▶，原平台的播放器會出現在這裡。</p>
+            <p class="audio-status" data-audio-status role="status"></p>
+            <a class="text-button" data-audio-source href="#" target="_blank" rel="noreferrer" hidden>在原平台開啟 ↗</a>
+          </section>
+          <figure class="radio-postcard" data-speaker-photo>
+            <img alt="">
+            <figcaption></figcaption>
+          </figure>
+        </aside>
+      </div>
     </dialog>
 
-    <dialog id="dialog-photo" class="object-dialog" data-object-dialog="photo" aria-labelledby="photo-title">
-      <button class="dialog-close" type="button" data-close-dialog aria-label="關閉照片">×</button>
-      <p class="eyebrow" data-photo-meta>1/17｜跟知行一起跑採訪</p><h2 id="photo-title">思遠桌上的照片</h2>
-      <div class="photo-stack" data-photo-stack></div>
-      <p class="photo-stack__note" data-photo-note aria-live="polite"></p>
-      <nav class="photo-stack__nav" aria-label="切換照片">
-        <button type="button" data-photo-prev aria-label="上一張">←</button>
-        <span data-photo-count>1 / 2</span>
-        <button type="button" data-photo-next aria-label="下一張">→</button>
-      </nav>
+    <dialog id="dialog-photo" class="stage-dialog stage-dialog--photo" data-object-dialog="photo" aria-labelledby="photo-title">
+      <button class="stage-close" type="button" data-close-dialog aria-label="把照片放回桌上">放回桌上 <span aria-hidden="true">×</span></button>
+      <div class="stage" data-stage-backdrop>
+        <div class="photo-hand" data-lift data-lift-from="rotate(4deg)">
+          <h2 id="photo-title" class="visually-hidden">思遠桌上的照片</h2>
+          <p class="photo-hand__meta" data-photo-meta>1/17｜跟知行一起跑採訪</p>
+          <div class="photo-stack" data-photo-stack></div>
+          <p class="photo-hand__hint">點照片翻到背面看看</p>
+          <nav class="photo-stack__nav" aria-label="切換照片">
+            <button type="button" data-photo-prev aria-label="上一張">←</button>
+            <span data-photo-count>1 / 2</span>
+            <button type="button" data-photo-next aria-label="下一張">→</button>
+          </nav>
+        </div>
+      </div>
     </dialog>
 
     <dialog id="dialog-depart" class="object-dialog" data-depart-dialog aria-labelledby="depart-title">
@@ -262,7 +340,7 @@
         <h2 id="sources-title">照片與內容來源</h2>
         <p>公開新聞照片僅供內部原型溝通。正式對外發布前，必須逐張重新確認授權、使用範圍與署名方式。</p>
         <ul class="source-list" data-source-list></ul>
-        <p class="source-note">互動桌景、周思遠與林知行的合照及桌面紋理皆為 AI 生成戲劇示意，不代表真實人物、場景或新聞紀錄。收音機裡的兩段影音嵌入原平台播放器，授權確認中。</p>
+        <p class="source-note">互動桌景、周思遠與林知行的合照及桌面紋理皆為 AI 生成戲劇示意，不代表真實人物、場景或新聞紀錄。收音機正面圖為 AI 生成示意；收音機裡的兩段影音為示意素材，嵌入原平台播放器，授權確認中。</p>
         <button class="danger-button" type="button" data-reset-prototype>重設這台裝置上的原型資料</button>
       </form>
     </dialog>

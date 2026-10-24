@@ -405,6 +405,14 @@ export const PHOTO_STACK = [
   },
 ];
 
+// 收音機拿起來之後的正面（AI 生成示意，外觀參考桌景裡的那台收音機）。
+export const RADIO_FRONT = {
+  src: 'assets/images/radio-front.webp',
+  alt: '老舊黑色手提收音機的正面：左邊是喇叭網，右邊是螢幕、四個按鍵與兩個旋鈕',
+  credit: 'AI 生成示意圖（收音機正面）',
+  sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
+};
+
 export const DESK_TEXTURE = {
   src: 'assets/images/desk-texture.jpg',
   alt: '深色木質桌面紋理',

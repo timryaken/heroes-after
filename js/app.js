@@ -4,7 +4,7 @@ import { createBoardController } from './board.js';
 import { createBoardApi } from './board-api.js';
 import { BOARD_CONFIG } from './board-config.js';
 import { createChecklistController } from './checklist.js';
-import { BOARD_SAMPLE_POSTS, CHECKLIST, DESK_TEXTURE, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, ROLES, SPEAKER_PHOTO, VOICE_CLIPS } from './data.js';
+import { BOARD_SAMPLE_POSTS, CHECKLIST, DESK_TEXTURE, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, ROLES, SPEAKER_PHOTO, VOICE_CLIPS } from './data.js';
 import { createDeskController, createStoryContentController } from './desk.js';
 import { createDeskView } from './desk-view.js';
 import { createFormsController } from './forms.js';
@@ -38,10 +38,11 @@ const sourcesDialog = document.querySelector('[data-sources-dialog]');
 const departDialog = document.querySelector('[data-depart-dialog]');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const deskRoot = document.querySelector('[data-desk]');
-const desk = createDeskController(deskRoot, store);
-createStoryContentController(document, {
+const desk = createDeskController(deskRoot, store, { reducedMotion });
+const story = createStoryContentController(document, {
   notebookPages: NOTEBOOK_PAGES,
   photos: PHOTO_STACK,
+  reducedMotion,
 });
 const forms = createFormsController(document, store);
 const deskView = createDeskView(deskRoot);
@@ -65,6 +66,9 @@ const placeMap = createMapController(document.querySelector('[data-object-dialog
 // CHECK LIST 只要求至少聽過一段錄音。
 const audio = createAudioController(document.querySelector('[data-object-dialog="speaker"]'), VOICE_CLIPS, {
   listened: store.load().listened,
+  reducedMotion,
+  // 右邊的音量旋鈕和右上角的聲音開關是同一個。
+  onVolume: () => document.querySelector('[data-mute]').click(),
   onComplete: (id, listened) => {
     store.save({ listened });
     complete('speaker');
@@ -78,6 +82,7 @@ function renderSources() {
     ...PLACES.flatMap((place) => [place.before, place.after]),
     ...PHOTO_STACK,
     SPEAKER_PHOTO,
+    RADIO_FRONT,
     ...BOARD_SAMPLE_POSTS.filter((post) => post.photo).map((post) => ({ ...post.photo, credit: 'AI 生成示意圖（讀者版示意留言）', sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/' })),
     DESK_TEXTURE,
     INTERACTIVE_DESK,
@@ -166,9 +171,13 @@ document.querySelector('[data-mute]').addEventListener('click', (event) => {
 
 deskRoot.addEventListener('desk:object-opened', (event) => {
   if (event.detail.id === 'map') placeMap.ensureMap();
+  if (event.detail.id === 'computer') board.load();
+  if (event.detail.id === 'speaker') audio.setActive(true);
 });
 deskRoot.addEventListener('desk:object-closed', (event) => {
-  if (event.detail.id === 'speaker') audio.stop();
+  if (event.detail.id !== 'speaker') return;
+  audio.stop();
+  audio.setActive(false);
 });
 document.addEventListener('forms:posted', () => complete('computer'));
 document.addEventListener('story:notebook-finished', () => complete('notebook'));
@@ -177,6 +186,7 @@ document.addEventListener('forms:reset', () => {
   desk.reset();
   board.reset();
   audio.setListened([]);
+  story.setBookOpen(false);
   checklist.update([]);
   if (sourcesDialog.open) sourcesDialog.close();
   if (departDialog.open) departDialog.close();

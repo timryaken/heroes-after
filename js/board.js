@@ -31,8 +31,9 @@ export function postMarkup(post, { byline = '', photoUrl = '', liked = false } =
 }
 
 export function createBoardController(root, api, { roles = [], samples = [], showSamples = true, getRole = () => '' } = {}) {
-  const tabs = [...root.querySelectorAll('[data-board-tab]')];
-  const panels = [...root.querySelectorAll('[data-board-panel]')];
+  const composeButton = root.querySelector('[data-board-compose]');
+  const composePanel = root.querySelector('[data-board-compose-panel]');
+  const composeClose = root.querySelector('[data-board-compose-close]');
   const form = root.querySelector('[data-board-form]');
   const prompt = root.querySelector('[data-board-prompt]');
   const fileInput = root.querySelector('[data-board-file]');
@@ -51,24 +52,24 @@ export function createBoardController(root, api, { roles = [], samples = [], sho
 
   const bylineFor = (roleId) => roles.find(({ id }) => id === roleId)?.byline ?? '讀者';
 
-  function selectTab(name, { focus = false } = {}) {
-    for (const tab of tabs) {
-      const selected = tab.dataset.boardTab === name;
-      tab.setAttribute('aria-selected', String(selected));
-      tab.tabIndex = selected ? 0 : -1;
-      if (selected && focus) tab.focus();
-    }
-    for (const panel of panels) panel.hidden = panel.dataset.boardPanel !== name;
-    if (name === 'read') load();
+  // 筆電螢幕先顯示讀者版；右下角「投稿」打開投稿視窗，蓋在讀者版上面。
+  function setComposeOpen(open, { focus = true } = {}) {
+    composePanel.hidden = !open;
+    composeButton.hidden = open;
+    composeButton.setAttribute('aria-expanded', String(open));
+    if (!focus) return;
+    if (open) form.elements.body.focus({ preventScroll: true });
+    else composeButton.focus({ preventScroll: true });
   }
 
-  tabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => selectTab(tab.dataset.boardTab));
-    tab.addEventListener('keydown', (event) => {
-      if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-      const next = tabs[(index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
-      selectTab(next.dataset.boardTab, { focus: true });
-    });
+  composeButton.addEventListener('click', () => setComposeOpen(true));
+  composeClose.addEventListener('click', () => setComposeOpen(false));
+  composePanel.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    // 先關投稿視窗，不要連筆電一起放回桌上。
+    event.preventDefault();
+    event.stopPropagation();
+    setComposeOpen(false);
   });
 
   function render() {
@@ -176,12 +177,13 @@ export function createBoardController(root, api, { roles = [], samples = [], sho
   hydrate();
   return {
     hydrate,
-    selectTab,
+    load,
+    setComposeOpen,
     reset() {
       form.reset();
       revokePreview();
       status.hidden = true;
-      selectTab('write');
+      setComposeOpen(false, { focus: false });
       hydrate();
     },
   };
