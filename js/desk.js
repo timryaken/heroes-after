@@ -55,7 +55,7 @@ export function createStoryContentController(root, { notebookPages = [], photos 
     noteCount.textContent = `${noteIndex + 1} / ${notebookPages.length}`;
     previousNote.disabled = noteIndex === 0;
     nextNote.disabled = noteIndex === notebookPages.length - 1;
-    // 讀到英雄出發前的最後一頁，才算翻閱完筆記。
+    // 讀到思遠出發前的最後一頁，才算翻閱完筆記。
     if (noteIndex === notebookPages.length - 1) dispatch(notebook, 'story:notebook-finished');
   }
 

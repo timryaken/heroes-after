@@ -222,6 +222,10 @@
 .photo-stack__nav button { width: 2.75rem; height: 2.75rem; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); background: transparent; cursor: pointer; }
 .photo-stack__nav button:hover { border-color: var(--ember-bright); }
 
+.speaker-photo { margin: 1.25rem 0 0; border: 1px solid var(--line); background: rgba(0,0,0,0.28); }
+.speaker-photo img { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: cover; }
+.speaker-photo figcaption { padding: 0.6rem 0.7rem; color: var(--ink-muted); font-size: 0.68rem; }
+.speaker-photo a { color: inherit; }
 .track-list { display: grid; gap: 0.5rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
 .track { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem; width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--line); color: var(--ink); background: transparent; text-align: left; cursor: pointer; transition: border-color 160ms ease, background 160ms ease; }
 .track:hover { border-color: rgba(255,174,118,0.55); }

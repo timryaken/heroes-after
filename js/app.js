@@ -1,7 +1,7 @@
 import { daysSinceDisaster } from './core.js';
 import { createAudioController } from './audio.js';
 import { createChecklistController } from './checklist.js';
-import { CHECKLIST, DESK_TEXTURE, INTERACTIVE_DESK, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, ROLES, VOICE_CLIPS } from './data.js';
+import { CHECKLIST, DESK_TEXTURE, INTERACTIVE_DESK, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, ROLES, SPEAKER_PHOTO, VOICE_CLIPS } from './data.js';
 import { createDeskController, createStoryContentController } from './desk.js';
 import { createFormsController } from './forms.js';
 import { createMapController } from './map.js';
@@ -67,6 +67,7 @@ function renderSources() {
     ...PROLOGUE_SLIDES,
     ...PLACES.flatMap((place) => [place.before, place.after]),
     ...PHOTO_STACK,
+    SPEAKER_PHOTO,
     DESK_TEXTURE,
     INTERACTIVE_DESK,
   ].filter((photo) => !photo.placeholder);
@@ -83,6 +84,16 @@ function renderSources() {
 }
 
 renderSources();
+
+function renderSpeakerPhoto() {
+  const figure = document.querySelector('[data-speaker-photo]');
+  const image = figure.querySelector('img');
+  image.src = SPEAKER_PHOTO.src;
+  image.alt = SPEAKER_PHOTO.alt;
+  figure.querySelector('figcaption').innerHTML = `${SPEAKER_PHOTO.credit} · <a href="${SPEAKER_PHOTO.sourceUrl}" target="_blank" rel="noreferrer">原始圖片</a>`;
+}
+
+renderSpeakerPhoto();
 
 const prologue = createPrologueController(prologueRoot, {
   slides: PROLOGUE_SLIDES,

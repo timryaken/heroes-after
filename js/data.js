@@ -1,125 +1,116 @@
 const SOURCES = {
-  ptsDisaster: 'https://news.pts.org.tw/article/771944',
-  cnaVolunteers: 'https://www.cna.com.tw/news/asoc/202509280229.aspx',
-  cnaCleanup: 'https://www.cna.com.tw/news/aipl/202509270165.aspx',
-  ptsAnniversary: 'https://news.pts.org.tw/article/828012',
-  cnaMuseum: 'https://www.cna.com.tw/news/aloc/202606060104.aspx',
-  ptsMemorial: 'https://news.pts.org.tw/article/805126',
+  twreporterFlood: 'https://www.twreporter.org/a/mataian-creek-barrier-lake',
+  setnShovelHeroes: 'https://www.setn.com/news/1727641',
+  nownewsSugarFactory: 'https://www.nownews.com/news/6734849',
+  tcmbShovels: 'https://tcmb.culture.tw/zh-tw/datasearch?keyword=%E9%A6%AC%E5%A4%AA%E9%9E%8D%E9%A2%A8%E7%81%BD&limit=10&offset=40&sort=relevance&order=desc&isFuzzyMode=false&query=%7B%7D',
+  taiwanWetland: 'https://media.taiwan.net.tw/zh-tw/portal/media/collection/3110181_ph_20260120',
   cnaBangcha: 'https://www.cna.com.tw/news/aloc/202510060168.aspx',
   cnaBixin: 'https://www.cna.com.tw/culture/article/20260615w004',
   cteeXiaoguang: 'https://www.ctee.com.tw/news/20260313701403-431206',
   udnSugarFactory: 'https://udn.com/news/story/124616/9046532',
 };
 
-// 前導素材整理表「02_圖片檔」的原始圖片網址（FB 圖片網址有時效，原貼文網址待補）。
-const SHEET_IMAGE_URLS = {
-  bangchaDuring: 'https://scontent.ftpe14-1.fna.fbcdn.net/v/t39.30808-6/557638440_1207991428029463_3036226397234658890_n.jpg?stp=dst-jpg_tt6&cstp=mx1536x2048&ctp=s1536x2048&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=t2AfxIdGQBUQ7kNvwGFiUME&_nc_oc=AdqtU1N2mhKnNOROwYbRJTDJbYfXOjHvJGQud8boeKWYuI5YmYQpyVTD_U7lgv07A3Y&_nc_zt=23&_nc_ht=scontent.ftpe14-1.fna&_nc_gid=i3WYJs3Clxt8MHazCkww6g&_nc_ss=7b2a8&oh=00_AQP9i4DPPMwH0OZeOVG4eDAymTFoYmuJAz7dqir3op7vlA&oe=6ADEF6A7',
-  bangchaAfter: 'https://scontent.ftpe14-1.fna.fbcdn.net/v/t39.30808-6/584309842_1250111010484171_8241184142871493596_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1365&ctp=s2048x1365&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=le6dwOg3ZQMQ7kNvwGZjqyh&_nc_oc=AdrmvDwkf-yxAjJmyWRya3-wuJttlsUdI_EL_12Z2YDXnTJYp31C2gguyI5ldsYMLTg&_nc_zt=23&_nc_ht=scontent.ftpe14-1.fna&_nc_gid=n4SDRkGRtnnR2tExBvWqwA&_nc_ss=7b2a8&oh=00_AQP03dTWRASyR3yVuVNYguLu0NRWMIEWzRIrVhznrOkjBg&oe=6ADEF8C5',
-  bixinDuring: 'https://scontent.ftpe14-1.fna.fbcdn.net/v/t39.99422-6/857608161_3371922239674999_271998674442411391_n.png?stp=dst-jpg_tt6&cstp=mx1108x1477&ctp=s1108x1477&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=VPbOAk4Ze94Q7kNvwEi1SK_&_nc_oc=AdqLTPBhMEQ53v6dlr1gxcRNBZEW9Am0JYzeRQUnXjFQB6TazrHhSVAzIr-poHPktE4&_nc_zt=14&_nc_ht=scontent.ftpe14-1.fna&_nc_gid=ZY9DyCwfhRwBnTCyAjeJUA&_nc_ss=7b2a8&oh=00_AQOTByvMsN2RQn5QdbnEYiiE4pbAt5q5xi-CrO3ip9UTTw&oe=6ADF0FAD',
-  bixinAfter: 'https://scontent.ftpe14-1.fna.fbcdn.net/v/t39.99422-6/859478355_2828806067475664_4976383592069195371_n.png?stp=dst-jpg_tt6&cstp=mx1477x1108&ctp=s1477x1108&_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=70ACIwFwYdcQ7kNvwF4g_d1&_nc_oc=AdpXnLIZMX5ReU_vD76_anfMmF9JQZa1kutUltL4aTtl8zK9TaAaGj1dupsfcn6tpZ4&_nc_zt=14&_nc_ht=scontent.ftpe14-1.fna&_nc_gid=ZY9DyCwfhRwBnTCyAjeJUA&_nc_ss=7b2a8&oh=00_AQMjVWx7wvCy-qvHC4oy3IWTKiJ-Eh45nVG0GZ0SkZYo-g&oe=6ADF1694',
-  xiaoguangDuring: 'https://scontent.ftpe14-1.fna.fbcdn.net/v/t39.30808-6/553675175_793048633273233_3049715377782294339_n.jpg?stp=dst-jpg_tt6&cstp=mx868x1156&ctp=s868x1156&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=UjwwOruunkIQ7kNvwGYPWZv&_nc_oc=Adp9Ij1I3Alsrhr-pE_bk-LwgYw7xgmw9lsMyVIqmOJNOHo6zHIxq5KtNHmlMLFXr6w&_nc_zt=23&_nc_ht=scontent.ftpe14-1.fna&_nc_gid=C0RQC-WwJf1ytEoVn9-mHA&_nc_ss=7b2a8&oh=00_AQNMQm9P8vcAZTUyfWoKNkLWRRNyY5emF4j__KoP1JoC-Q&oe=6ADF091A',
-  xiaoguangAfter: 'https://scontent.ftpe14-1.fna.fbcdn.net/v/t39.30808-6/558205697_806296781948418_3980299337800017368_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=104&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=oudMH8USaCYQ7kNvwHuQVXw&_nc_oc=AdoH7wPqLYprb8YYH6w17_I8Yot-MNFbPBOLe10UUbR6LaiMKdZphiDdz-7mBpiNZHA&_nc_zt=23&_nc_ht=scontent.ftpe14-1.fna&_nc_gid=mlbfySNwdjULAEdteP6Cxg&_nc_ss=7b2a8&oh=00_AQP89U9LJZ-Q3h4_oB_pomM-e-L-OI2v0uLAs4LJGcCidg&oe=6ADF09B6',
-  sugarFactoryDuring: 'https://media.nownews.com/nn_media/thumbnail/2025/09/1758685832275-5b4f3e1aafe24f159f2513f3b3375a86-800x600.webp?unShow=false',
-  sharedShovels: 'https://dcm.s3.hicloud.net.tw/new/excel/event/2025-11-26/d9293227-1e48-46e6-a8ae-6923e42358f5/collection/ac21ad80-7391-442f-925c-fd1a18eee202/4cc2f447-8773-43cb-9e06-7a0a31065bc4.jpeg',
-};
-
-const FB_CREDIT = '照片來源：Facebook 公開貼文（原貼文待補、授權待確認）';
+// 前導素材整理表「02_圖片檔」「06_前導災前災後照片」列出的 Facebook 照片頁（授權待確認）。
+const fbPhoto = (fbid) => `https://www.facebook.com/photo/?fbid=${fbid}`;
+const BANGCHA_CREDIT = '照片來源：邦查農場 Facebook（授權待確認）';
+const BIXIN_CREDIT = '照片來源：彼心書店 Facebook（授權待確認）';
+const XIAOGUANG_CREDIT = '照片來源：小光故事屋 Facebook（授權待確認）';
 
 const photos = {
-  disaster: {
-    src: 'assets/images/disaster-guangfu.jpg',
-    alt: '泥流淹入光復鄉街區，車輛受困在混濁水流中',
-    credit: '畫面來源：公視新聞網',
-    sourceUrl: SOURCES.ptsDisaster,
+  flood: {
+    src: 'assets/images/prologue-flood.jpg',
+    alt: '空拍光復鄉：泥流漫過田地與房舍，只剩樹冠和屋頂露出水面',
+    credit: '照片來源：報導者（攝影／謝佩穎，授權待確認）',
+    sourceUrl: SOURCES.twreporterFlood,
   },
-  volunteersStation: {
-    src: 'assets/images/volunteers-shoveling.jpg',
-    alt: '大批志工攜帶裝備抵達光復車站月台',
-    credit: '照片來源：中央社',
-    sourceUrl: SOURCES.cnaVolunteers,
+  shovelHeroes: {
+    src: 'assets/images/prologue-shovel-heroes.jpg',
+    alt: '大批鏟子超人背著背包、拿著鏟子走進滿是泥濘的光復街道',
+    credit: '照片來源：三立新聞網（原圖台鐵提供，授權待確認）',
+    sourceUrl: SOURCES.setnShovelHeroes,
   },
-  volunteersStreet: {
-    src: 'assets/images/volunteers-arriving.jpg',
-    alt: '穿著雨鞋、手持清潔工具的志工走進光復受災街區',
-    credit: '照片來源：中央社',
-    sourceUrl: SOURCES.cnaCleanup,
+  bangchaMachine: {
+    src: 'assets/images/prologue-bangcha-machine.jpg',
+    alt: '邦查農場被泥流沖毀，挖土機在倒塌的棚架與雜物間整理',
+    credit: BANGCHA_CREDIT,
+    sourceUrl: fbPhoto('1207989684696304'),
   },
-  riverNow: {
-    src: 'assets/images/wetland-now.jpg',
-    alt: '災後週年時仍在整治中的馬太鞍溪河道',
-    credit: '畫面來源：公視新聞網（週年追蹤）',
-    sourceUrl: SOURCES.ptsAnniversary,
+  bixinDrying: {
+    src: 'assets/images/prologue-bixin-drying.jpg',
+    alt: '彼心書店的書一本本攤開在屋頂的黑布上晾乾',
+    credit: BIXIN_CREDIT,
+    sourceUrl: fbPhoto('122224580426353355'),
   },
-  museumNow: {
-    src: 'assets/images/sugar-factory-now.jpg',
-    alt: '光復糖廠鏟子超人館內保存的救災物件與照片',
-    credit: '照片來源：中央社記者張祈攝',
-    sourceUrl: SOURCES.cnaMuseum,
+  bangchaReplant: {
+    src: 'assets/images/prologue-bangcha-replant.jpg',
+    alt: '空拍邦查農場：覆滿淤泥的田地上，排出一圈圈重新耕種的種植點',
+    credit: BANGCHA_CREDIT,
+    sourceUrl: fbPhoto('1250109317151007'),
   },
-  memorialNow: {
-    src: 'assets/images/datong-now.jpg',
-    alt: '光復車站前紀念鏟子超人的公仔',
-    credit: '畫面來源：公視新聞網',
-    sourceUrl: SOURCES.ptsMemorial,
+  bangchaGreen: {
+    src: 'assets/images/prologue-bangcha-green.jpg',
+    alt: '空拍邦查農場：田裡重新長出綠色作物，排成一片葉子的形狀',
+    credit: BANGCHA_CREDIT,
+    sourceUrl: fbPhoto('1509787551183181'),
   },
   bangchaDuring: {
     src: 'assets/images/bangcha-during.jpg',
-    alt: '邦查農場被泥流淹沒，有人推著推車在淤泥裡清淤',
-    credit: FB_CREDIT,
-    sourceUrl: SHEET_IMAGE_URLS.bangchaDuring,
+    alt: '邦查農場被泥流淹沒，有人推著推車在淤泥裡搬泥',
+    credit: BANGCHA_CREDIT,
+    sourceUrl: fbPhoto('1207989528029653'),
   },
   bangchaAfter: {
     src: 'assets/images/bangcha-after.jpg',
-    alt: '空拍邦查農場：覆滿淤泥的田地上，排出一圈圈重新復苗的種植點',
-    credit: FB_CREDIT,
-    sourceUrl: SHEET_IMAGE_URLS.bangchaAfter,
+    alt: '邦查農場田裡重新長出一片紅藜',
+    credit: BANGCHA_CREDIT,
+    sourceUrl: fbPhoto('1467285568766713'),
   },
   bixinDuring: {
     src: 'assets/images/bixin-during.jpg',
     alt: '彼心書店外，被泥沙掩埋的書堆成一座小山',
-    credit: FB_CREDIT,
-    sourceUrl: SHEET_IMAGE_URLS.bixinDuring,
+    credit: BIXIN_CREDIT,
+    sourceUrl: fbPhoto('122224580534353355'),
   },
   bixinAfter: {
     src: 'assets/images/bixin-after.jpg',
-    alt: '彼心書店的書一本本攤開在屋頂的黑布上晾乾',
-    credit: FB_CREDIT,
-    sourceUrl: SHEET_IMAGE_URLS.bixinAfter,
+    alt: '各地寄到彼心書店的祝福卡片，寫著「祝福人人平安康樂」「光復加油」',
+    credit: BIXIN_CREDIT,
+    sourceUrl: fbPhoto('122221611500353355'),
   },
   xiaoguangDuring: {
     src: 'assets/images/xiaoguang-during.jpg',
     alt: '小光故事屋教室裡，桌椅與書架被泥流沖倒、堆成一團',
-    credit: FB_CREDIT,
-    sourceUrl: SHEET_IMAGE_URLS.xiaoguangDuring,
+    credit: XIAOGUANG_CREDIT,
+    sourceUrl: fbPhoto('793048453273251'),
   },
   xiaoguangAfter: {
     src: 'assets/images/xiaoguang-after.jpg',
-    alt: '小光故事屋恢復運作，孩子和大人們在教室裡比著手勢合照',
-    credit: FB_CREDIT,
-    sourceUrl: SHEET_IMAGE_URLS.xiaoguangAfter,
+    alt: '小光故事屋清理乾淨的室內，地板重新露了出來',
+    credit: XIAOGUANG_CREDIT,
+    sourceUrl: fbPhoto('796410922937004'),
   },
   sugarFactoryDuring: {
     src: 'assets/images/sugar-factory-during.jpg',
     alt: '光復糖廠的救災資源集換站，志工一箱箱傳遞物資',
-    credit: '照片來源：NOWnews 今日新聞（原報導待補、授權待確認）',
-    sourceUrl: SHEET_IMAGE_URLS.sugarFactoryDuring,
+    credit: '照片來源：NOWnews 今日新聞（授權待確認）',
+    sourceUrl: SOURCES.nownewsSugarFactory,
   },
   sharedShovels: {
     src: 'assets/images/shared-shovels.jpg',
     alt: '牆邊堆滿志工用過的鏟子，地上放著藍色小板凳',
-    credit: '照片來源待補（授權待確認）',
-    sourceUrl: SHEET_IMAGE_URLS.sharedShovels,
+    credit: '照片來源：國家文化記憶庫〈花蓮馬太鞍溪堰塞湖洪災-鏟子堆〉（授權待確認）',
+    sourceUrl: SOURCES.tcmbShovels,
   },
 };
 
+// 前導開場：依「06_前導災前災後照片」，先是災害與行動的 3 張，再是重新開始的 3 張。
 export const PROLOGUE_SLIDES = [
-  { id: 'disaster-street', phase: 'disaster', ...photos.disaster },
-  { id: 'disaster-aftermath', phase: 'disaster', ...photos.disaster },
-  { id: 'volunteers-station', phase: 'volunteers', ...photos.volunteersStation },
-  { id: 'volunteers-street', phase: 'volunteers', ...photos.volunteersStreet },
-  { id: 'river-now', phase: 'now', ...photos.riverNow },
-  { id: 'memory-now', phase: 'now', ...photos.museumNow },
-  { id: 'memorial-now', phase: 'now', ...photos.memorialNow },
+  { id: 'flood', phase: 'disaster', ...photos.flood },
+  { id: 'shovel-heroes', phase: 'volunteers', ...photos.shovelHeroes },
+  { id: 'bangcha-machine', phase: 'volunteers', ...photos.bangchaMachine },
+  { id: 'bixin-drying', phase: 'now', ...photos.bixinDrying },
+  { id: 'bangcha-replant', phase: 'now', ...photos.bangchaReplant },
+  { id: 'bangcha-green', phase: 'now', ...photos.bangchaGreen },
 ];
 
 // 問卷只區分玩家在事件中的既有參與位置，不限制可看到的內容；headline 是結果頁標語（暫定）。
@@ -147,7 +138,7 @@ export const ROLES = [
   },
 ];
 
-// 谷英雄的採訪筆記，時間線停在他出發前往光復。
+// 周思遠的採訪筆記，時間線停在他出發前往光復。
 // lines 裡的空字串是段落間的空行；允許 <mark>（螢光筆）與 <s>（劃掉）兩種手寫效果。
 // doodle 是頁邊的手繪裝飾：crown（皇冠與輸贏記號）、ticket（夾在角落的機票）；sparse 會讓版面留更多空白。
 export const NOTEBOOK_PAGES = [
@@ -185,7 +176,7 @@ export const NOTEBOOK_PAGES = [
     lines: [
       '這個月流量：',
       '知行 1,284,302',
-      '英雄 1,241,870',
+      '思遠 1,241,870',
       '輸了 42,432。',
       '',
       '他今天故意把排行榜截圖傳給我。',
@@ -275,8 +266,8 @@ export const PLACES = [
     name: '邦查農場',
     lat: 23.6672,
     lng: 121.4336,
-    era: '清淤，然後重新復苗',
-    summary: '馬太鞍部落最早的有機農場，靠著馬太鞍溪的水源耕作。洪災時土砂淹進農地與溫室，之後一點一點清淤，再重新排出一圈圈的種植點。',
+    era: '清淤，然後重新種出紅藜',
+    summary: '馬太鞍部落最早的有機農場，靠著馬太鞍溪的水源耕作。洪災時土砂淹進農地與溫室，之後一點一點清淤、重新耕種，田裡又長出了紅藜。',
     reading: SOURCES.cnaBangcha,
     before: photos.bangchaDuring,
     after: photos.bangchaAfter,
@@ -286,8 +277,8 @@ export const PLACES = [
     name: '彼心書店',
     lat: 23.6656,
     lng: 121.4248,
-    era: '書被掩埋，再一本本晾乾',
-    summary: '光復鄉唯一的獨立書店，原本開在縣府舊消防隊辦公室的一樓。洪水淹進一樓，來不及搬的書被泥沙埋住；清淤後，書被一本本攤開晾乾。',
+    era: '書被掩埋，祝福從各地寄來',
+    summary: '光復鄉唯一的獨立書店，原本開在縣府舊消防隊辦公室的一樓。洪水淹進一樓，來不及搬的書被泥沙埋住；清淤後，書被一本本攤開晾乾，各地寄來的祝福卡片也陸續送到書店。',
     reading: SOURCES.cnaBixin,
     before: photos.bixinDuring,
     after: photos.bixinAfter,
@@ -337,16 +328,24 @@ export const VOICE_CLIPS = [
   },
 ];
 
+// 收音機旁放的照片（「02_圖片檔」的馬太鞍濕地），依政府資料開放授權條款標示來源。
+export const SPEAKER_PHOTO = {
+  src: 'assets/images/wetland-fireflies.jpg',
+  alt: '馬太鞍濕地的「螢饗」夜間餐會，木造棚架下掛著一串串燈泡',
+  credit: '照片來源：觀光多媒體開放資料〈2026光復馬太鞍濕地-螢饗〉（拍攝者：花蓮縣馬太鞍休閒農業發展協會；製作單位：農業部；政府資料開放授權條款）',
+  sourceUrl: SOURCES.taiwanWetland,
+};
+
 // 總編 CHECK LIST：三項都確認後才能按「出發」；id 對應桌上的物件。
 export const CHECKLIST = [
-  { id: 'speaker', label: '確認英雄留下的錄音', hint: '至少聽一段錄音' },
+  { id: 'speaker', label: '確認思遠留下的錄音', hint: '至少聽一段錄音' },
   { id: 'map', label: '確認光復相關照片', hint: '在地圖上打開一個地點' },
-  { id: 'notebook', label: '翻閱英雄的採訪筆記', hint: '讀到出發前的最後一頁' },
+  { id: 'notebook', label: '翻閱思遠的採訪筆記', hint: '讀到出發前的最後一頁' },
 ];
 
 export const REPORTER_PHOTO = {
   src: 'assets/images/reporters-photo.jpg',
-  alt: '谷英雄與林知行跑地方採訪時，和居民的戲劇重現合照',
+  alt: '周思遠與林知行跑地方採訪時，和居民的戲劇重現合照',
   credit: 'AI 生成戲劇示意圖，非真實新聞照片',
   sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
 };
@@ -376,7 +375,7 @@ export const DESK_TEXTURE = {
 
 export const INTERACTIVE_DESK = {
   src: 'assets/images/interactive-desk.png',
-  alt: '深夜新聞編輯部裡谷英雄的辦公桌，桌上有電腦、採訪筆記、地圖、收音機與照片',
+  alt: '深夜新聞編輯部裡周思遠的辦公桌，桌上有電腦、採訪筆記、地圖、收音機與照片',
   credit: 'AI 生成互動桌景原型，非真實新聞現場',
   sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
 };

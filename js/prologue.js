@@ -73,8 +73,8 @@ export function createPrologueController(root, options) {
       eyebrow.textContent = '一年之後';
       title.textContent = '那些被鏟子超人清出來的街道，現在怎麼樣了？';
     } else {
-      eyebrow.textContent = '英雄之後';
-      title.textContent = '因為有你們，光復正在回來。記者谷英雄，也出發去了光復。';
+      eyebrow.textContent = '與光赴會';
+      title.textContent = '因為有你們，光復正在回來。\n記者周思遠，也出發去了光復。';
     }
   }
 
