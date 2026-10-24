@@ -118,6 +118,7 @@ export const ROLES = [
   {
     id: 'volunteer',
     label: '我曾是鏟子超人',
+    byline: '曾是鏟子超人',
     relation: '曾實際前往光復參與災後協助，對現場已有直接經驗。',
     wishPrompt: '如果再次回到光復，你最想確認什麼？',
     headline: '你曾經走進這裡，也曾親手成為改變的一部分。',
@@ -125,6 +126,7 @@ export const ROLES = [
   {
     id: 'wanted-to-help',
     label: '我當時想參與，但沒能前往',
+    byline: '當時沒能前往',
     relation: '當時有參與意願，但受時間、距離或其他條件限制，未能到現場。',
     wishPrompt: '如果現在能用另一種方式參與，你想做什麼？',
     headline: '你人沒到，這裡卻一直留在心的某個地方。',
@@ -132,6 +134,7 @@ export const ROLES = [
   {
     id: 'other',
     label: '我以其他方式關心這裡',
+    byline: '在遠方關心',
     relation: '未必到過現場，但曾透過新聞、捐款、社群、轉發或其他方式持續關注。',
     wishPrompt: '你想把哪一句話，留給正在重新開始的人？',
     headline: '英雄，不只出現在現場。',
@@ -328,6 +331,42 @@ export const VOICE_CLIPS = [
   },
 ];
 
+// 讀者版的三篇示意留言（假文，照片為 AI 生成示意），正式上線後可由 BOARD_CONFIG.showSamples 關閉。
+export const BOARD_SAMPLE_POSTS = [
+  {
+    id: 'sample-volunteer',
+    sample: true,
+    role: 'volunteer',
+    prompt: '如果再次回到光復，你最想確認什麼？',
+    name: '阿哲',
+    body: '我最想確認那位阿嬤家門口的花，是不是又擺回去了。那天下火車，整條街都是泥，她一直塞麵包給我們，說吃飽才有力氣。清完她家的騎樓，我們連名字都沒問就走了。',
+    photo: { src: 'assets/images/board-sample-boots.jpg', alt: '騎樓牆邊靠著一雙沾滿乾泥的雨鞋和一把舊鐵鏟（AI 生成示意）' },
+    likes: 128,
+    publishedAt: '2026-10-12',
+  },
+  {
+    id: 'sample-wanted',
+    sample: true,
+    role: 'wanted-to-help',
+    prompt: '如果現在能用另一種方式參與，你想做什麼？',
+    name: '小米',
+    body: '明年春天，我想帶家人去光復住兩晚。那時候我在台北加班，只能一直轉發物資需求，看著大家出發。這次想自己去走走，買一點在地的東西，吃一碗麵，跟店家說聲辛苦了。',
+    likes: 64,
+    publishedAt: '2026-10-15',
+  },
+  {
+    id: 'sample-other',
+    sample: true,
+    role: 'other',
+    prompt: '你想把哪一句話，留給正在重新開始的人？',
+    name: 'Yuki',
+    body: '慢慢來也沒關係，我們都還在看著。我畫了一張光復的明信片，等書店重新開門那天，想寄過去給你們。',
+    photo: { src: 'assets/images/board-sample-card.jpg', alt: '木桌上一張手繪的山與稻田明信片，旁邊放著彩色鉛筆和熱茶（AI 生成示意）' },
+    likes: 37,
+    publishedAt: '2026-10-20',
+  },
+];
+
 // 收音機旁放的照片（「02_圖片檔」的馬太鞍濕地），依政府資料開放授權條款標示來源。
 export const SPEAKER_PHOTO = {
   src: 'assets/images/wetland-fireflies.jpg',
@@ -370,6 +409,13 @@ export const DESK_TEXTURE = {
   src: 'assets/images/desk-texture.jpg',
   alt: '深色木質桌面紋理',
   credit: 'AI 生成原型背景',
+  sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
+};
+
+export const INTERACTIVE_DESK_MOBILE = {
+  src: 'assets/images/interactive-desk-mobile.jpg',
+  alt: '手機版直式桌景：周思遠的辦公桌，牆上有地圖，桌上有收音機、筆電、採訪筆記與照片',
+  credit: 'AI 生成互動桌景原型（手機版），非真實新聞現場',
   sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
 };
 

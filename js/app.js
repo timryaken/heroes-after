@@ -1,8 +1,12 @@
 import { daysSinceDisaster } from './core.js';
 import { createAudioController } from './audio.js';
+import { createBoardController } from './board.js';
+import { createBoardApi } from './board-api.js';
+import { BOARD_CONFIG } from './board-config.js';
 import { createChecklistController } from './checklist.js';
-import { CHECKLIST, DESK_TEXTURE, INTERACTIVE_DESK, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, ROLES, SPEAKER_PHOTO, VOICE_CLIPS } from './data.js';
+import { BOARD_SAMPLE_POSTS, CHECKLIST, DESK_TEXTURE, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, ROLES, SPEAKER_PHOTO, VOICE_CLIPS } from './data.js';
 import { createDeskController, createStoryContentController } from './desk.js';
+import { createDeskView } from './desk-view.js';
 import { createFormsController } from './forms.js';
 import { createMapController } from './map.js';
 import { createPrologueController } from './prologue.js';
@@ -39,7 +43,13 @@ createStoryContentController(document, {
   notebookPages: NOTEBOOK_PAGES,
   photos: PHOTO_STACK,
 });
-const forms = createFormsController(document, store, { roles: ROLES });
+const forms = createFormsController(document, store);
+const deskView = createDeskView(deskRoot);
+const board = createBoardController(
+  document.querySelector('[data-object-dialog="computer"]'),
+  createBoardApi(BOARD_CONFIG, { storage: browserStorage() }),
+  { roles: ROLES, samples: BOARD_SAMPLE_POSTS, showSamples: BOARD_CONFIG.showSamples, getRole: () => store.load().role },
+);
 const checklist = createChecklistController(document.querySelector('[data-checklist]'), CHECKLIST, {
   onOpenItem: (id, trigger) => desk.openObject(id, trigger),
   onDepart: () => openDialog(departDialog),
@@ -68,8 +78,10 @@ function renderSources() {
     ...PLACES.flatMap((place) => [place.before, place.after]),
     ...PHOTO_STACK,
     SPEAKER_PHOTO,
+    ...BOARD_SAMPLE_POSTS.filter((post) => post.photo).map((post) => ({ ...post.photo, credit: 'AI 生成示意圖（讀者版示意留言）', sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/' })),
     DESK_TEXTURE,
     INTERACTIVE_DESK,
+    INTERACTIVE_DESK_MOBILE,
   ].filter((photo) => !photo.placeholder);
   const unique = [...new Map(photos.map((photo) => [`${photo.src}|${photo.credit}`, photo])).values()];
   const entries = [
@@ -105,9 +117,11 @@ function enterDesk(roleId) {
   const role = ROLES.find(({ id }) => id === roleId) ?? ROLES[2];
   roleHeadline.textContent = role.headline;
   forms.hydrate();
+  board.hydrate();
   roleDialog.close();
   experience.hidden = false;
   experience.focus({ preventScroll: true });
+  deskView.show();
   document.dispatchEvent(new CustomEvent('role:selected', {
     detail: { role: role.id },
   }));
@@ -161,6 +175,7 @@ document.addEventListener('story:notebook-finished', () => complete('notebook'))
 document.addEventListener('story:photo-viewed', () => complete('photo'));
 document.addEventListener('forms:reset', () => {
   desk.reset();
+  board.reset();
   audio.setListened([]);
   checklist.update([]);
   if (sourcesDialog.open) sourcesDialog.close();

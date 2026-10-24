@@ -57,18 +57,27 @@
 
     <main id="experience" class="experience" tabindex="-1" hidden>
       <section class="desk" data-desk aria-labelledby="desk-title">
-        <header class="desk__intro">
-          <p class="eyebrow">周思遠的辦公桌</p>
-          <h1 id="desk-title" data-role-headline>英雄，不只出現在現場。</h1>
-          <p>周思遠去了光復。林知行出發前，總編正在整理思遠留下的辦公桌，確認哪些資料要交給知行。完成總編的 CHECK LIST，就可以出發。</p>
-        </header>
+        <aside class="editor-note" data-editor-note aria-labelledby="desk-title">
+          <div class="editor-note__paper" id="editor-note-paper" data-editor-note-paper>
+            <p class="editor-note__from">總編的便條｜周思遠的辦公桌</p>
+            <h1 id="desk-title" data-role-headline>英雄，不只出現在現場。</h1>
+            <p>周思遠去了光復。林知行出發前，總編正在整理思遠留下的辦公桌，確認哪些資料要交給知行。完成總編的 CHECK LIST，就可以出發。</p>
+            <p class="editor-note__hint" data-desk-hint>點桌上發光的物件；畫面放不下時，可以拖曳桌面。</p>
+            <button class="primary-button" type="button" data-editor-note-close>開始整理 <span aria-hidden="true">→</span></button>
+          </div>
+          <button class="editor-note__tab" type="button" data-editor-note-open aria-controls="editor-note-paper" aria-expanded="true">總編的便條</button>
+        </aside>
 
-        <div class="desk__stage">
-          <img class="desk__photo" src="assets/images/interactive-desk.png" alt="深夜新聞編輯部裡周思遠的辦公桌，桌上有電腦、採訪筆記、地圖、收音機與照片">
+        <div class="desk__viewport" data-desk-viewport>
+        <div class="desk__stage" data-desk-stage>
+          <picture>
+            <source media="(max-aspect-ratio: 4/5)" srcset="assets/images/interactive-desk-mobile.jpg">
+            <img class="desk__photo" src="assets/images/interactive-desk.png" alt="深夜新聞編輯部裡周思遠的辦公桌，桌上有電腦、採訪筆記、地圖、收音機與照片" draggable="false">
+          </picture>
           <button class="desk-object desk-object--computer" type="button" data-desk-object="computer" aria-haspopup="dialog" aria-controls="dialog-computer">
             <span class="object-glow" aria-hidden="true"></span>
             <span class="desk-object__visual computer-visual" aria-hidden="true"><i></i></span>
-            <span class="desk-object__copy"><strong>電腦螢幕<span class="visually-hidden" data-done-label></span></strong><em>留下想對光復說的話</em></span>
+            <span class="desk-object__copy"><strong>電腦螢幕<span class="visually-hidden" data-done-label></span></strong><em>留言板與讀者版</em></span>
           </button>
 
           <button class="desk-object desk-object--notebook" type="button" data-desk-object="notebook" aria-haspopup="dialog" aria-controls="dialog-notebook">
@@ -96,6 +105,8 @@
           </button>
 
         </div>
+        </div>
+        <p class="desk__drag-hint" data-drag-hint aria-hidden="true">← 拖曳桌面 →</p>
 
       </section>
 
@@ -115,31 +126,50 @@
       </aside>
     </main>
 
-    <dialog id="dialog-computer" class="object-dialog" data-object-dialog="computer" aria-labelledby="computer-title">
+    <dialog id="dialog-computer" class="object-dialog object-dialog--wide object-dialog--board" data-object-dialog="computer" aria-labelledby="computer-title">
       <button class="dialog-close" type="button" data-close-dialog aria-label="關閉電腦螢幕">×</button>
       <p class="eyebrow">留言給光復</p><h2 id="computer-title">把你想說的，留給光復</h2>
-      <p class="dialog-lede dialog-lede--dark">不論你曾經拿著鏟子到過現場，或在遠方默默關心，都可以留下一段話或一張照片。</p>
-      <form class="story-form" data-memory-form novalidate>
-        <label for="memory-text">我記得……</label>
-        <textarea id="memory-text" name="memory" rows="5" maxlength="800" placeholder="那時候的光復，你記得什麼？現在最想回去看看什麼？"></textarea>
-        <label class="file-field" for="memory-photo">
-          <span>加入一張照片（選填）</span>
-          <small>JPG、PNG 或 WebP，最多 5 MB</small>
-        </label>
-        <input id="memory-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" data-memory-file>
-        <img class="memory-preview" data-memory-preview hidden alt="">
-        <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
-        <div class="form-footer"><small>資料不會送出，只暫存在此裝置。</small><button class="primary-button" type="submit">留下記憶 <span aria-hidden="true">→</span></button></div>
-      </form>
-      <div class="computer-wish">
-        <p class="eyebrow">給光復的一句話</p>
-        <form class="story-form" data-wish-form novalidate>
-          <label id="wish-prompt" for="wish-text" data-wish-prompt>你想把哪一句話，留給正在重新開始的人？</label>
-          <textarea id="wish-text" name="wish" rows="4" maxlength="500" aria-describedby="wish-prompt" placeholder="寫下一句祝福、問題，或你還放不下的念頭。"></textarea>
-          <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
-          <div class="form-footer"><small>資料不會送出，只暫存在此裝置。</small><button class="primary-button" type="submit">收進祈願牆 <span aria-hidden="true">→</span></button></div>
-        </form>
+      <div class="board-tabs" role="tablist" aria-label="留言板">
+        <button type="button" role="tab" id="board-tab-write" aria-controls="board-panel-write" aria-selected="true" data-board-tab="write">寫留言</button>
+        <button type="button" role="tab" id="board-tab-read" aria-controls="board-panel-read" aria-selected="false" tabindex="-1" data-board-tab="read">讀者版</button>
       </div>
+
+      <section class="board-panel" id="board-panel-write" role="tabpanel" aria-labelledby="board-tab-write" data-board-panel="write">
+        <form class="story-form" data-board-form novalidate>
+          <label id="board-prompt" for="board-text" data-board-prompt>你想把哪一句話，留給正在重新開始的人？</label>
+          <textarea id="board-text" name="body" rows="5" maxlength="500" aria-describedby="board-prompt board-privacy" placeholder="寫下一段記憶、一句祝福，或你還放不下的念頭。"></textarea>
+          <div class="board-form__row">
+            <div>
+              <label for="board-name">署名（選填）</label>
+              <input id="board-name" name="name" type="text" maxlength="20" autocomplete="nickname" placeholder="暱稱即可，不必填真名">
+            </div>
+            <div>
+              <label class="file-field" for="board-photo">
+                <span>加入一張照片（選填）</span>
+                <small>JPG、PNG 或 WebP，最多 5 MB</small>
+              </label>
+              <input id="board-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" data-board-file>
+            </div>
+          </div>
+          <img class="memory-preview" data-board-preview hidden alt="">
+          <label class="board-honeypot" aria-hidden="true">請留空<input name="website" type="text" tabindex="-1" autocomplete="off"></label>
+          <p class="board-privacy" id="board-privacy" data-board-privacy>送出後會先由編輯部審核，通過後才會刊登在讀者版，所有人都看得到。照片上傳前會縮小並移除拍攝地點等資訊；請不要寫電話、地址等個人資料。</p>
+          <p class="form-status" data-form-status role="status" tabindex="-1" hidden></p>
+          <div class="form-footer"><small data-board-mode></small><button class="primary-button" type="submit" data-board-submit>送出留言 <span aria-hidden="true">→</span></button></div>
+        </form>
+      </section>
+
+      <section class="board-panel" id="board-panel-read" role="tabpanel" aria-labelledby="board-tab-read" data-board-panel="read" hidden>
+        <article class="paper" aria-label="讀者版">
+          <header class="paper__masthead">
+            <p class="paper__meta"><span data-paper-date></span><span>讀者來函</span><span>與光赴會</span></p>
+            <h3 class="paper__title">光復讀者版</h3>
+            <p class="paper__sub">鏟子超人、想去卻沒能去的人、在遠方關心的人，留給光復的話。</p>
+          </header>
+          <p class="paper__status" data-paper-status role="status"></p>
+          <div class="paper__columns" data-paper-posts></div>
+        </article>
+      </section>
     </dialog>
 
     <dialog id="dialog-notebook" class="object-dialog object-dialog--notebook" data-object-dialog="notebook" aria-labelledby="notebook-title">

@@ -16,12 +16,26 @@ python3 -m http.server 4173
 
 1. 播放或跳過前導，確認災後天數會從 `2025-09-23` 自動計算。
 2. 選擇三種身分之一，桌景上方的大標題會換成該身分的結果頁標語，電腦的祈願提問也會不同。
-3. 桌機版點擊擬真桌景照片上的發光點；手機版向下瀏覽五張物件卡片。
+3. 進桌面時先看到「總編的便條」（身分標語＋說明），按「開始整理」收成左上角的小便條。桌景滿版鋪滿畫面，點發光點打開物件；畫面放不下時可以拖曳桌面（手機版用直式桌景 `interactive-desk-mobile.jpg`，放大 1.2 倍，需要拖曳才看得到全部物件）。
 4. 右下角的總編 CHECK LIST（手機版在畫面底部，可收合）會依下面三項自動打勾，三項都完成才解鎖「出發」：
    - 收音機：按下任一段錄音（載入播放器即算聽過）。
    - 地圖：點開任一個地點。
    - 筆記本：翻到最後一頁（9/25）。
 5. 「出發」視窗可留 Email（正式遊戲開放時通知）；電腦留言與桌上的照片是選看項目，完成後一樣會打勾。
+6. 電腦是留言板：「寫留言」依身分顯示一個題目，可附一張照片與署名；「讀者版」用報紙排版顯示已上架的留言與讚數，另有三篇標示「示意」的假文。
+
+## 留言板後台（Supabase）
+
+- 沒填 `js/board-config.js` 時是示意模式：送出的留言只存在這台裝置，讀者版只顯示示意文，讚數只在本機加一。
+- 接上後台的步驟：
+  1. 在 Supabase 建一個新專案，到 SQL Editor 貼上 `supabase/schema.sql` 全文執行。
+  2. 把最後一行的 Email 換成審核者的 Email 再執行，加入 `board_admins` 名單。
+  3. Authentication → Users 用「Invite user」邀請同一個 Email；Authentication → URL Configuration 的 Redirect URLs 加上 `https://timryaken.github.io/heroes-after/admin.html`（本機測試再加 `http://localhost:4173/admin.html`）。建議關掉公開註冊（Allow new users to sign up）。
+  4. 把 Project URL 與 Publishable key（可公開的前端金鑰）填進 `js/board-config.js`。不要放 service_role／secret key。
+- 審核頁：`admin.html`（不在網站上連結、不被搜尋引擎收錄）。用 Email 登入連結登入後，可以「通過並上架」「退回」「下架」。
+- 權限：訪客只能送出待審留言、上傳待審照片（私人空間）、讀已上架留言、替已上架留言按讚；照片在通過時才複製到公開空間。上傳前會在瀏覽器縮到 1600px 並移除 EXIF（含 GPS）。
+- 按讚以「同一台裝置每篇一次」限制，換裝置或清除瀏覽器資料仍可再按。
+- Supabase 免費專案一週沒有使用會自動暫停，需要到後台恢復。
 
 ## 外部資源
 
@@ -35,8 +49,8 @@ python3 -m http.server 4173
 
 ## 隱私與功能限制
 
-- 這是無後端的內部原型；文字、Email 與探索進度只暫存在目前瀏覽器的 localStorage，不會寄信或傳送到伺服器。
-- 選取的照片只建立本機預覽，重新整理後不保留，也不會上傳。
+- Email 與探索進度只暫存在目前瀏覽器的 localStorage，不會寄信或傳送到伺服器。
+- 留言板接上 Supabase 後，送出的文字與照片會上傳到後台，經審核才公開；送出前畫面會提示這件事。
 - 周思遠與林知行的合照、互動桌景及桌面紋理為 AI 生成示意；不代表真實人物或新聞紀錄。
 
 ## 照片與來源政策
@@ -45,6 +59,8 @@ python3 -m http.server 4173
 
 ## 更換內容與素材
 
+- 留言板：連線設定在 `js/board-config.js`，資料存取在 `js/board-api.js`，畫面在 `js/board.js`；示意文是 `js/data.js` 的 `BOARD_SAMPLE_POSTS`；後台結構在 `supabase/schema.sql`；審核頁是 `admin.html` 與 `js/admin.js`。
+- 桌面：滿版與拖曳在 `js/desk-view.js`；物件熱區位置在 `styles/desk.css`（直式畫面另有一組位置）。
 - 遊戲名與主角名：`index.html`（標題、wordmark、桌面說明）、`js/prologue.js`（前導最後一句）、`js/data.js`（筆記、CHECK LIST、替代文字）。
 - 文案、角色標題、地點座標、來源、旁白：編輯 `js/data.js`。
 - 圖片：把新檔案放進 `assets/images/`，並同步修改 `js/data.js` 的 `src`、`alt`、`credit`、`sourceUrl`。

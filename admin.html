@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#120f0c">
+    <title>留言審核｜與光赴會</title>
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/admin.css">
+  </head>
+  <body class="admin">
+    <header class="admin__bar">
+      <div>
+        <p class="eyebrow">與光赴會｜讀者版</p>
+        <h1>留言審核</h1>
+      </div>
+      <button class="text-button" type="button" data-admin-logout hidden>登出</button>
+    </header>
+
+    <main class="admin__main">
+      <p class="admin__notice" data-admin-notice role="status"></p>
+
+      <section class="admin__login" data-admin-login hidden aria-labelledby="login-title">
+        <h2 id="login-title">用 Email 登入</h2>
+        <p>輸入審核者的 Email，系統會寄一封登入連結信；打開信裡的連結就會回到這一頁。</p>
+        <form data-admin-login-form>
+          <label for="admin-email">Email</label>
+          <input id="admin-email" name="email" type="email" autocomplete="email" required>
+          <button class="primary-button" type="submit">寄登入連結 <span aria-hidden="true">→</span></button>
+        </form>
+      </section>
+
+      <section class="admin__review" data-admin-review hidden aria-label="留言列表">
+        <nav class="admin__filters" aria-label="篩選">
+          <button type="button" data-filter="pending" aria-pressed="true">待審核 <span data-count="pending"></span></button>
+          <button type="button" data-filter="approved" aria-pressed="false">已上架 <span data-count="approved"></span></button>
+          <button type="button" data-filter="rejected" aria-pressed="false">已退回 <span data-count="rejected"></span></button>
+          <button class="text-button" type="button" data-admin-refresh>重新整理</button>
+        </nav>
+        <ol class="admin__list" data-admin-list></ol>
+      </section>
+    </main>
+
+    <script type="module" src="js/admin.js"></script>
+  </body>
+</html>

@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { DESK_TEXTURE, INTERACTIVE_DESK, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, SPEAKER_PHOTO } from '../js/data.js';
+import { BOARD_SAMPLE_POSTS, DESK_TEXTURE, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, SPEAKER_PHOTO } from '../js/data.js';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(resolve(projectRoot, 'index.html'), 'utf8');
@@ -25,7 +25,12 @@ const photos = [
   SPEAKER_PHOTO,
   DESK_TEXTURE,
   INTERACTIVE_DESK,
+  INTERACTIVE_DESK_MOBILE,
 ].filter((photo) => !photo.placeholder);
+for (const post of BOARD_SAMPLE_POSTS.filter(({ photo }) => photo)) {
+  check(existsSync(resolve(projectRoot, post.photo.src)), `示意留言照片不存在：${post.photo.src}`);
+  check(Boolean(post.photo.alt?.trim()), `示意留言照片缺少替代文字：${post.photo.src}`);
+}
 for (const photo of photos) {
   check(photo.src.startsWith('assets/images/'), `圖片必須使用本機路徑：${photo.src}`);
   check(!/^https?:/i.test(photo.src), `圖片 src 不得外連：${photo.src}`);
@@ -41,6 +46,8 @@ for (const id of ['computer', 'notebook', 'map', 'speaker', 'photo']) {
 }
 
 check(html.includes('data-checklist') && html.includes('data-depart'), '缺少總編 CHECK LIST 或出發按鈕');
+check(html.includes('data-board-form') && html.includes('data-paper-posts'), '缺少留言板或讀者版');
+check(html.includes('data-editor-note') && html.includes('data-desk-viewport'), '缺少總編便條或滿版桌面');
 check(!/<img[^>]+src=["']https?:/i.test(html), 'index.html 不得直接載入外部圖片');
 check(existsSync(resolve(projectRoot, 'README.md')), '缺少 README.md 操作說明');
 
