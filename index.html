@@ -23,20 +23,23 @@
       <nav class="site-actions" aria-label="原型控制">
         <button class="text-button" type="button" data-open-sources>素材來源</button>
         <button class="icon-button" type="button" aria-pressed="false" aria-label="切換聲音" data-mute>
-          <span aria-hidden="true">◖</span><span class="control-label">聲音</span>
+          <svg class="sound-icon" viewBox="0 0 24 24" aria-hidden="true"><path class="sound-icon__body" d="M4 9h4l5-4v14l-5-4H4z"/><path class="sound-icon__on" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/><path class="sound-icon__off" d="M16 9.5l5 5m0-5-5 5"/></svg><span class="control-label">聲音</span>
         </button>
         <button class="text-button" type="button" data-replay>重播前導</button>
       </nav>
     </header>
 
     <section class="prologue" data-prologue aria-label="故事前導">
+      <div class="prologue__progress" data-prologue-progress aria-hidden="true"></div>
       <figure class="prologue__media">
         <img data-prologue-image src="assets/images/disaster-guangfu.jpg" alt="">
-        <figcaption data-prologue-credit>
-          <span></span>
+        <figcaption class="prologue__info" id="prologue-info" data-prologue-info hidden>
+          <span data-prologue-credit></span>
+          <a data-prologue-source href="#" target="_blank" rel="noreferrer">查看來源 ↗</a>
+          <small>內部互動原型｜照片授權確認中</small>
         </figcaption>
-        <a class="prologue__source" data-prologue-source href="#" target="_blank" rel="noreferrer">查看來源</a>
       </figure>
+      <button class="prologue__icon prologue__info-toggle" type="button" data-prologue-info-toggle aria-controls="prologue-info" aria-expanded="false" aria-label="照片來源" title="照片來源">i</button>
 
       <div class="prologue__card" data-prologue-card hidden>
         <p class="eyebrow" data-prologue-eyebrow></p>
@@ -47,11 +50,9 @@
       </div>
 
       <div class="prologue__controls">
-        <button class="text-button" type="button" data-prologue-skip>跳過前導</button>
-        <div class="prologue__progress" data-prologue-progress aria-hidden="true"></div>
-        <button class="primary-button" type="button" data-prologue-next>繼續 <span aria-hidden="true">→</span></button>
+        <button class="prologue__skip" type="button" data-prologue-skip title="跳過前導">跳過 <span aria-hidden="true">⏭</span></button>
+        <button class="prologue__icon prologue__next" type="button" data-prologue-next aria-label="下一張" title="下一張"><span aria-hidden="true">→</span></button>
       </div>
-      <p class="prototype-badge">內部互動原型</p>
     </section>
 
     <main id="experience" class="experience" tabindex="-1" hidden>

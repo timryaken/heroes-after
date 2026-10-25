@@ -154,11 +154,11 @@ for (const [index, role] of ROLES.entries()) {
   roleOptions.append(button);
 }
 
-prologueRoot.addEventListener('prologue:complete', () => {
-  const { role } = store.load();
-  if (role) enterDesk(role);
-  else openDialog(roleDialog);
-});
+// 身分每次進來都重新問，不沿用上次的選擇。
+store.save({ role: '' });
+prologueRoot.addEventListener('prologue:complete', () => openDialog(roleDialog));
+// 一定要選一個身分才進得了桌面，按 Esc 不會把問題關掉。
+roleDialog.addEventListener('cancel', (event) => event.preventDefault());
 
 document.querySelector('[data-replay]').addEventListener('click', () => {
   experience.hidden = true;

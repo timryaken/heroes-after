@@ -33,6 +33,8 @@ export function createPrologueController(root, options) {
   const title = root.querySelector('[data-prologue-title]');
   const dayCount = root.querySelector('[data-day-count]');
   const progress = root.querySelector('[data-prologue-progress]');
+  const info = root.querySelector('[data-prologue-info]');
+  const infoToggle = root.querySelector('[data-prologue-info-toggle]');
   let timer = 0;
   let frame = 0;
   let index = -1;
@@ -60,8 +62,8 @@ export function createPrologueController(root, options) {
 
   function showText(beat) {
     image.hidden = true;
-    credit.hidden = true;
-    source.hidden = true;
+    infoToggle.hidden = true;
+    setInfoOpen(false);
     card.hidden = false;
     dayCount.hidden = true;
     if (beat.type === 'count') {
@@ -82,14 +84,21 @@ export function createPrologueController(root, options) {
     const { slide } = beat;
     card.hidden = true;
     image.hidden = false;
-    credit.hidden = false;
-    source.hidden = false;
+    infoToggle.hidden = false;
     image.src = slide.src;
     image.alt = slide.alt;
     image.dataset.phase = slide.phase;
     credit.textContent = slide.credit;
     source.href = slide.sourceUrl;
   }
+
+  // 照片來源收在左下角的 i 圖示裡，點了才展開。
+  function setInfoOpen(open) {
+    info.hidden = !open;
+    infoToggle.setAttribute('aria-expanded', String(open));
+  }
+
+  infoToggle.addEventListener('click', () => setInfoOpen(info.hidden));
 
   function render(beat) {
     root.dataset.beat = beat.type;
@@ -101,6 +110,7 @@ export function createPrologueController(root, options) {
   function complete() {
     cancelPending();
     root.hidden = true;
+    document.body.dataset.stage = 'desk';
     root.dispatchEvent(new CustomEvent('prologue:complete', { bubbles: true }));
   }
 
@@ -121,6 +131,8 @@ export function createPrologueController(root, options) {
     index = -1;
     dayCount.textContent = '0';
     root.hidden = false;
+    // 前導播放時，上方只留標題，其他控制縮成圖示（見 prologue.css）。
+    document.body.dataset.stage = 'prologue';
     next();
   }
 

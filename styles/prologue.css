@@ -26,16 +26,14 @@
   to { transform: scale(1.11); }
 }
 
-.prologue__media figcaption,
-.prologue__source {
-  position: absolute;
-  z-index: 2;
-  bottom: calc(var(--safe-bottom) + 5.2rem);
-  color: rgba(255,255,255,0.74);
-  font-size: 0.72rem;
-}
-.prologue__media figcaption { left: var(--safe-left); }
-.prologue__source { right: var(--safe-right); text-decoration: underline; text-underline-offset: 0.25em; }
+/* 照片來源：左下角的 i 圖示，點了才展開 */
+.prologue__icon { position: absolute; z-index: 4; display: grid; width: 2.75rem; height: 2.75rem; place-items: center; padding: 0; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 50%; color: rgba(255, 255, 255, 0.85); background: rgba(0, 0, 0, 0.35); font: 700 1rem/1 var(--serif); cursor: pointer; transition: border-color 160ms ease, background 160ms ease; }
+.prologue__icon:hover { border-color: var(--ember-bright); background: rgba(0, 0, 0, 0.55); }
+.prologue__info-toggle { bottom: var(--safe-bottom); left: var(--safe-left); font-style: italic; }
+.prologue__info-toggle[aria-expanded='true'] { color: #1b120c; background: var(--paper); }
+.prologue__info { position: absolute; z-index: 4; bottom: calc(var(--safe-bottom) + 3.4rem); left: var(--safe-left); display: grid; gap: 0.3rem; max-width: min(26rem, calc(100% - 2rem)); padding: 0.75rem 0.9rem; border: 1px solid rgba(255, 255, 255, 0.16); color: rgba(255, 255, 255, 0.86); background: rgba(8, 6, 5, 0.82); font-size: 0.76rem; line-height: 1.55; }
+.prologue__info a { color: var(--ember-bright); }
+.prologue__info small { color: var(--ink-muted); font-size: 0.66rem; letter-spacing: 0.1em; }
 
 .prologue__card {
   position: absolute;
@@ -53,40 +51,25 @@
 .day-count { margin: -1rem 0 -0.25rem; color: var(--paper); font: 600 clamp(7rem, 24vw, 20rem)/0.95 var(--serif); letter-spacing: -0.08em; text-shadow: 0 0 60px rgba(219, 95, 51, 0.2); }
 .day-count + h1 { color: var(--ink-muted); font-size: clamp(1.2rem, 3vw, 2rem); }
 
-.prologue__controls {
-  position: absolute;
-  z-index: 4;
-  right: var(--safe-right);
-  bottom: var(--safe-bottom);
-  left: var(--safe-left);
-  display: grid;
-  grid-template-columns: auto minmax(4rem, 14rem) auto;
-  gap: 1rem;
-  align-items: center;
-  justify-content: end;
-}
+/* 跳過與下一張：右下角的小按鈕 */
+.prologue__controls { position: absolute; z-index: 4; right: var(--safe-right); bottom: var(--safe-bottom); display: flex; align-items: center; gap: 0.6rem; }
+.prologue__controls .prologue__icon { position: static; font: 400 1.15rem/1 var(--sans); }
+.prologue__skip { min-height: 2.75rem; padding: 0 0.6rem; border: 0; color: rgba(255, 255, 255, 0.6); background: transparent; font: 600 0.78rem var(--sans); letter-spacing: 0.12em; cursor: pointer; }
+.prologue__skip:hover { color: var(--ink); }
 
-.prologue__progress { position: relative; height: 1px; background: rgba(255,255,255,0.18); }
-.prologue__progress::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--progress, 0%); background: var(--ember-bright); transition: width 500ms ease; }
+/* 進度條：貼齊畫面最上緣的一條細線 */
+.prologue__progress { position: absolute; z-index: 6; top: 0; right: 0; left: 0; height: 3px; background: rgba(255, 255, 255, 0.14); }
+.prologue__progress::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--progress, 0%); background: var(--ember-bright); box-shadow: 0 0 8px rgba(255, 174, 118, 0.7); transition: width 500ms ease; }
 
-.prototype-badge {
-  position: absolute;
-  z-index: 4;
-  top: calc(var(--safe-top) + 4rem);
-  left: var(--safe-left);
-  margin: 0;
-  padding: 0.28rem 0.55rem;
-  border: 1px solid rgba(255,255,255,0.16);
-  color: var(--ink-muted);
-  font-size: 0.64rem;
-  letter-spacing: 0.15em;
-}
+/* 前導播放時：網站控制列只留置中的標題，聲音縮成圖示，其餘隱藏 */
+body[data-stage='prologue'] .site-bar { justify-content: center; background: linear-gradient(180deg, rgba(5, 4, 3, 0.7), transparent); }
+body[data-stage='prologue'] .wordmark { justify-items: center; text-align: center; }
+body[data-stage='prologue'] .site-actions { position: absolute; top: var(--safe-top); right: var(--safe-right); }
+body[data-stage='prologue'] .site-actions .text-button,
+body[data-stage='prologue'] .control-label { display: none; }
+body[data-stage='prologue'] [data-mute] { width: 2.75rem; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 50%; background: rgba(0, 0, 0, 0.35); }
 
 @media (max-width: 650px) {
-  .prologue__controls { grid-template-columns: 1fr auto; }
-  .prologue__progress { grid-row: 1; grid-column: 1 / -1; }
-  .prologue__media figcaption { right: 5rem; bottom: calc(var(--safe-bottom) + 6.8rem); }
-  .prologue__source { bottom: calc(var(--safe-bottom) + 6.8rem); }
   .prologue__card h1 { font-size: clamp(1.8rem, 9vw, 3.2rem); }
   .day-count { font-size: clamp(6rem, 35vw, 10rem); }
 }
