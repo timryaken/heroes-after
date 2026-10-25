@@ -443,10 +443,3 @@
 /* 讀者版沒有報頭，第一則留言就在最上面；置頂留言加一個小標 */
 .laptop__view .paper { padding-top: clamp(1rem, 2.5vw, 1.6rem); }
 .paper-post__pin { padding: 0.05rem 0.4rem; color: #f4ecd6; background: #a3402b; font-size: 0.65rem; letter-spacing: 0.1em; }
-
-/* 觸控裝置省記憶體：iOS Safari／LINE 內建瀏覽器在全畫面模糊＋大圖層動畫時，會把整頁重新載入 */
-@media (hover: none), (max-width: 720px) {
-  .stage-dialog::before { background: rgba(5, 4, 3, 0.9); -webkit-backdrop-filter: none; backdrop-filter: none; }
-  .radio { filter: none; }
-  .lcd__ticker.is-scrolling span { animation-duration: 12s; }
-}
