@@ -1,4 +1,5 @@
 -- 《重返·馬太鞍》出發後的滿意度投票＋抽獎登記：在 Supabase 專案的 SQL Editor 整段貼上執行一次（需先執行過 schema.sql）。
+-- Email 用於抽獎、得獎通知與實境遊戲的活動／行銷通知（訪客勾選同意後才能送出）。
 -- 一定要留 Email 才能投票；同一個 Email 只留一筆（重複送出會更新成最新的一票），所以一個 Email 只算一次抽獎資格。
 -- 訪客只能透過 submit_site_feedback() 送出，讀不到任何人的 Email；只有 board_admins 裡的審核者看得到統計與名單。
 

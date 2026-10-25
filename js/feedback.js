@@ -7,7 +7,7 @@ export function validateFeedback({ vote, email, consent } = {}) {
   if (vote !== 'up' && vote !== 'down') return { ok: false, field: 'vote', message: '請先選擇滿意或不滿意。' };
   if (!isValidEmail(email)) return { ok: false, field: 'email', message: '請輸入有效的 Email，例如 name@example.com。' };
   if (String(email).trim().length > 254) return { ok: false, field: 'email', message: 'Email 太長了。' };
-  if (!consent) return { ok: false, field: 'consent', message: '請勾選同意以 Email 通知抽獎結果。' };
+  if (!consent) return { ok: false, field: 'consent', message: '請勾選同意，才能參加抽獎並收到實境遊戲的通知。' };
   return { ok: true };
 }
 
@@ -77,7 +77,7 @@ export function createFeedbackController(root, api, { getRole = () => '' } = {})
       const result = await api.submit({ ...draft, role: getRole() });
       form.classList.add('is-sent');
       announce(result.mode === 'live'
-        ? '謝謝你！已完成抽獎登記，得獎時會寄信到這個 Email。'
+        ? '謝謝你！已完成抽獎登記。得獎通知與 11/30 實境遊戲的消息，都會寄到這個 Email。'
         : '已記下（示意模式，只存在這台裝置）。');
     } catch (error) {
       announce(error.message, 'error');

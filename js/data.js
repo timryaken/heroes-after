@@ -145,11 +145,9 @@ export const NOTEBOOK_PAGES = [
       '年度數據出來了。',
       '年度報導流量第一跟第二又是知行和我。',
       '編輯今天還特別把我們兩個叫上台。',
-      '',
       '知行說這代表我們很會寫新聞。',
       '我覺得不完全對。',
       '應該是我們比較知道大家想看什麼。',
-      '',
       '希望明年能再破一次紀錄。',
     ],
   },
@@ -157,12 +155,9 @@ export const NOTEBOOK_PAGES = [
     date: '1/17',
     lines: [
       '今天跟知行一起跑採訪。',
-      '',
       '初想的標題：<s>「地方老店重新開幕」</s>',
       '知行看了一眼說：「這個沒人會點。」我也同意。',
-      '',
       '改完：<mark>「消失十年的味道回來了！老闆透露重新開店原因」</mark>',
-      '',
       '點閱高很多，我有時候沒有很喜歡自己對流量那麼敏感。',
       '但沒辦法，這時代就是追求這個。',
     ],
@@ -175,10 +170,8 @@ export const NOTEBOOK_PAGES = [
       '知行 1,284,302',
       '思遠 1,241,870',
       '輸了 42,432。',
-      '',
       '他今天故意把排行榜截圖傳給我。',
       '還附一句：「流量之王。」',
-      '',
       '很幼稚。',
     ],
   },
@@ -189,7 +182,6 @@ export const NOTEBOOK_PAGES = [
       '知行收到總編的任務，要出國採訪一段時間。',
       '我第一個問題是：「那你的新聞怎麼辦？」',
       '他說：「趁我不在，好好享受一下第一名。」',
-      '',
       '誰需要他讓。等他回來再比。',
     ],
   },
@@ -198,15 +190,11 @@ export const NOTEBOOK_PAGES = [
     sparse: true,
     lines: [
       '知行出國一個多月。',
-      '',
       '這個月又是我流量、點擊、轉發第一。',
       '開始有點有點無聊了。',
-      '',
       '今天又有人問他什麼時候回來。不知道。',
-      '',
       '本來以為旁邊少一個人一直講話，',
       '工作應該會快很多。',
-      '',
       '好像也沒有。',
     ],
   },
@@ -214,7 +202,6 @@ export const NOTEBOOK_PAGES = [
     date: '9/24',
     lines: [
       '<mark>花蓮・光復 明天就出發</mark>',
-      '',
       '可追：',
       '□ 災情範圍',
       '□ 居民撤離',
@@ -222,12 +209,9 @@ export const NOTEBOOK_PAGES = [
       '□ 志工',
       '□ 交通中斷',
       '□ 災後復原',
-      '',
       '編輯問誰可以去。',
       '我說我去。',
-      '',
       '現場的故事很多。',
-      '',
       '這一篇應該會有流量。',
     ],
   },
@@ -240,16 +224,12 @@ export const NOTEBOOK_PAGES = [
       '記憶卡 × 3',
       '筆記本',
       '換洗衣物',
-      '',
       '預計：',
       '1.　災情／救援',
       '2.　志工／居民',
       '3.　復原進度',
-      '',
       '拍完、整理、交稿。應該最多一周就能回來了。',
-      '',
       '如果做得好，這篇應該可以撐一陣子的流量。',
-      '',
       '知行也差不多快回來了。',
       '等他回來再給他看。先去光復。',
     ],
@@ -368,21 +348,8 @@ export const CHECKLIST = [
   { id: 'notebook', label: '翻閱思遠的採訪筆記', hint: '讀到出發前的最後一頁' },
 ];
 
-export const REPORTER_PHOTO = {
-  src: 'assets/images/reporters-photo.jpg',
-  alt: '周思遠與林知行跑地方採訪時，和居民的戲劇重現合照',
-  credit: 'AI 生成戲劇示意圖，非真實新聞照片',
-  sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
-};
-
 // 桌上的照片可疊放切換；placeholder 為待補照片的灰色佔位圖，note 可留空。
 export const PHOTO_STACK = [
-  {
-    ...REPORTER_PHOTO,
-    date: '1/17',
-    place: '跟知行一起跑採訪',
-    note: '「這個沒人會點。」',
-  },
   {
     ...photos.sharedShovels,
     date: '光復',
@@ -463,14 +430,14 @@ export const DESK_TEXTURE = {
 
 export const INTERACTIVE_DESK_MOBILE = {
   src: 'assets/images/interactive-desk-mobile.webp',
-  alt: '手機版直式桌景：周思遠的辦公桌，牆上有地圖，桌上有收音機、筆電、採訪筆記與照片',
+  alt: '手機版直式桌景：周思遠的辦公桌，牆上有地圖，桌上有收音機、筆電、採訪筆記、照片與記者識別證',
   credit: 'AI 生成互動桌景原型（手機版），非真實新聞現場',
   sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
 };
 
 export const INTERACTIVE_DESK = {
   src: 'assets/images/interactive-desk.webp',
-  alt: '深夜新聞編輯部裡周思遠的辦公桌，桌上有電腦、採訪筆記、地圖、收音機與照片',
+  alt: '深夜裡周思遠的辦公桌：牆上的地圖、筆電、收音機、採訪筆記、一疊照片，還有他的記者識別證',
   credit: 'AI 生成互動桌景原型，非真實新聞現場',
   sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
 };

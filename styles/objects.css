@@ -436,3 +436,5 @@
 .place-pin--left .place-pin__name { right: 2.4rem; }
 .place-pin__name b { margin-right: 0.3rem; color: #a3402b; font: 800 0.8rem var(--sans); }
 .place-pin.is-selected .place-pin__name b { color: #f4ecd6; }
+.feedback__event { margin: -0.6rem 0 1.2rem; padding: 0.7rem 0.9rem; border-left: 3px solid #a3402b; color: #3a2c20; background: rgba(163, 64, 43, 0.08); font: 600 0.95rem/1.6 var(--serif); }
+.feedback__event strong { color: #a3402b; font-family: var(--sans); letter-spacing: 0.04em; }

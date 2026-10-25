@@ -7,7 +7,6 @@ import {
   PHOTO_STACK,
   PLACES,
   PROLOGUE_SLIDES,
-  REPORTER_PHOTO,
   ROLES,
   VOICE_CLIPS,
 } from '../js/data.js';
@@ -52,9 +51,8 @@ test('roles, recordings, checklist, and desk photos are complete', () => {
   assert.equal(VOICE_CLIPS.length, 2);
   assert.ok(VOICE_CLIPS.every(({ embedUrl, sourceUrl, title }) => /^https:\/\//.test(embedUrl) && /^https:\/\//.test(sourceUrl) && title));
   assert.deepEqual(CHECKLIST.map(({ id }) => id), ['speaker', 'map', 'notebook']);
-  assertPhotoContract(REPORTER_PHOTO);
   assert.ok(PHOTO_STACK.length >= 2);
-  assert.equal(PHOTO_STACK[0].src, REPORTER_PHOTO.src);
+  assert.ok(PHOTO_STACK.every(({ src }) => !src.includes('reporters-photo')), '照片堆不放 AI 生成的合照');
   for (const photo of PHOTO_STACK) {
     assert.ok(photo.date && photo.place);
     if (!photo.placeholder) assertPhotoContract(photo);
