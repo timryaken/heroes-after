@@ -1,7 +1,12 @@
-// 收音機螢幕上的示波器。錄音是嵌入的外部播放器，網頁讀不到真正的聲音，所以這是「播放中」的模擬波形：
-// 用幾個正弦波疊加，振幅照說話的節奏忽大忽小、偶爾停頓。
+// 收音機螢幕上的各頻率音量條（像音響的等化器）。錄音是嵌入的外部播放器，網頁讀不到真正的聲音，
+// 所以這是「播放中」的模擬：整體音量照說話的節奏忽大忽小、偶爾停頓，低頻比高頻跳得高，每一條的頂端留一格慢慢落下的峰值。
+const BANDS = 16;
+const SEGMENTS = 10;
+
 export function createScope(canvas, { reducedMotion = false } = {}) {
   const ctx = canvas?.getContext('2d');
+  const levels = new Array(BANDS).fill(0);
+  const peaks = new Array(BANDS).fill(0);
   let frame = 0;
   let active = false;
   let playing = false;
@@ -19,55 +24,56 @@ export function createScope(canvas, { reducedMotion = false } = {}) {
     }
   }
 
+  // 每一條頻帶的目標高度：低頻高、高頻低，再加上一點各自的抖動。
+  function bandTarget(band, time) {
+    const tilt = 1 - (band / (BANDS - 1)) * 0.55;
+    const wobble = 0.55 + 0.45 * Math.sin(time / 170 + band * 1.7) * Math.sin(time / 410 + band * 0.6);
+    return Math.max(0, Math.min(1, envelope * tilt * (0.6 + 0.4 * wobble) + (Math.random() - 0.5) * 0.12 * envelope));
+  }
+
   function draw(time) {
     if (!ctx) return;
     resize();
     const { width, height } = canvas;
-    // 收音機放回桌上、螢幕看不見時寬度是 0：不畫。（之前格線用「每次加寬度的 1/12」累加，寬度 0 時會變成無限迴圈，iPhone Safari 會因此當掉重新載入。）
+    // 收音機放回桌上、螢幕看不見時寬度是 0：不畫。
     if (!width || !height) return;
-    const mid = height / 2;
     ctx.clearRect(0, 0, width, height);
-
-    // 刻度格線
-    ctx.strokeStyle = 'rgba(190, 240, 120, 0.12)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    for (let column = 0; column <= 12; column += 1) {
-      const x = (width * column) / 12;
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
-    }
-    ctx.moveTo(0, mid);
-    ctx.lineTo(width, mid);
-    ctx.stroke();
 
     if (playing && time > nextBeat) {
       // 一個音節 90–260ms；約一成的機率停頓一下。
-      target = Math.random() < 0.12 ? 0.06 : 0.3 + Math.random() * 0.7;
+      target = Math.random() < 0.12 ? 0.08 : 0.45 + Math.random() * 0.55;
       nextBeat = time + 90 + Math.random() * 170;
     }
-    if (!playing) target = 0.035;
-    envelope += (target - envelope) * (reducedMotion ? 1 : 0.18);
+    if (!playing) target = 0;
+    envelope += (target - envelope) * (reducedMotion ? 1 : 0.2);
 
-    const t = reducedMotion ? 0 : time / 1000;
-    ctx.strokeStyle = playing ? '#c8ff8a' : 'rgba(200, 255, 138, 0.55)';
-    ctx.shadowColor = 'rgba(180, 255, 110, 0.9)';
-    ctx.shadowBlur = playing ? 8 * (window.devicePixelRatio || 1) : 0;
-    ctx.lineWidth = Math.max(1.2, height / 26);
-    ctx.beginPath();
-    for (let x = 0; x <= width; x += 2) {
-      const p = x / width;
-      const wave = Math.sin(p * 31 + t * 19) * 0.55
-        + Math.sin(p * 83 - t * 37) * 0.28
-        + Math.sin(p * 9 + t * 5) * 0.17;
-      // 兩端收窄，看起來像掃描線中央的訊號。
-      const taper = Math.sin(Math.PI * p) ** 0.6;
-      const y = mid + wave * envelope * taper * mid * 0.9;
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+    const gap = Math.max(1, Math.round(width / 160));
+    const barWidth = (width - gap * (BANDS - 1)) / BANDS;
+    const segmentHeight = height / SEGMENTS;
+
+    for (let band = 0; band < BANDS; band += 1) {
+      const next = reducedMotion ? bandTarget(band, 0) : bandTarget(band, time);
+      // 上升快、下降慢，看起來比較像真的音量表。
+      levels[band] = next > levels[band] ? next : levels[band] + (next - levels[band]) * 0.18;
+      peaks[band] = Math.max(levels[band], peaks[band] - 0.012);
+
+      const x = band * (barWidth + gap);
+      const lit = Math.max(1, Math.round(levels[band] * SEGMENTS));
+      for (let segment = 0; segment < SEGMENTS; segment += 1) {
+        const on = segment < lit;
+        // 最上面兩格是琥珀色，其他是綠色；沒亮的格子留淡淡的底。
+        const hot = segment >= SEGMENTS - 2;
+        ctx.fillStyle = on
+          ? (hot ? 'rgba(255, 196, 92, 0.95)' : `rgba(200, 255, 138, ${playing ? 0.9 : 0.45})`)
+          : 'rgba(200, 255, 138, 0.08)';
+        ctx.fillRect(x, height - (segment + 1) * segmentHeight + gap, barWidth, segmentHeight - gap);
+      }
+      if (playing && peaks[band] > 0.05) {
+        const peakSegment = Math.min(SEGMENTS - 1, Math.round(peaks[band] * SEGMENTS));
+        ctx.fillStyle = 'rgba(255, 230, 170, 0.9)';
+        ctx.fillRect(x, height - (peakSegment + 1) * segmentHeight + gap, barWidth, Math.max(1, (segmentHeight - gap) * 0.35));
+      }
     }
-    ctx.stroke();
-    ctx.shadowBlur = 0;
   }
 
   function loop(time) {
@@ -79,7 +85,7 @@ export function createScope(canvas, { reducedMotion = false } = {}) {
     setPlaying(value) {
       playing = Boolean(value);
       if (reducedMotion) {
-        envelope = playing ? 0.7 : 0.035;
+        envelope = playing ? 0.7 : 0;
         draw(performance.now());
       }
     },

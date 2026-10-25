@@ -42,7 +42,7 @@ python3 -m http.server 4173
 
 ## 外部資源
 
-- 收音機的兩段影音是示意素材，嵌入 YouTube／Facebook 原平台播放器，需連網，不下載檔案。螢幕上的示波器是模擬波形（網頁讀不到外部播放器的聲音）。收音機正面圖 `assets/images/radio-front.webp` 為 AI 生成示意。
+- 收音機的兩段影音是示意素材，嵌入 YouTube／Facebook 原平台播放器，需連網，不下載檔案。螢幕上的各頻率音量條是模擬的（網頁讀不到外部播放器的聲音）。收音機正面圖 `assets/images/radio-front.webp` 為 AI 生成示意。
 - 地圖是一張本機的紙本地圖圖片（不再使用 Leaflet 與線上圖磚），點位為大略位置；手機上可以左右拖著看。
 - 筆記本手寫字型為 Google Fonts 的霞鶩文楷 TC（LXGW WenKai TC）。
 
@@ -71,7 +71,7 @@ python3 -m http.server 4173
 - 地圖：底圖 `assets/images/guangfu-map.webp` 由 AI 依 OpenStreetMap 光復鄉一帶的地圖重繪，點位用 `js/data.js` 的 `GUANGFU_MAP.bounds` 由經緯度換算；換底圖時要一起更新 bounds。
 - 筆電外框 `assets/images/laptop-front.webp` 用 border-image 九宮格切（螢幕區域 98–1413 × 42–781 px）；板夾 `assets/images/clipboard.webp` 的紙張位置寫在 `styles/objects.css`。
 - 物件拿起來的動畫：`js/lift.js`（起點角度寫在各物件的 `data-lift-from`）；收音機、筆電、地圖、筆記本、照片與 CHECK LIST 板夾的外觀在 `styles/objects.css`。
-- 收音機：按鍵與選台在 `js/audio.js`，示波器在 `js/scope.js`；按鍵與螢幕疊在正面圖上的位置（百分比）在 `styles/objects.css`，換圖時要一起對齊。
+- 收音機：按鍵與選台在 `js/audio.js`，音量條在 `js/scope.js`；按鍵與螢幕疊在正面圖上的位置（百分比）在 `styles/objects.css`，換圖時要一起對齊。
 - 遊戲名與主角名：`index.html`（標題、wordmark、桌面說明）、`js/prologue.js`（前導最後一句）、`js/data.js`（筆記、CHECK LIST、替代文字）。
 - 文案、角色標題、地點座標、來源、旁白：編輯 `js/data.js`。
 - 圖片：把新檔案放進 `assets/images/`，並同步修改 `js/data.js` 的 `src`、`alt`、`credit`、`sourceUrl`。
