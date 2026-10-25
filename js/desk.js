@@ -230,8 +230,9 @@ export function createDeskController(root, store, { reducedMotion = false } = {}
     if (!dialog?.open || closing.has(id)) return;
     closing.add(id);
     const animations = await animateLift(dialog, sourceFor(id), { closing: true, reducedMotion });
-    dialog.close();
+    // 先清掉動畫再關閉（同一個步驟裡，畫面不會閃）；不要對已經關掉、不再顯示的元素清動畫。
     animations.forEach((animation) => animation.cancel());
+    dialog.close();
     closing.delete(id);
   }
 

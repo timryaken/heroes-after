@@ -23,13 +23,12 @@ export function animateLift(dialog, source, { closing = false, reducedMotion = f
   const direction = closing ? 'reverse' : 'normal';
   const fade = { duration: Math.min(duration, 360), easing: 'ease', direction, fill: 'both' };
   // 只淡入背景和旁邊的說明；物件本身不透明，看起來才像真的被拿起來。
-  const animations = [
-    dialog.animate([{ opacity: 0 }, { opacity: 1 }], { ...fade, pseudoElement: '::before' }),
-    ...[...dialog.querySelectorAll('.stage-close, .stage > :not([data-lift])')].map((element) => element.animate([{ opacity: 0 }, { opacity: 1 }], fade)),
-  ];
+  const animations = [...dialog.querySelectorAll('.stage-dim, .stage-close, .stage > :not([data-lift])')]
+    .map((element) => element.animate([{ opacity: 0 }, { opacity: 1 }], fade));
   if (target) {
     const sourceRect = source?.getBoundingClientRect();
-    if (reducedMotion || !sourceRect?.width) {
+    // 觸控裝置關閉時只淡出，不再把物件縮回桌上，減少瀏覽器的負擔。
+    if (reducedMotion || !sourceRect?.width || (closing && lightweight())) {
       animations.push(target.animate([{ opacity: 0, transform: 'scale(0.97)' }, { opacity: 1, transform: 'none' }], { duration, easing: 'ease', direction, fill: 'both' }));
     } else {
       const extra = lightweight() ? '' : target.dataset.liftFrom ?? '';
@@ -41,7 +40,7 @@ export function animateLift(dialog, source, { closing = false, reducedMotion = f
     }
   }
   return Promise.all(animations.map((animation) => animation.finished.catch(() => {}))).then(() => {
-    // 打開後就移除動畫，物件之後的 hover／翻頁等 transform 才不會被蓋掉；關閉的等對話框關掉再清。
+    // 打開後就移除動畫，物件之後的 hover／翻頁等 transform 才不會被蓋掉；關閉的動畫由呼叫的人在關掉對話框前清掉。
     if (!closing) animations.forEach((animation) => animation.cancel());
     return animations;
   });
