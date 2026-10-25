@@ -15,8 +15,8 @@
   background: transparent;
 }
 .stage-dialog::backdrop { background: transparent; }
-/* 背景暗幕是一個真的元素（不用 ::before：Safari 對偽元素做動畫後再關閉對話框，可能讓分頁當掉重新載入） */
-.stage-dim { position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at 50% 45%, rgba(46, 30, 18, 0.8), rgba(3, 2, 2, 0.94) 72%); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+/* 背景暗幕放在 ::before，打開時單獨淡入 */
+.stage-dialog::before { content: ''; position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at 50% 45%, rgba(46, 30, 18, 0.8), rgba(3, 2, 2, 0.94) 72%); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .stage { display: grid; place-items: center; min-height: 100%; padding: calc(var(--safe-top) + 3.6rem) var(--safe-right) var(--safe-bottom) var(--safe-left); }
 .stage-close { position: fixed; z-index: 10; top: var(--safe-top); right: var(--safe-right); display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; padding: 0 1rem; border: 1px solid rgba(255, 214, 170, 0.4); border-radius: 999px; color: var(--ink); background: rgba(10, 7, 5, 0.78); font: 600 0.88rem var(--sans); letter-spacing: 0.08em; cursor: pointer; }
 .stage-close span { font-size: 1.3rem; line-height: 1; }
@@ -446,7 +446,7 @@
 
 /* 觸控裝置省記憶體：iOS Safari／LINE 內建瀏覽器在全畫面模糊＋大圖層動畫時，會把整頁重新載入 */
 @media (hover: none), (max-width: 720px) {
-  .stage-dim { background: rgba(5, 4, 3, 0.9); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .stage-dialog::before { background: rgba(5, 4, 3, 0.9); -webkit-backdrop-filter: none; backdrop-filter: none; }
   .radio { filter: none; }
   .lcd__ticker.is-scrolling span { animation-duration: 12s; }
 }
