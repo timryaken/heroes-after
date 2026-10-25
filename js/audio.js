@@ -1,3 +1,4 @@
+import { trace } from './debug.js';
 import { createScope } from './scope.js';
 
 export function mergeListened(clips, listened = [], nextId) {
@@ -58,6 +59,7 @@ export function createAudioController(root, clips, options = {}) {
 
   function stop({ quiet = false } = {}) {
     const wasPlaying = playing;
+    trace(`收音機 stop（播放中=${wasPlaying}，播放器=${embed.childElementCount}）`);
     // 移除播放器才能確實停下嵌入的影音。
     embed.replaceChildren();
     embed.hidden = true;

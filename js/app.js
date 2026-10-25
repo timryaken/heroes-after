@@ -1,3 +1,4 @@
+import './debug.js';
 import { daysSinceDisaster } from './core.js';
 import { createAudioController } from './audio.js';
 import { createBoardController } from './board.js';

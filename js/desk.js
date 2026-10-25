@@ -1,3 +1,4 @@
+import { trace } from './debug.js';
 import { animateLift } from './lift.js';
 
 export const DESK_OBJECT_IDS = Object.freeze([
@@ -229,9 +230,13 @@ export function createDeskController(root, store, { reducedMotion = false } = {}
     const dialog = dialogs.find((item) => item.dataset.objectDialog === id);
     if (!dialog?.open || closing.has(id)) return;
     closing.add(id);
+    trace(`${id}：開始放回桌上`);
     const animations = await animateLift(dialog, sourceFor(id), { closing: true, reducedMotion });
+    trace(`${id}：動畫結束，關閉對話框`);
     dialog.close();
+    trace(`${id}：已關閉，清除動畫`);
     animations.forEach((animation) => animation.cancel());
+    trace(`${id}：清除完成`);
     closing.delete(id);
   }
 
@@ -240,6 +245,7 @@ export function createDeskController(root, store, { reducedMotion = false } = {}
     if (!dialog) return false;
     activeTrigger = trigger ?? buttons.find((button) => button.dataset.deskObject === id);
     if (!dialog.open) {
+      trace(`${id}：打開`);
       dialog.showModal();
       animateLift(dialog, sourceFor(id), { reducedMotion });
     }
@@ -264,8 +270,10 @@ export function createDeskController(root, store, { reducedMotion = false } = {}
   for (const dialog of dialogs) {
     const id = dialog.dataset.objectDialog;
     dialog.addEventListener('close', () => {
+      trace(`${id}：close 事件`);
       if (activeTrigger?.isConnected) activeTrigger.focus({ preventScroll: true });
       dispatch(root, 'desk:object-closed', { id });
+      trace(`${id}：close 事件處理完`);
     });
     // 按 Esc 也要播放「放回桌上」的動畫。
     dialog.addEventListener('cancel', (event) => {
