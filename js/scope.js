@@ -23,6 +23,8 @@ export function createScope(canvas, { reducedMotion = false } = {}) {
     if (!ctx) return;
     resize();
     const { width, height } = canvas;
+    // 收音機放回桌上、螢幕看不見時寬度是 0：不畫。（之前格線用「每次加寬度的 1/12」累加，寬度 0 時會變成無限迴圈，iPhone Safari 會因此當掉重新載入。）
+    if (!width || !height) return;
     const mid = height / 2;
     ctx.clearRect(0, 0, width, height);
 
@@ -30,7 +32,8 @@ export function createScope(canvas, { reducedMotion = false } = {}) {
     ctx.strokeStyle = 'rgba(190, 240, 120, 0.12)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    for (let x = 0; x <= width; x += width / 12) {
+    for (let column = 0; column <= 12; column += 1) {
+      const x = (width * column) / 12;
       ctx.moveTo(x, 0);
       ctx.lineTo(x, height);
     }
