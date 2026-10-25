@@ -1,6 +1,8 @@
 // 物件從桌上的位置「拿起來」放到畫面中央，關閉時放回原位（FLIP 動畫）。
 const EASE_OPEN = 'cubic-bezier(0.2, 0.85, 0.25, 1)';
 const EASE_CLOSE = 'cubic-bezier(0.5, 0, 0.75, 0.4)';
+// 觸控裝置（iPhone、LINE 內建瀏覽器）記憶體較緊，大圖層做 3D 翻轉容易讓瀏覽器整頁重新載入，改成平面的放大縮小。
+const lightweight = () => globalThis.matchMedia?.('(hover: none), (max-width: 720px)').matches ?? false;
 
 // 起點：物件在桌上的位置與大小；額外的立體角度（例如收音機斜放）寫在 data-lift-from。
 export function liftTransform(from, to, extra = '') {
@@ -30,7 +32,7 @@ export function animateLift(dialog, source, { closing = false, reducedMotion = f
     if (reducedMotion || !sourceRect?.width) {
       animations.push(target.animate([{ opacity: 0, transform: 'scale(0.97)' }, { opacity: 1, transform: 'none' }], { duration, easing: 'ease', direction, fill: 'both' }));
     } else {
-      const extra = target.dataset.liftFrom ?? '';
+      const extra = lightweight() ? '' : target.dataset.liftFrom ?? '';
       const from = liftTransform(sourceRect, target.getBoundingClientRect(), extra);
       animations.push(target.animate(
         [{ transform: from }, { transform: neutralTransform(extra) }],

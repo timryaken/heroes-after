@@ -260,3 +260,8 @@
   .press-badge:hover, .press-badge:focus-visible { transform: rotate(4deg) scale(0.64); }
   .press-badge__lanyard { height: 3.2rem; }
 }
+
+/* 觸控裝置沒有滑鼠滑過的效果，不必在每個物件上再疊一份桌景圖片（省記憶體） */
+@media (hover: none) {
+  .desk-object__visual { background: none; -webkit-mask-image: none; mask-image: none; }
+}
