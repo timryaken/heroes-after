@@ -401,8 +401,10 @@
 }
 .polaroids--single { grid-template-columns: minmax(0, 0.62fr); justify-content: center; }
 
-/* 板夾還沒出場：整個藏在畫面下緣外 */
-.checklist.is-away { transform: rotate(-1.2deg) translateY(calc(100% + 3rem)); }
+/* 收合的板夾：滑鼠移上去會往上浮一點，提示可以拉上來 */
+.checklist.is-collapsed { cursor: pointer; }
+.checklist.is-collapsed:hover,
+.checklist.is-collapsed:focus-within { transform: rotate(-1.2deg) translateY(calc(100% - var(--peek) - 1.1rem)); }
 
 /* 筆記本：頁面本身可以點來翻頁；右下角捲起一點紙角提示 */
 .journal[data-open='true'] .journal__page,
@@ -438,3 +440,6 @@
 .place-pin.is-selected .place-pin__name b { color: #f4ecd6; }
 .feedback__event { margin: -0.6rem 0 1.2rem; padding: 0.7rem 0.9rem; border-left: 3px solid #a3402b; color: #3a2c20; background: rgba(163, 64, 43, 0.08); font: 600 0.95rem/1.6 var(--serif); }
 .feedback__event strong { color: #a3402b; font-family: var(--sans); letter-spacing: 0.04em; }
+/* 讀者版沒有報頭，第一則留言就在最上面；置頂留言加一個小標 */
+.laptop__view .paper { padding-top: clamp(1rem, 2.5vw, 1.6rem); }
+.paper-post__pin { padding: 0.05rem 0.4rem; color: #f4ecd6; background: #a3402b; font-size: 0.65rem; letter-spacing: 0.1em; }

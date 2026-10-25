@@ -15,7 +15,7 @@ export function postMarkup(post, { byline = '', photoUrl = '', liked = false } =
   const alt = post.photo?.alt ?? '讀者提供的照片';
   return `
     <article class="paper-post${photo ? ' paper-post--photo' : ''}" data-post-id="${escapeHtml(post.id)}">
-      <p class="paper-post__kicker">${escapeHtml(byline)}${post.sample ? '<span class="paper-post__sample">示意</span>' : ''}</p>
+      <p class="paper-post__kicker">${post.pin_order != null ? '<span class="paper-post__pin">置頂</span>' : ''}${escapeHtml(byline)}${post.sample ? '<span class="paper-post__sample">示意</span>' : ''}</p>
       <h4 class="paper-post__headline">${escapeHtml(headline)}</h4>
       ${photo ? `<figure class="paper-post__figure"><img src="${escapeHtml(photo)}" alt="${escapeHtml(alt)}" loading="lazy"><figcaption>${post.sample ? 'AI 生成示意圖' : '讀者提供'}</figcaption></figure>` : ''}
       ${text ? `<p class="paper-post__body">${escapeHtml(text)}</p>` : ''}
@@ -42,7 +42,6 @@ export function createBoardController(root, api, { roles = [], samples = [], sho
   const submit = root.querySelector('[data-board-submit]');
   const postsRoot = root.querySelector('[data-paper-posts]');
   const paperStatus = root.querySelector('[data-paper-status]');
-  root.querySelector('[data-paper-date]').textContent = formatPaperDate(new Date());
   root.querySelector('[data-board-mode]').textContent = api.mode === 'live'
     ? '送出後由編輯部審核，通過才會上架。'
     : '示意模式：尚未連接後台，留言只存在這台裝置。';

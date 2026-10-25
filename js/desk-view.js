@@ -11,8 +11,12 @@ export function createDeskView(root) {
   let suppressClick = false;
   let ignoreScrollUntil = 0;
 
+  // 下方的提示等便條收起來才出現（避免兩個同時擋住桌面），拖曳桌面或打開物件後就不再出現。
+  let hintDone = false;
+
   function setNoteOpen(open, { focus = false } = {}) {
     note.classList.toggle('is-collapsed', !open);
+    hint.hidden = open || hintDone;
     openNote.setAttribute('aria-expanded', String(open));
     if (focus) (open ? closeNote : openNote).focus({ preventScroll: true });
   }
@@ -28,12 +32,14 @@ export function createDeskView(root) {
     ignoreScrollUntil = performance.now() + 400;
     viewport.scrollLeft = (viewport.scrollWidth - viewport.clientWidth) / 2;
     viewport.scrollTop = (viewport.scrollHeight - viewport.clientHeight) / 2;
-    hint.hidden = !canPan();
   }
 
   viewport.addEventListener('scroll', () => {
-    // 玩家第一次自己移動桌面後，就收起拖曳提示；程式置中造成的捲動不算。
-    if (performance.now() > ignoreScrollUntil) hint.hidden = true;
+    // 玩家第一次自己移動桌面後，就收起下方的提示；程式置中造成的捲動不算。
+    if (performance.now() > ignoreScrollUntil) {
+      hintDone = true;
+      hint.hidden = true;
+    }
   }, { passive: true });
 
   viewport.addEventListener('pointerdown', (event) => {
@@ -72,9 +78,6 @@ export function createDeskView(root) {
     event.stopPropagation();
   }, true);
 
-  window.addEventListener('resize', () => {
-    hint.hidden = hint.hidden || !canPan();
-  });
 
   return {
     show() {
@@ -82,5 +85,10 @@ export function createDeskView(root) {
       requestAnimationFrame(center);
     },
     setNoteOpen,
+    // 打開第一個物件後，提示就功成身退。
+    hideHint() {
+      hintDone = true;
+      hint.hidden = true;
+    },
   };
 }

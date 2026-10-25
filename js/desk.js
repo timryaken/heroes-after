@@ -273,6 +273,7 @@ export function createDeskController(root, store, { reducedMotion = false } = {}
       closeObject(id);
     });
     dialog.addEventListener('click', (event) => {
+      // 點黑色底版或物件旁的空白（版面容器）就放回桌上；點到物件本身不算。
       if (event.target === dialog || event.target.hasAttribute?.('data-stage-backdrop')) closeObject(id);
     });
     for (const close of dialog.querySelectorAll('[data-close-dialog]')) {

@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { BOARD_SAMPLE_POSTS, DESK_TEXTURE, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, LAPTOP_FRONT, CLIPBOARD, GUANGFU_MAP, LOGOTYPE, PUSHPIN } from '../js/data.js';
+import { BOARD_SAMPLE_POSTS, DESK_TEXTURE, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, LAPTOP_FRONT, CLIPBOARD, GUANGFU_MAP, LOGOTYPE, PUSHPIN, PRESS_BADGE } from '../js/data.js';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(resolve(projectRoot, 'index.html'), 'utf8');
@@ -28,6 +28,7 @@ const photos = [
   GUANGFU_MAP,
   LOGOTYPE,
   PUSHPIN,
+  PRESS_BADGE,
   DESK_TEXTURE,
   INTERACTIVE_DESK,
   INTERACTIVE_DESK_MOBILE,

@@ -79,3 +79,19 @@ body[data-stage='prologue'] [data-open-sources] { display: none; }
 
 .prologue__logo { display: block; width: min(34rem, 78vw); height: auto; margin: 0 auto 1.6rem; }
 .prologue__logo[hidden] { display: none; }
+
+/* 預覽密碼 */
+.gate { position: fixed; z-index: 300; inset: 0; display: grid; place-items: center; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); background: radial-gradient(ellipse at 50% 40%, #1d140e, #050403 70%); }
+.gate__form { display: grid; justify-items: center; gap: 0.8rem; width: min(24rem, 100%); text-align: center; }
+.gate__logo { width: min(22rem, 80vw); height: auto; margin-bottom: 1.2rem; }
+.gate__title { margin: 0; color: var(--ember-bright); font: 700 0.78rem var(--sans); letter-spacing: 0.3em; }
+.gate__label { color: var(--ink-muted); font-size: 0.9rem; }
+.gate__row { display: flex; gap: 0.5rem; width: 100%; }
+.gate__row input { flex: 1; min-width: 0; min-height: 3rem; padding: 0 1rem; border: 1px solid rgba(255, 214, 170, 0.35); color: var(--ink); background: rgba(0, 0, 0, 0.4); font: 600 1.2rem var(--sans); letter-spacing: 0.4em; text-align: center; }
+.gate__status { min-height: 1.4rem; margin: 0; color: #ff9b85; font-size: 0.85rem; }
+.gate__form.is-wrong .gate__row { animation: gate-shake 360ms ease; }
+@keyframes gate-shake { 20%, 60% { transform: translateX(-0.5rem); } 40%, 80% { transform: translateX(0.5rem); } }
+body[data-preview='locked'] .site-bar,
+body[data-preview='locked'] .prologue { visibility: hidden; }
+/* 預覽碼不是帳號密碼：用一般文字欄位遮字，瀏覽器就不會跳出「儲存密碼」 */
+.gate__row input { -webkit-text-security: disc; }

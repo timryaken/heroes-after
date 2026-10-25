@@ -33,15 +33,10 @@ export function createChecklistController(root, items, { onOpenItem, onDepart } 
   let waiting = false;
   let revealed = false;
 
-  // 板夾一開始收在畫面外；第一次看完桌上的物件後才滑上來提醒。
-  root.classList.add('is-away');
-  root.inert = true;
-
+  // 板夾一開始收合在畫面下緣；第一次看完桌上的物件後，自己滑上來提醒一次。
   function reveal() {
     if (revealed) return;
     revealed = true;
-    root.classList.remove('is-away');
-    root.inert = false;
     setExpanded(true);
   }
 
@@ -98,8 +93,12 @@ export function createChecklistController(root, items, { onOpenItem, onDepart } 
     if (toggle?.getAttribute('aria-expanded') === 'true' && event.target.closest?.('[data-desk-viewport]')) setExpanded(false);
   });
 
-  // 手機版預設收合，只露出進度列，避免擋住桌上的物件。
-  if (window.matchMedia?.('(max-width: 720px)').matches) setExpanded(false);
+  // 收合時點板夾露出來的任何地方都能拉上來，不一定要點到標題列。
+  root.addEventListener('click', (event) => {
+    if (toggle?.getAttribute('aria-expanded') === 'false' && !toggle.contains(event.target)) setExpanded(true);
+  });
+
+  setExpanded(false);
 
   return { update, setExpanded, reveal };
 }

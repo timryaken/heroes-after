@@ -42,3 +42,4 @@
 .report th { color: var(--ink-muted); font-weight: 600; }
 .report td.num, .report th.num { text-align: right; }
 .report__scroll { overflow-x: auto; }
+.admin-card__pin { padding: 0.15rem 0.5rem; color: #1f1a14; background: #efe4cc; font-size: 0.78rem; font-weight: 700; }

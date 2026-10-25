@@ -4,10 +4,12 @@ import { createBoardController } from './board.js';
 import { createBoardApi } from './board-api.js';
 import { BOARD_CONFIG } from './board-config.js';
 import { createChecklistController } from './checklist.js';
-import { BOARD_SAMPLE_POSTS, CHECKLIST, CLIPBOARD, DESK_TEXTURE, GUANGFU_MAP, INTERACTIVE_DESK, LOGOTYPE, PUSHPIN, INTERACTIVE_DESK_MOBILE, LAPTOP_FRONT, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, ROLES, VOICE_CLIPS } from './data.js';
+import { BOARD_SAMPLE_POSTS, CHECKLIST, CLIPBOARD, DESK_TEXTURE, DESK_PROPS, GUANGFU_MAP, INTERACTIVE_DESK, LOGOTYPE, PRESS_BADGE, PUSHPIN, INTERACTIVE_DESK_MOBILE, LAPTOP_FRONT, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, ROLES, VOICE_CLIPS } from './data.js';
 import { createDeskController, createStoryContentController } from './desk.js';
 import { createDeskView } from './desk-view.js';
 import { createFeedbackApi, createFeedbackController } from './feedback.js';
+import { createPreviewGate } from './gate.js';
+import { createDeskProps } from './props.js';
 import { createFormsController } from './forms.js';
 import { createMapController } from './map.js';
 import { createPrologueController } from './prologue.js';
@@ -47,6 +49,7 @@ const story = createStoryContentController(document, {
 });
 createFormsController(document, store);
 const deskView = createDeskView(deskRoot);
+createDeskProps(deskRoot, { props: DESK_PROPS, badge: PRESS_BADGE });
 const board = createBoardController(
   document.querySelector('[data-object-dialog="computer"]'),
   createBoardApi(BOARD_CONFIG, { storage: browserStorage() }),
@@ -91,6 +94,7 @@ function renderSources() {
     GUANGFU_MAP,
     LOGOTYPE,
     PUSHPIN,
+    PRESS_BADGE,
     ...BOARD_SAMPLE_POSTS.filter((post) => post.photo).map((post) => ({ ...post.photo, credit: 'AI 生成示意圖（讀者版示意留言）', sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/' })),
     DESK_TEXTURE,
     INTERACTIVE_DESK,
@@ -162,6 +166,7 @@ document.querySelector('[data-mute]').addEventListener('click', (event) => {
 });
 
 deskRoot.addEventListener('desk:object-opened', (event) => {
+  deskView.hideHint();
   if (event.detail.id === 'map') placeMap.reveal();
   if (event.detail.id === 'computer') board.load();
   if (event.detail.id === 'speaker') audio.setActive(true);
@@ -194,4 +199,5 @@ departDialog.addEventListener('click', (event) => {
 checklist.update(store.load().completed);
 
 if (!store.persistent) document.querySelector('[data-save-notice]').hidden = false;
-prologue.start();
+// 先過預覽密碼，才開始播前導。
+createPreviewGate(document.querySelector('[data-gate]'), { onUnlock: () => prologue.start() });

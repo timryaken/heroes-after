@@ -421,6 +421,25 @@ export const PUSHPIN = {
   sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
 };
 
+// 記者證（照片為 AI 生成的虛構人物）與桌上可以點的小東西；點了會跳出一小段手寫文字（文字為暫定）。
+export const PRESS_BADGE = {
+  src: 'assets/images/press-portrait.jpg',
+  alt: '周思遠的記者證照片（AI 生成的虛構人物）',
+  credit: 'AI 生成示意圖（周思遠的證件照，虛構人物）',
+  sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
+  name: '周思遠',
+  role: '地方新聞組｜記者',
+  number: 'No. 0917',
+  note: '周思遠，32 歲，跑地方新聞第八年。證件照是好幾年前拍的，他一直說要換。',
+};
+
+export const DESK_PROPS = [
+  { id: 'lamp', label: '檯燈', note: '這盞黃銅檯燈是思遠從舊家搬來的。他說日光燈太亮，想不出標題。' },
+  { id: 'window', label: '窗外', note: '凌晨兩點，城市還醒著。思遠常常對著窗外改稿到天亮。' },
+  { id: 'mug', label: '咖啡杯', note: '咖啡早就涼了，杯底還剩一口。他走得有點急。' },
+  { id: 'shelf', label: '書架', note: '一整排舊報紙和剪報，邊上貼滿便利貼，最上面那張寫著「光復」。' },
+];
+
 export const DESK_TEXTURE = {
   src: 'assets/images/desk-texture.jpg',
   alt: '深色木質桌面紋理',

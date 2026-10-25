@@ -77,10 +77,18 @@ export function createBoardApi(config = {}, { fetchImpl = globalThis.fetch?.bind
       return live && path ? `${url}/storage/v1/object/public/${PUBLIC_BUCKET}/${path}` : '';
     },
 
+    // 置頂的留言依審核頁排的順序放最前面，其餘依上架時間由新到舊。
+    // 資料庫還沒加置頂欄位（還沒執行 supabase/pin.sql）時，改用上架時間排序。
     async listPosts() {
       if (!live) return [];
-      const response = await request('/rest/v1/board_public?select=id,role,prompt,name,body,photo_path,likes,published_at&order=published_at.desc&limit=60');
-      return response.json();
+      const fields = 'id,role,prompt,name,body,photo_path,likes,published_at';
+      try {
+        const response = await request(`/rest/v1/board_public?select=${fields},pin_order&order=pin_order.asc.nullslast,published_at.desc&limit=60`);
+        return response.json();
+      } catch {
+        const response = await request(`/rest/v1/board_public?select=${fields}&order=published_at.desc&limit=60`);
+        return response.json();
+      }
     },
 
     async submitPost({ role, prompt, name = '', body, photo = null }) {

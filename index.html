@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#120f0c">
+    <meta name="robots" content="noindex, nofollow">
     <meta name="description" content="《重返·馬太鞍》— 記者周思遠出發去了光復。整理他留下的辦公桌，看看他為什麼出發。內部互動原型。">
     <title>重返·馬太鞍｜周思遠的辦公桌</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,6 +28,19 @@
         </button>
       </nav>
     </header>
+
+    <section class="gate" data-gate aria-labelledby="gate-title" hidden>
+      <form class="gate__form" data-gate-form method="dialog" novalidate>
+        <img class="gate__logo" src="assets/images/logotype.webp" alt="重返·馬太鞍" width="1400" height="242">
+        <h1 id="gate-title" class="gate__title">內部預覽</h1>
+        <label class="gate__label" for="gate-code">請輸入預覽密碼</label>
+        <div class="gate__row">
+          <input id="gate-code" name="code" type="text" inputmode="numeric" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="12" required>
+          <button class="primary-button" type="submit">進入 <span aria-hidden="true">→</span></button>
+        </div>
+        <p class="gate__status" data-gate-status role="status"></p>
+      </form>
+    </section>
 
     <section class="prologue" data-prologue aria-label="故事前導">
       <div class="prologue__progress" data-prologue-progress aria-hidden="true"></div>
@@ -62,7 +76,6 @@
             <p class="editor-note__from">總編的便條｜周思遠的辦公桌</p>
             <h1 id="desk-title" data-role-headline>英雄，不只出現在現場。</h1>
             <p>思遠去了光復。知行出發前，總編在整理思遠留下的辦公桌，看哪些資料要交給知行；完成 CHECK LIST，就可以出發。</p>
-            <p class="editor-note__hint" data-desk-hint>桌上有小燈在閃的，都是思遠留下的東西。他的桌子亂得一眼看不完，拉著桌面四處翻翻看。</p>
             <button class="primary-button" type="button" data-editor-note-close>開始整理 <span aria-hidden="true">→</span></button>
           </div>
           <button class="editor-note__tab" type="button" data-editor-note-open aria-controls="editor-note-paper" aria-expanded="true">總編的便條</button>
@@ -106,7 +119,19 @@
 
         </div>
         </div>
-        <p class="desk__drag-hint" data-drag-hint aria-hidden="true">← 拖曳桌面 →</p>
+        <p class="prop-note" data-prop-note role="status" hidden></p>
+        <button class="press-badge" type="button" data-press-badge>
+          <span class="press-badge__lanyard" aria-hidden="true"></span>
+          <span class="press-badge__card">
+            <span class="press-badge__clip" aria-hidden="true"></span>
+            <span class="press-badge__head" aria-hidden="true">PRESS<small>記者證</small></span>
+            <img alt="" width="304" height="360">
+            <span class="press-badge__name" data-badge-name></span>
+            <span class="press-badge__role" data-badge-role></span>
+            <span class="press-badge__number" data-badge-number></span>
+          </span>
+        </button>
+        <p class="desk__drag-hint" data-drag-hint hidden>桌上有小燈在閃的，都是思遠留下的東西。他的桌子亂得一眼看不完，拉著桌面四處翻翻看。</p>
 
       </section>
 
@@ -138,11 +163,6 @@
               <div class="laptop__view">
                 <h2 id="computer-title" class="visually-hidden">光復讀者版：大家留給光復的話</h2>
                 <article class="paper" aria-label="讀者版">
-                  <header class="paper__masthead">
-                    <p class="paper__meta"><span data-paper-date></span><span>讀者來函</span><span>重返·馬太鞍</span></p>
-                    <h3 class="paper__title">光復讀者版</h3>
-                    <p class="paper__sub">鏟子超人、想去卻沒能去的人、在遠方關心的人，留給光復的話。</p>
-                  </header>
                   <p class="paper__status" data-paper-status role="status"></p>
                   <div class="paper__columns" data-paper-posts></div>
                 </article>
@@ -188,7 +208,7 @@
       <button class="stage-close" type="button" data-close-dialog aria-label="把筆記本放回桌上">放回桌上 <span aria-hidden="true">×</span></button>
       <div class="stage" data-stage-backdrop>
         <h2 id="notebook-title" class="visually-hidden">周思遠的採訪筆記</h2>
-        <div class="journal" data-lift data-lift-from="rotate(-1.5deg)" data-journal data-open="false" data-turned="false">
+        <div class="journal" data-lift data-lift-from="rotate(-1.5deg)" data-stage-backdrop data-journal data-open="false" data-turned="false">
           <div class="journal__book">
             <div class="journal__verso" aria-hidden="true"></div>
             <div class="journal__page"><div data-notebook-pages aria-live="polite"></div></div>
@@ -237,9 +257,9 @@
     <dialog id="dialog-map" class="stage-dialog stage-dialog--map" data-object-dialog="map" aria-labelledby="map-title">
       <button class="stage-close" type="button" data-close-dialog aria-label="把地圖放回牆上">放回牆上 <span aria-hidden="true">×</span></button>
       <div class="stage" data-stage-backdrop>
-        <div class="map-sheet" data-lift data-lift-from="rotate(1deg)">
+        <div class="map-sheet" data-lift data-lift-from="rotate(1deg)" data-stage-backdrop>
           <header class="map-sheet__title"><p class="eyebrow">光復地圖｜災害當下與災後</p><h2 id="map-title">光復的四個地方</h2></header>
-          <div class="map-body">
+          <div class="map-body" data-stage-backdrop>
             <div class="map-frame">
               <span class="map-pin map-pin--tl" aria-hidden="true"></span><span class="map-pin map-pin--tr" aria-hidden="true"></span>
               <span class="map-pin map-pin--bl" aria-hidden="true"></span><span class="map-pin map-pin--br" aria-hidden="true"></span>
@@ -277,7 +297,7 @@
             <p class="radio__print radio__print--knobs" aria-hidden="true"><span>TUNING</span><span>VOLUME</span></p>
           </div>
         </div>
-        <aside class="radio-side">
+        <aside class="radio-side" data-stage-backdrop>
           <section class="radio-monitor" aria-label="錄音播放器">
             <p class="prototype-tag">示意錄音｜嵌入原平台播放器</p>
             <p class="radio-monitor__speaker" data-audio-speaker></p>
@@ -293,10 +313,10 @@
     <dialog id="dialog-photo" class="stage-dialog stage-dialog--photo" data-object-dialog="photo" aria-labelledby="photo-title">
       <button class="stage-close" type="button" data-close-dialog aria-label="把照片放回桌上">放回桌上 <span aria-hidden="true">×</span></button>
       <div class="stage" data-stage-backdrop>
-        <div class="photo-hand" data-lift data-lift-from="rotate(4deg)">
+        <div class="photo-hand" data-lift data-lift-from="rotate(4deg)" data-stage-backdrop>
           <h2 id="photo-title" class="visually-hidden">思遠桌上的照片</h2>
           <p class="photo-hand__meta" data-photo-meta>1/17｜跟知行一起跑採訪</p>
-          <div class="photo-stack" data-photo-stack></div>
+          <div class="photo-stack" data-photo-stack data-stage-backdrop></div>
           <p class="photo-hand__hint">點照片翻到背面看看</p>
           <nav class="photo-stack__nav" aria-label="切換照片">
             <button type="button" data-photo-prev aria-label="上一張">←</button>

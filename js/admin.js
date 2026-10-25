@@ -107,6 +107,9 @@ async function render() {
     button.setAttribute('aria-pressed', String(button.dataset.filter === filter));
   }
   const visible = posts.filter((post) => post.status === filter);
+  // 已上架：置頂的依順序排最前面，方便調整。
+  const pinned = pinnedPosts();
+  if (filter === 'approved') visible.sort((a, b) => (a.pin_order ?? Infinity) - (b.pin_order ?? Infinity));
   list.innerHTML = visible.length ? '' : '<li class="admin__empty">這裡目前沒有留言。</li>';
   for (const post of visible) {
     const item = document.createElement('li');
@@ -122,6 +125,11 @@ async function render() {
           ${post.status !== 'approved' ? '<button class="primary-button" type="button" data-action="approve">通過並上架</button>' : ''}
           ${post.status === 'pending' ? '<button class="text-button" type="button" data-action="reject">退回</button>' : ''}
           ${post.status === 'approved' ? '<button class="text-button" type="button" data-action="reject">下架</button>' : ''}
+          ${post.status === 'approved' && post.pin_order == null ? '<button class="text-button" type="button" data-action="pin">置頂</button>' : ''}
+          ${post.status === 'approved' && post.pin_order != null ? `<span class="admin-card__pin">置頂第 ${pinned.indexOf(post) + 1} 則</span>
+            <button class="text-button" type="button" data-action="up" aria-label="往前移"${pinned.indexOf(post) === 0 ? ' disabled' : ''}>↑</button>
+            <button class="text-button" type="button" data-action="down" aria-label="往後移"${pinned.indexOf(post) === pinned.length - 1 ? ' disabled' : ''}>↓</button>
+            <button class="text-button" type="button" data-action="unpin">取消置頂</button>` : ''}
         </div>
       </div>
     `;
@@ -248,8 +256,29 @@ async function approve(post) {
   await api(`/rest/v1/board_posts?id=eq.${post.id}`, { method: 'PATCH', body: { status: 'approved' }, headers: { prefer: 'return=minimal' } });
 }
 
+// 置頂：pin_order 越小越前面；只排已上架的留言。
+function pinnedPosts() {
+  return posts.filter((post) => post.status === 'approved' && post.pin_order != null).sort((a, b) => a.pin_order - b.pin_order);
+}
+
+function setPin(post, pinOrder) {
+  return api(`/rest/v1/board_posts?id=eq.${post.id}`, { method: 'PATCH', body: { pin_order: pinOrder }, headers: { prefer: 'return=minimal' } });
+}
+
+async function pin(post, action) {
+  const pinned = pinnedPosts();
+  if (action === 'pin') return setPin(post, (pinned.at(-1)?.pin_order ?? 0) + 1);
+  if (action === 'unpin') return setPin(post, null);
+  // 往前／往後：和相鄰那則交換順序。
+  const index = pinned.indexOf(post);
+  const other = pinned[index + (action === 'up' ? -1 : 1)];
+  if (!other) return null;
+  await setPin(post, other.pin_order);
+  return setPin(other, post.pin_order);
+}
+
 async function reject(post) {
-  await api(`/rest/v1/board_posts?id=eq.${post.id}`, { method: 'PATCH', body: { status: 'rejected' }, headers: { prefer: 'return=minimal' } });
+  await api(`/rest/v1/board_posts?id=eq.${post.id}`, { method: 'PATCH', body: { status: 'rejected', ...(post.pin_order != null ? { pin_order: null } : {}) }, headers: { prefer: 'return=minimal' } });
   if (post.photo_path) {
     await api(`/storage/v1/object/${PUBLIC_BUCKET}`, { method: 'DELETE', body: { prefixes: [post.photo_path] } }).catch(() => {});
   }
@@ -261,13 +290,17 @@ list.addEventListener('click', async (event) => {
   const post = posts.find((item) => item.id === button.closest('[data-id]').dataset.id);
   button.disabled = true;
   try {
-    if (button.dataset.action === 'approve') await approve(post);
-    else await reject(post);
-    say(button.dataset.action === 'approve' ? '已上架。' : '已退回／下架。', 'success');
+    const { action } = button.dataset;
+    if (action === 'approve') await approve(post);
+    else if (action === 'reject') await reject(post);
+    else await pin(post, action);
+    say({ approve: '已上架。', reject: '已退回／下架。', pin: '已置頂。', unpin: '已取消置頂。' }[action] ?? '已調整置頂順序。', 'success');
     await load();
   } catch (error) {
     button.disabled = false;
-    say(`操作失敗：${error.message}`, 'error');
+    say(/pin_order/.test(error.message)
+      ? '還沒開啟置頂功能：請先在 Supabase 的 SQL Editor 執行 supabase/pin.sql。'
+      : `操作失敗：${error.message}`, 'error');
   }
 });
 
