@@ -190,7 +190,6 @@ textarea:focus-visible {
 
 @media (max-width: 650px) {
   .site-bar { min-height: 3.75rem; }
-  .control-label, .site-actions .text-button[data-open-sources] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .site-actions { gap: 0; }
   .text-button, .icon-button { font-size: 0.86rem; }
   .paper-dialog form { padding-top: 3rem; }
@@ -208,3 +207,9 @@ textarea:focus-visible {
 .sound-icon__off,
 [data-mute][aria-pressed='true'] .sound-icon__on { display: none; }
 [data-mute][aria-pressed='true'] .sound-icon__off { display: inline; }
+
+/* 右上角：素材來源與聲音都是圓形圖示按鈕 */
+.site-actions .icon-button { width: 2.75rem; height: 2.75rem; justify-content: center; padding: 0; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 50%; color: rgba(255, 255, 255, 0.88); background: rgba(0, 0, 0, 0.35); transition: border-color 160ms ease, background 160ms ease; }
+.site-actions .icon-button:hover { border-color: var(--ember-bright); background: rgba(0, 0, 0, 0.55); }
+.site-actions { gap: 0.55rem; }
+.info-icon { font: italic 700 1.05rem/1 var(--serif); }

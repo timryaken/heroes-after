@@ -160,18 +160,12 @@ prologueRoot.addEventListener('prologue:complete', () => openDialog(roleDialog))
 // 一定要選一個身分才進得了桌面，按 Esc 不會把問題關掉。
 roleDialog.addEventListener('cancel', (event) => event.preventDefault());
 
-document.querySelector('[data-replay]').addEventListener('click', () => {
-  experience.hidden = true;
-  if (roleDialog.open) roleDialog.close();
-  prologue.replay();
-});
-
 document.querySelector('[data-open-sources]').addEventListener('click', () => openDialog(sourcesDialog));
 
 document.querySelector('[data-mute]').addEventListener('click', (event) => {
   const pressed = event.currentTarget.getAttribute('aria-pressed') === 'true';
   event.currentTarget.setAttribute('aria-pressed', String(!pressed));
-  event.currentTarget.querySelector('.control-label').textContent = pressed ? '聲音' : '已靜音';
+  event.currentTarget.setAttribute('aria-label', pressed ? '切換聲音' : '目前靜音，按一下開啟聲音');
   audio.setMuted(!pressed);
 });
 

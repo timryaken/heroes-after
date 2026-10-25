@@ -28,8 +28,12 @@ export function createChecklistController(root, items, { onOpenItem, onDepart } 
     return button;
   });
 
-  function update(completed = []) {
-    const { done, ready } = checklistProgress(items, completed);
+  let shown = null;
+  let latest = [];
+  let waiting = false;
+
+  function render(done) {
+    const ready = done.length === items.length;
     for (const button of buttons) {
       const checked = done.includes(button.dataset.checklistId);
       button.classList.toggle('is-checked', checked);
@@ -39,6 +43,32 @@ export function createChecklistController(root, items, { onOpenItem, onDepart } 
     if (depart) depart.disabled = !ready;
     if (departHint) departHint.textContent = ready ? '資料都確認好了，按下出發' : '前三項確認後才能出發';
     root.classList.toggle('is-ready', ready);
+    shown = done;
+  }
+
+  // 新完成一項時，等物件放回桌上（對話框關掉）再把板夾拉上來，玩家才看得到紅筆打勾。
+  function pop() {
+    waiting = false;
+    setExpanded(true);
+    requestAnimationFrame(() => render(latest));
+  }
+
+  function update(completed = []) {
+    const { done, ready } = checklistProgress(items, completed);
+    latest = done;
+    const fresh = shown ? done.filter((id) => !shown.includes(id)) : [];
+    if (!fresh.length) {
+      if (!waiting) render(done);
+      return { done, ready };
+    }
+    if (waiting) return { done, ready };
+    const openDialog = document.querySelector('dialog[open]');
+    if (!openDialog) {
+      pop();
+      return { done, ready };
+    }
+    waiting = true;
+    openDialog.addEventListener('close', () => window.setTimeout(pop, 180), { once: true });
     return { done, ready };
   }
 
@@ -49,6 +79,10 @@ export function createChecklistController(root, items, { onOpenItem, onDepart } 
 
   toggle?.addEventListener('click', () => setExpanded(toggle.getAttribute('aria-expanded') !== 'true'));
   depart?.addEventListener('click', () => onDepart?.(depart));
+  // 點桌面（桌上的物件或空白處）時，板夾就自己收下去；前導、對話框、便條和控制列的點擊不算。
+  document.addEventListener('click', (event) => {
+    if (toggle?.getAttribute('aria-expanded') === 'true' && event.target.closest?.('[data-desk-viewport]')) setExpanded(false);
+  });
 
   // 手機版預設收合，只露出進度列，避免擋住桌上的物件。
   if (window.matchMedia?.('(max-width: 720px)').matches) setExpanded(false);

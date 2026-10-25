@@ -9,6 +9,7 @@
 
 .desk__stage {
   --desk-ratio: 1.7768;
+  --desk-img: url('../assets/images/interactive-desk.webp');
   --desk-zoom: 1;
   position: relative;
   width: max(100vw * var(--desk-zoom), calc(100dvh * var(--desk-ratio) * var(--desk-zoom)));
@@ -38,42 +39,60 @@
 .editor-note.is-collapsed .editor-note__paper { display: none; }
 .editor-note.is-collapsed .editor-note__tab { display: inline-block; }
 
+/* 物件熱區：位置以桌景照片的百分比定位（--x --y --w），--ar 是熱區寬高比，--dx --dy 是提示小點在熱區裡的位置 */
 .desk-object {
+  --dx: 50%;
+  --dy: 50%;
   position: absolute;
-  display: grid;
-  gap: 0.75rem;
+  top: calc(var(--y) * 1%);
+  left: calc(var(--x) * 1%);
+  width: calc(var(--w) * 1%);
+  display: block;
   padding: 0;
   border: 0;
   color: var(--ink);
   background: transparent;
   text-align: left;
   cursor: pointer;
-  filter: drop-shadow(0 1.4rem 1.2rem rgba(0,0,0,0.65));
 }
-.desk-object::after { content: ''; position: absolute; inset: -0.65rem; border: 1px solid transparent; transition: border-color 180ms ease, background 180ms ease; }
-.desk-object:hover::after,
-.desk-object:focus-visible::after { border-color: rgba(255, 174, 118, 0.48); background: rgba(255,255,255,0.025); }
 .desk-object:focus-visible { outline: none; }
+.desk-object--computer { --x: 29; --y: 22.8; --w: 38.1; --ar: 1.43; --dx: 50%; --dy: 34%; z-index: 2; }
+.desk-object--notebook { --x: 19.7; --y: 67; --w: 30.4; --ar: 1.95; --dx: 58%; --dy: 48%; z-index: 3; }
+.desk-object--map { --x: 63.7; --y: 0.5; --w: 36; --ar: 1.62; --dx: 44%; --dy: 50%; }
+.desk-object--speaker { --x: 2.4; --y: 44.4; --w: 23.4; --ar: 1.77; --dx: 50%; --dy: 55%; z-index: 3; }
+.desk-object--photo { --x: 62.5; --y: 63.8; --w: 32.6; --ar: 1.68; --dx: 40%; --dy: 45%; z-index: 4; }
 
-/* 還沒看過的物件罩著一圈柔和的暖光，看過之後光就熄掉 */
-.object-glow { position: absolute; z-index: 3; top: -6%; left: -6%; width: 112%; aspect-ratio: var(--ar); border-radius: 40%; background: radial-gradient(ellipse at center, rgba(255, 205, 140, 0.46), rgba(255, 170, 90, 0.18) 45%, transparent 70%); mix-blend-mode: screen; pointer-events: none; animation: object-breathe 3.2s ease-in-out infinite; }
-.desk-object.is-done .object-glow { display: none; }
-@keyframes object-breathe { 50% { opacity: 0.35; } }
+/* 滑過時：從桌景裁出同一塊畫面疊上去，放大一點、變亮，物件看起來像被拿起來；邊緣用遮罩淡掉，看不出接縫 */
+.desk-object__visual {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--ar);
+  background: var(--desk-img) no-repeat;
+  background-size: calc(10000% / var(--w)) calc(10000% * var(--ar) / (var(--w) * var(--desk-ratio)));
+  background-position: calc(var(--x) / (100 - var(--w)) * 100%) calc(var(--y) / (100 - var(--w) * var(--desk-ratio) / var(--ar)) * 100%);
+  -webkit-mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 55%, transparent 100%);
+  opacity: 0;
+  transition: opacity 220ms ease, transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1), filter 320ms ease;
+}
+.desk-object:hover .desk-object__visual,
+.desk-object:focus-visible .desk-object__visual { opacity: 1; transform: scale(1.06); filter: brightness(1.22) saturate(1.12); }
 
-.desk-object__visual { display: block; position: relative; width: 100%; }
-.desk-object__copy { display: grid; gap: 0.1rem; max-width: 15rem; opacity: 0; transform: translateY(0.45rem); transition: opacity 180ms ease, transform 180ms ease; text-shadow: 0 2px 8px #000; }
+/* 呼吸的小點：提示這裡可以點；看過之後變成小勾勾 */
+.object-glow { position: absolute; z-index: 3; top: var(--dy); left: var(--dx); width: 1.05rem; height: 1.05rem; margin: -0.525rem 0 0 -0.525rem; border: 2px solid #fff2cf; border-radius: 50%; background: #e9974f; box-shadow: 0 0 0 0.3rem rgba(255, 190, 122, 0.16), 0 0 1.4rem 0.45rem rgba(255, 136, 66, 0.6); pointer-events: none; animation: object-pulse 2.2s ease-in-out infinite; }
+@keyframes object-pulse { 50% { transform: scale(1.25); box-shadow: 0 0 0 0.55rem rgba(255, 190, 122, 0.05), 0 0 2rem 0.7rem rgba(255, 136, 66, 0.75); } }
+.desk-object.is-done .object-glow { display: grid; place-items: center; border-color: #fff8e6; background: rgba(242, 237, 226, 0.92); box-shadow: 0 0 0.8rem rgba(255, 190, 122, 0.35); animation: none; }
+.desk-object.is-done .object-glow::after { content: '✓'; color: #2b1d13; font: 800 0.7rem/1 var(--sans); }
+.desk-object:focus-visible .object-glow { outline: 2px solid var(--ember-bright); outline-offset: 4px; }
+
+/* 物件名稱：寫在小點上方的手寫標註，箭頭指著小點 */
+.desk-object__copy { position: absolute; z-index: 3; left: var(--dx); bottom: calc(100% - var(--dy) + 0.75rem); display: grid; justify-items: center; color: #fff3dc; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 0.8rem rgba(0, 0, 0, 0.85); white-space: nowrap; transform: translateX(-50%) rotate(-4deg); pointer-events: none; transition: transform 240ms ease; }
+.desk-object__copy strong { font: 700 clamp(1.05rem, 1.5vw, 1.35rem)/1.2 var(--hand); letter-spacing: 0.04em; }
+.desk-object__copy em { display: none; }
+.desk-object__copy::after { content: ''; width: 1.1rem; height: 0.85rem; margin-top: 0.05rem; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 17'%3E%3Cpath d='M4 2c6 1 9 5 9 12m-4-3 4 4 4-5' fill='none' stroke='%23fff3dc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.9)); }
 .desk-object:hover .desk-object__copy,
-.desk-object:focus-visible .desk-object__copy { opacity: 1; transform: none; }
-.desk-object__copy strong { font: 600 1.05rem var(--serif); letter-spacing: 0.08em; }
-.desk-object__copy em { color: var(--ink-muted); font-size: 0.75rem; font-style: normal; }
-
-/* 物件位置以桌景照片（1672×941）的百分比定位；--ar 是熱區的寬高比 */
-.desk-object--computer { --ar: 1.43; z-index: 2; top: 22.8%; left: 29%; width: 38.1%; }
-.desk-object--notebook { --ar: 1.95; z-index: 3; top: 67%; left: 19.7%; width: 30.4%; }
-.desk-object--map { --ar: 1.62; top: 0.5%; left: 63.7%; width: 36%; }
-.desk-object--speaker { --ar: 1.77; z-index: 3; top: 44.4%; left: 2.4%; width: 23.4%; }
-.desk-object--photo { --ar: 1.68; z-index: 4; top: 63.8%; left: 62.5%; width: 32.6%; }
-.desk-object__visual { aspect-ratio: var(--ar); }
+.desk-object:focus-visible .desk-object__copy { transform: translateX(-50%) rotate(-4deg) translateY(-0.25rem); }
 
 .desk-object--wish { z-index: 4; left: 5%; bottom: 4%; width: 17%; transform: rotate(-5deg); }
 .wish-visual { aspect-ratio: 1.4 / 1; display: grid; place-items: center; padding: 1rem; color: #4a3425; background: #d8bd86; box-shadow: 0 1rem 1.6rem #000; font: 600 clamp(0.82rem, 1.25vw, 1.1rem) var(--serif); text-align: center; }
@@ -146,8 +165,6 @@
   .object-dialog { width: calc(100% - 1rem); max-height: 94dvh; padding: 1.2rem; }
 }
 
-/* 桌景上的物件只是可點的熱區，外觀來自照片；發光點提示位置 */
-.desk-object__visual { opacity: 0; }
 
 /* 留言板：投稿表單；讀者版用報紙排版 */
 .board-form__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
@@ -186,18 +203,13 @@
 /* 直式畫面（手機）：換成直式桌景與對應的物件位置，名稱常駐顯示 */
 @media (max-aspect-ratio: 4/5) {
   /* 放大 1.2 倍，桌面比螢幕大，玩家要拖曳才找得到全部物件 */
-  .desk__stage { --desk-ratio: 0.6667; --desk-zoom: 1.2; }
-  .desk-object { transform: none; }
-  /* 名稱貼在發光點正上方，玩家看得出哪個點是哪個物件 */
-  .desk-object__copy { position: absolute; right: 4%; bottom: calc(14% + 1.9rem); padding: 0.15rem 0.5rem; background: rgba(10, 7, 5, 0.62); opacity: 1; transform: none; text-align: right; white-space: nowrap; }
-  .desk-object__copy strong { font-size: 0.95rem; }
-  .desk-object__copy em { display: none; }
+  .desk__stage { --desk-ratio: 0.6667; --desk-zoom: 1.2; --desk-img: url('../assets/images/interactive-desk-mobile.webp'); }
   /* 直式桌景（1024×1536） */
-  .desk-object--map { --ar: 1.2; top: 0; left: 50.8%; width: 49.2%; }
-  .desk-object--speaker { --ar: 1.43; top: 32.2%; left: 0; width: 37.1%; }
-  .desk-object--computer { --ar: 1.05; top: 30.9%; left: 29%; width: 58.9%; }
-  .desk-object--notebook { --ar: 1.35; top: 63.8%; left: 2.4%; width: 49.3%; }
-  .desk-object--photo { --ar: 1.38; top: 70.3%; left: 50.3%; width: 49.7%; }
+  .desk-object--map { --x: 50.8; --y: 0; --w: 49.2; --ar: 1.2; --dx: 45%; --dy: 74%; }
+  .desk-object--speaker { --x: 0; --y: 32.2; --w: 37.1; --ar: 1.43; --dx: 50%; --dy: 55%; }
+  .desk-object--computer { --x: 29; --y: 30.9; --w: 58.9; --ar: 1.05; --dx: 58%; --dy: 30%; }
+  .desk-object--notebook { --x: 2.4; --y: 63.8; --w: 49.3; --ar: 1.35; --dx: 55%; --dy: 55%; }
+  .desk-object--photo { --x: 50.3; --y: 70.3; --w: 49.7; --ar: 1.38; --dx: 46%; --dy: 45%; }
   .editor-note { top: calc(var(--safe-top) + 4.6rem); }
   .editor-note__paper { padding: 1.3rem 1.2rem 1.1rem; }
   .editor-note__paper > p:not([class]) { font-size: 0.85rem; }

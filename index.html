@@ -21,11 +21,10 @@
         <small>GUANGFU · HUALIEN</small>
       </a>
       <nav class="site-actions" aria-label="原型控制">
-        <button class="text-button" type="button" data-open-sources>素材來源</button>
-        <button class="icon-button" type="button" aria-pressed="false" aria-label="切換聲音" data-mute>
-          <svg class="sound-icon" viewBox="0 0 24 24" aria-hidden="true"><path class="sound-icon__body" d="M4 9h4l5-4v14l-5-4H4z"/><path class="sound-icon__on" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/><path class="sound-icon__off" d="M16 9.5l5 5m0-5-5 5"/></svg><span class="control-label">聲音</span>
+        <button class="icon-button" type="button" data-open-sources aria-label="素材來源" title="素材來源"><span class="info-icon" aria-hidden="true">i</span></button>
+        <button class="icon-button" type="button" aria-pressed="false" aria-label="切換聲音" title="聲音" data-mute>
+          <svg class="sound-icon" viewBox="0 0 24 24" aria-hidden="true"><path class="sound-icon__body" d="M4 9h4l5-4v14l-5-4H4z"/><path class="sound-icon__on" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/><path class="sound-icon__off" d="M16 9.5l5 5m0-5-5 5"/></svg>
         </button>
-        <button class="text-button" type="button" data-replay>重播前導</button>
       </nav>
     </header>
 
@@ -62,7 +61,7 @@
             <p class="editor-note__from">總編的便條｜周思遠的辦公桌</p>
             <h1 id="desk-title" data-role-headline>英雄，不只出現在現場。</h1>
             <p>周思遠去了光復。林知行出發前，總編正在整理思遠留下的辦公桌，確認哪些資料要交給知行。完成總編的 CHECK LIST，就可以出發。</p>
-            <p class="editor-note__hint" data-desk-hint>點桌上發光的物件；畫面放不下時，可以拖曳桌面。</p>
+            <p class="editor-note__hint" data-desk-hint>桌上有小燈在閃的，都是思遠留下的東西。他的桌子亂得一眼看不完，拉著桌面四處翻翻看。</p>
             <button class="primary-button" type="button" data-editor-note-close>開始整理 <span aria-hidden="true">→</span></button>
           </div>
           <button class="editor-note__tab" type="button" data-editor-note-open aria-controls="editor-note-paper" aria-expanded="true">總編的便條</button>
@@ -76,25 +75,25 @@
           </picture>
           <button class="desk-object desk-object--computer" type="button" data-desk-object="computer" aria-haspopup="dialog" aria-controls="dialog-computer">
             <span class="object-glow" aria-hidden="true"></span>
-            <span class="desk-object__visual computer-visual" aria-hidden="true"><i></i></span>
+            <span class="desk-object__visual computer-visual" aria-hidden="true"></span>
             <span class="desk-object__copy"><strong>電腦螢幕<span class="visually-hidden" data-done-label></span></strong><em>留言板與讀者版</em></span>
           </button>
 
           <button class="desk-object desk-object--notebook" type="button" data-desk-object="notebook" aria-haspopup="dialog" aria-controls="dialog-notebook">
             <span class="object-glow" aria-hidden="true"></span>
-            <span class="desk-object__visual notebook-visual" aria-hidden="true"><i>採訪筆記<br>周思遠</i></span>
+            <span class="desk-object__visual notebook-visual" aria-hidden="true"></span>
             <span class="desk-object__copy"><strong>採訪筆記本<span class="visually-hidden" data-done-label></span></strong><em>思遠出發前的筆記</em></span>
           </button>
 
           <button class="desk-object desk-object--map" type="button" data-desk-object="map" aria-haspopup="dialog" aria-controls="dialog-map">
             <span class="object-glow" aria-hidden="true"></span>
-            <span class="desk-object__visual map-visual" aria-hidden="true"><b>邦查農場</b><b>彼心書店</b><b>小光故事屋</b><b>光復糖廠</b></span>
+            <span class="desk-object__visual map-visual" aria-hidden="true"></span>
             <span class="desk-object__copy"><strong>光復地圖<span class="visually-hidden" data-done-label></span></strong><em>四個地方的災害當下與災後</em></span>
           </button>
 
           <button class="desk-object desk-object--speaker" type="button" data-desk-object="speaker" aria-haspopup="dialog" aria-controls="dialog-speaker">
             <span class="object-glow" aria-hidden="true"></span>
-            <span class="desk-object__visual speaker-visual" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="desk-object__visual speaker-visual" aria-hidden="true"></span>
             <span class="desk-object__copy"><strong>收音機<span class="visually-hidden" data-done-label></span></strong><em>思遠留下的錄音</em></span>
           </button>
 

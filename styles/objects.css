@@ -389,3 +389,13 @@
 .feedback .form-status[data-kind='error'] { border-color: #a3402b; color: #8a2a18; background: rgba(163, 64, 43, 0.12); }
 .feedback .form-footer small { color: #7a6a52; }
 .depart-dialog .eyebrow { color: #a3402b; }
+
+/* 全部確認完：「出發」按鈕一直輕輕跳動、發光，提醒玩家可以出發了 */
+.checklist.is-ready .checklist__depart:not(:disabled) { animation: depart-call 1.8s ease-in-out infinite; }
+@keyframes depart-call {
+  0%, 100% { transform: none; box-shadow: 0 0 0 0 rgba(163, 64, 43, 0.55); }
+  12% { transform: scale(1.05) rotate(-1deg); }
+  24% { transform: scale(0.98) rotate(0.8deg); }
+  36% { transform: none; }
+  60% { box-shadow: 0 0 0 0.75rem rgba(163, 64, 43, 0); }
+}
