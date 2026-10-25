@@ -32,6 +32,7 @@ export function createPrologueController(root, options) {
   const eyebrow = root.querySelector('[data-prologue-eyebrow]');
   const title = root.querySelector('[data-prologue-title]');
   const dayCount = root.querySelector('[data-day-count]');
+  const logo = root.querySelector('[data-prologue-logo]');
   const progress = root.querySelector('[data-prologue-progress]');
   const info = root.querySelector('[data-prologue-info]');
   const infoToggle = root.querySelector('[data-prologue-info-toggle]');
@@ -66,6 +67,7 @@ export function createPrologueController(root, options) {
     setInfoOpen(false);
     card.hidden = false;
     dayCount.hidden = true;
+    logo.hidden = beat.type !== 'invitation';
     if (beat.type === 'count') {
       eyebrow.textContent = '在那之後，已經過了——';
       title.textContent = '天';
@@ -75,7 +77,8 @@ export function createPrologueController(root, options) {
       eyebrow.textContent = '一年之後';
       title.textContent = '那些被鏟子超人清出來的街道，現在怎麼樣了？';
     } else {
-      eyebrow.textContent = '與光赴會';
+      // 最後一頁用標準字當標題。
+      eyebrow.textContent = '';
       title.textContent = '因為有你們，光復正在回來。\n記者周思遠，也出發去了光復。';
     }
   }

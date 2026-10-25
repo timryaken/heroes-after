@@ -4,7 +4,7 @@ import { createBoardController } from './board.js';
 import { createBoardApi } from './board-api.js';
 import { BOARD_CONFIG } from './board-config.js';
 import { createChecklistController } from './checklist.js';
-import { BOARD_SAMPLE_POSTS, CHECKLIST, CLIPBOARD, DESK_TEXTURE, GUANGFU_MAP, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, LAPTOP_FRONT, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, ROLES, SPEAKER_PHOTO, VOICE_CLIPS } from './data.js';
+import { BOARD_SAMPLE_POSTS, CHECKLIST, CLIPBOARD, DESK_TEXTURE, GUANGFU_MAP, INTERACTIVE_DESK, LOGOTYPE, PUSHPIN, INTERACTIVE_DESK_MOBILE, LAPTOP_FRONT, NOTEBOOK_PAGES, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, ROLES, VOICE_CLIPS } from './data.js';
 import { createDeskController, createStoryContentController } from './desk.js';
 import { createDeskView } from './desk-view.js';
 import { createFeedbackApi, createFeedbackController } from './feedback.js';
@@ -83,13 +83,14 @@ function renderSources() {
   const sourceList = document.querySelector('[data-source-list]');
   const photos = [
     ...PROLOGUE_SLIDES,
-    ...PLACES.flatMap((place) => [place.before, place.after]),
+    ...PLACES.flatMap((place) => [place.before, place.after]).filter(Boolean),
     ...PHOTO_STACK,
-    SPEAKER_PHOTO,
     RADIO_FRONT,
     LAPTOP_FRONT,
     CLIPBOARD,
     GUANGFU_MAP,
+    LOGOTYPE,
+    PUSHPIN,
     ...BOARD_SAMPLE_POSTS.filter((post) => post.photo).map((post) => ({ ...post.photo, credit: 'AI 生成示意圖（讀者版示意留言）', sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/' })),
     DESK_TEXTURE,
     INTERACTIVE_DESK,
@@ -109,15 +110,6 @@ function renderSources() {
 
 renderSources();
 
-function renderSpeakerPhoto() {
-  const figure = document.querySelector('[data-speaker-photo]');
-  const image = figure.querySelector('img');
-  image.src = SPEAKER_PHOTO.src;
-  image.alt = SPEAKER_PHOTO.alt;
-  figure.querySelector('figcaption').innerHTML = `${SPEAKER_PHOTO.credit} · <a href="${SPEAKER_PHOTO.sourceUrl}" target="_blank" rel="noreferrer">原始圖片</a>`;
-}
-
-renderSpeakerPhoto();
 
 const prologue = createPrologueController(prologueRoot, {
   slides: PROLOGUE_SLIDES,
@@ -175,6 +167,7 @@ deskRoot.addEventListener('desk:object-opened', (event) => {
   if (event.detail.id === 'speaker') audio.setActive(true);
 });
 deskRoot.addEventListener('desk:object-closed', (event) => {
+  window.setTimeout(() => checklist.reveal(), 180);
   if (event.detail.id !== 'speaker') return;
   audio.stop();
   audio.setActive(false);

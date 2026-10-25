@@ -30,7 +30,7 @@ export function placePanelMarkup(place) {
   return `
     <button class="place-panel__close" type="button" data-place-close aria-label="收起${place.name}的照片">×</button>
     <header class="place-card"><p class="eyebrow">${place.era}</p><h3>${place.name}</h3><p>${place.summary}</p>${reading}</header>
-    <div class="polaroids">${photoMarkup(place.before, '災害當下')}${photoMarkup(place.after, '災害後')}</div>
+    <div class="polaroids${place.before ? '' : ' polaroids--single'}">${place.before ? photoMarkup(place.before, '災害當下') : ''}${photoMarkup(place.after, place.afterLabel ?? '災害後')}</div>
   `;
 }
 
@@ -54,7 +54,7 @@ export function createMapController(root, places, base, { onSelect } = {}) {
     pin.style.left = `${x.toFixed(2)}%`;
     pin.style.top = `${y.toFixed(2)}%`;
     pin.setAttribute('aria-pressed', 'false');
-    pin.innerHTML = `<span class="place-pin__dot" aria-hidden="true">${index + 1}</span><span class="place-pin__name">${place.name}</span>`;
+    pin.innerHTML = `<span class="place-pin__dot" aria-hidden="true"></span><span class="place-pin__name"><b>${index + 1}</b>${place.name}</span>`;
     pin.addEventListener('click', () => select(place.id));
     canvas.append(pin);
     return pin;
@@ -99,10 +99,10 @@ export function createMapController(root, places, base, { onSelect } = {}) {
     chips.find((button) => button.dataset.placeId === id)?.focus({ preventScroll: true });
   });
 
-  // 手機上地圖比畫面寬：打開時先捲到市區（四個地點大約在中間偏左）。
+  // 手機上地圖比畫面寬：打開時先捲到四個地點所在的區域（大約在中間偏左）。
   function reveal() {
     const scroller = root.querySelector('[data-map-scroll]');
-    if (scroller.scrollWidth > scroller.clientWidth) scroller.scrollLeft = (scroller.scrollWidth - scroller.clientWidth) * 0.4;
+    if (scroller.scrollWidth > scroller.clientWidth) scroller.scrollLeft = (scroller.scrollWidth - scroller.clientWidth) * 0.18;
   }
 
   return { select, reveal };

@@ -6,7 +6,6 @@ const SOURCES = {
   taiwanWetland: 'https://media.taiwan.net.tw/zh-tw/portal/media/collection/3110181_ph_20260120',
   cnaBangcha: 'https://www.cna.com.tw/news/aloc/202510060168.aspx',
   cnaBixin: 'https://www.cna.com.tw/culture/article/20260615w004',
-  cteeXiaoguang: 'https://www.ctee.com.tw/news/20260313701403-431206',
   udnSugarFactory: 'https://udn.com/news/story/124616/9046532',
 };
 
@@ -14,7 +13,7 @@ const SOURCES = {
 const fbPhoto = (fbid) => `https://www.facebook.com/photo/?fbid=${fbid}`;
 const BANGCHA_CREDIT = '照片來源：邦查農場 Facebook（授權待確認）';
 const BIXIN_CREDIT = '照片來源：彼心書店 Facebook（授權待確認）';
-const XIAOGUANG_CREDIT = '照片來源：小光故事屋 Facebook（授權待確認）';
+const BIXIN_PHOTOGRAPHER_CREDIT = '照片來源：彼心書店 Facebook（攝影：林彥劭，授權待確認）';
 
 const photos = {
   flood: {
@@ -77,17 +76,12 @@ const photos = {
     credit: BIXIN_CREDIT,
     sourceUrl: fbPhoto('122221611500353355'),
   },
-  xiaoguangDuring: {
-    src: 'assets/images/xiaoguang-during.jpg',
-    alt: '小光故事屋教室裡，桌椅與書架被泥流沖倒、堆成一團',
-    credit: XIAOGUANG_CREDIT,
-    sourceUrl: fbPhoto('793048453273251'),
-  },
-  xiaoguangAfter: {
-    src: 'assets/images/xiaoguang-after.jpg',
-    alt: '小光故事屋清理乾淨的室內，地板重新露了出來',
-    credit: XIAOGUANG_CREDIT,
-    sourceUrl: fbPhoto('796410922937004'),
+  // 「02_圖片檔」的馬太鞍濕地，依政府資料開放授權條款標示來源。
+  wetlandFireflies: {
+    src: 'assets/images/wetland-fireflies.jpg',
+    alt: '馬太鞍濕地的「螢饗」夜間餐會，木造棚架下掛著一串串燈泡',
+    credit: '照片來源：觀光多媒體開放資料〈2026光復馬太鞍濕地-螢饗〉（拍攝者：花蓮縣馬太鞍休閒農業發展協會；製作單位：農業部；政府資料開放授權條款）',
+    sourceUrl: SOURCES.taiwanWetland,
   },
   sugarFactoryDuring: {
     src: 'assets/images/sugar-factory-during.jpg',
@@ -288,28 +282,27 @@ export const PLACES = [
     after: photos.bixinAfter,
   },
   {
-    id: 'xiaoguang',
-    name: '小光故事屋',
-    lat: 23.6729,
-    lng: 121.4241,
-    labelSide: 'left',
-    era: '桌椅被沖倒，空間又回來了',
-    summary: '光復孩子們課後學習與陪伴的地方。教室曾被泥沙沖毀、桌椅全倒，後來在志工協助與修繕下重新鋪上地板，恢復運作。',
-    reading: SOURCES.cteeXiaoguang,
-    before: photos.xiaoguangDuring,
-    after: photos.xiaoguangAfter,
-  },
-  {
     id: 'sugar-factory',
     name: '光復糖廠',
     lat: 23.6574,
     lng: 121.4210,
-    labelSide: 'left',
     era: '救災資源集換站',
     summary: '災後，各地捐來的物資集中送到光復糖廠，再由志工整理、分送出去。（災後照片待補。）',
     reading: SOURCES.udnSugarFactory,
     before: photos.sugarFactoryDuring,
     after: { placeholder: true, label: '災後照片待補' },
+  },
+  // 只有一張「現在」的照片，沒有災害當下的對照；說明文字為草稿，待確認。
+  {
+    id: 'wetland',
+    name: '馬太鞍濕地',
+    lat: 23.6589,
+    lng: 121.41,
+    labelSide: 'left',
+    era: '夜裡，螢火蟲回來了',
+    summary: '馬太鞍部落旁的濕地，水源與生態是部落生活的一部分。2026 年的「螢饗」把人們帶回濕地，在燈串下一起吃飯、等螢火蟲出來。（說明文字待確認。）',
+    after: photos.wetlandFireflies,
+    afterLabel: '現在',
   },
 ];
 
@@ -368,14 +361,6 @@ export const BOARD_SAMPLE_POSTS = [
   },
 ];
 
-// 收音機旁放的照片（「02_圖片檔」的馬太鞍濕地），依政府資料開放授權條款標示來源。
-export const SPEAKER_PHOTO = {
-  src: 'assets/images/wetland-fireflies.jpg',
-  alt: '馬太鞍濕地的「螢饗」夜間餐會，木造棚架下掛著一串串燈泡',
-  credit: '照片來源：觀光多媒體開放資料〈2026光復馬太鞍濕地-螢饗〉（拍攝者：花蓮縣馬太鞍休閒農業發展協會；製作單位：農業部；政府資料開放授權條款）',
-  sourceUrl: SOURCES.taiwanWetland,
-};
-
 // 總編 CHECK LIST：三項都確認後才能按「出發」；id 對應桌上的物件。
 export const CHECKLIST = [
   { id: 'speaker', label: '確認思遠留下的錄音', hint: '至少聽一段錄音' },
@@ -404,6 +389,22 @@ export const PHOTO_STACK = [
     place: '共享鏟子堆',
     note: '',
   },
+  // 以下是「02_圖片檔」裡其他地方沒用到的照片；背面的字是暫定文字，待確認。
+  ...[
+    ['stack-bixin-mudflow', '122186920862353355', BIXIN_PHOTOGRAPHER_CREDIT, '9/23', '光復街上', '泥流沖進街上，車子停在泥裡。', '9 月 23 日 16:07，郵局前的街道被泥流淹過，車子陷在泥裡'],
+    ['stack-bixin-inside', '122186921954353355', BIXIN_PHOTOGRAPHER_CREDIT, '9/23', '彼心書店', '書店裡面，什麼都倒了。', '9 月 23 日 18:43，彼心書店內部被泥水淹過，桌椅物品倒成一片'],
+    ['stack-bixin-escape', '122186922080353355', BIXIN_PHOTOGRAPHER_CREDIT, '9/23', '彼心書店', '22:35，自行脫困。', '9 月 23 日 22:35，彼心書店門口的鐵門與堆在地上的雜物'],
+    ['stack-bixin-buried', '122192962238353355', BIXIN_PHOTOGRAPHER_CREDIT, '災後', '光復', '整片都被泥沙蓋住。', '被泥沙淹沒的田地，只露出一截鐵架'],
+    ['stack-bixin-temple', '122192961908353355', BIXIN_PHOTOGRAPHER_CREDIT, '災後', '光復', '寺廟前也是一片泥。', '遠方的寺廟前是一整片乾掉的泥地'],
+    ['stack-bixin-excavators', '122192964206353355', BIXIN_PHOTOGRAPHER_CREDIT, '災後', '溪邊', '怪手一台一台在整理。', '陰天的溪邊，幾台怪手在泥沙地上整理河道'],
+    ['stack-bixin-shovel', '122189161466353355', BIXIN_PHOTOGRAPHER_CREDIT, '災後', '清泥', '一鏟一鏟清。', '穿雨鞋的人拿著鏟子在泥地上清泥，旁邊是推車'],
+    ['stack-bangcha-circles', '1250109090484363', BANGCHA_CREDIT, '重新開始', '邦查農場', '在泥地上，圍出一圈一圈的田。', '邦查農場的人在泥地上整理一圈圈的台灣藜田圈'],
+    ['stack-bangcha-aerial', '1250109183817687', BANGCHA_CREDIT, '重新開始', '邦查農場', '從上面看，田圈一個一個排好了。', '空拍邦查農場的台灣藜田圈，一圈圈排列在泥地上'],
+    ['stack-bangcha-rebuild', '1506242204871049', BANGCHA_CREDIT, '重建', '邦查農場', '溫室的屋頂重新搭起來。', '幾個人站在梯子上，替邦查農場的溫室重新鋪上屋頂'],
+    ['stack-bangcha-drying', '1467285722100031', BANGCHA_CREDIT, '收成', '邦查農場', '紅藜收成，攤開來曬。', '收成的紅藜攤在帆布上曬乾，一整片紅色'],
+  ].map(([file, fbid, credit, date, place, note, alt]) => ({
+    src: `assets/images/${file}.jpg`, alt, credit, sourceUrl: fbPhoto(fbid), date, place, note,
+  })),
 ];
 
 // 收音機拿起來之後的正面（AI 生成示意，外觀參考桌景裡的那台收音機）。
@@ -436,6 +437,21 @@ export const GUANGFU_MAP = {
   credit: 'AI 生成示意圖，依 OpenStreetMap 貢獻者的地圖資料重新繪製（ODbL）',
   sourceUrl: 'https://www.openstreetmap.org/copyright',
   bounds: { north: 23.69028, south: 23.63996, west: 121.38614, east: 121.46853 },
+};
+
+// 標準字與圖釘（AI 生成）。
+export const LOGOTYPE = {
+  src: 'assets/images/logotype.webp',
+  alt: '《重返·馬太鞍》標準字',
+  credit: 'AI 生成標準字（ChatGPT），暫定',
+  sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
+};
+
+export const PUSHPIN = {
+  src: 'assets/images/pushpin.webp',
+  alt: '紅色圖釘',
+  credit: 'AI 生成示意圖（圖釘）',
+  sourceUrl: 'https://openai.com/index/introducing-4o-image-generation/',
 };
 
 export const DESK_TEXTURE = {

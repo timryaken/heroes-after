@@ -117,6 +117,19 @@ export function createStoryContentController(root, { notebookPages = [], photos 
   previousNote?.addEventListener('click', () => turnPage(-1));
   nextNote?.addEventListener('click', () => turnPage(1));
 
+  // 點右頁翻下一頁、點左頁翻上一頁；手機只看得到一頁，點左邊三分之一往前翻。
+  const page = root.querySelector('.journal__page');
+  const verso = root.querySelector('.journal__verso');
+  page?.addEventListener('click', (event) => {
+    if (book.dataset.open !== 'true') return;
+    const rect = page.getBoundingClientRect();
+    const singlePage = getComputedStyle(verso).visibility !== 'visible' && noteIndex > 0 && window.matchMedia('(max-width: 720px)').matches;
+    turnPage(singlePage && event.clientX - rect.left < rect.width / 3 ? -1 : 1);
+  });
+  verso?.addEventListener('click', () => {
+    if (book.dataset.open === 'true') turnPage(-1);
+  });
+
   const cards = photos.map((photo, index) => {
     const card = document.createElement('button');
     card.type = 'button';

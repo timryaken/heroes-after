@@ -213,3 +213,6 @@ textarea:focus-visible {
 .site-actions .icon-button:hover { border-color: var(--ember-bright); background: rgba(0, 0, 0, 0.55); }
 .site-actions { gap: 0.55rem; }
 .info-icon { font: italic 700 1.05rem/1 var(--serif); }
+
+/* 標準字（AI 生成，白字透明底） */
+.wordmark__logo { display: block; width: clamp(8.5rem, 14vw, 11.5rem); height: auto; filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.6)); }

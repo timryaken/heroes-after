@@ -62,6 +62,15 @@ export function createBoardController(root, api, { roles = [], samples = [], sho
     else composeButton.focus({ preventScroll: true });
   }
 
+  // 讀者版一開始在頂端時，下方顯示「往下捲」的提示；捲動之後就收起來。
+  const view = root.querySelector('.laptop__view');
+  const scrollHint = root.querySelector('[data-scroll-hint]');
+  function updateScrollHint() {
+    const more = view.scrollHeight - view.clientHeight > 40;
+    scrollHint.classList.toggle('is-hidden', !more || view.scrollTop > 40);
+  }
+  view.addEventListener('scroll', updateScrollHint, { passive: true });
+
   composeButton.addEventListener('click', () => setComposeOpen(true));
   composeClose.addEventListener('click', () => setComposeOpen(false));
   composePanel.addEventListener('keydown', (event) => {
@@ -94,6 +103,7 @@ export function createBoardController(root, api, { roles = [], samples = [], sho
       paperStatus.textContent = `${error.message}。先顯示示意文。`;
     }
     render();
+    requestAnimationFrame(updateScrollHint);
   }
 
   postsRoot.addEventListener('click', async (event) => {
@@ -177,7 +187,11 @@ export function createBoardController(root, api, { roles = [], samples = [], sho
   hydrate();
   return {
     hydrate,
-    load,
+    async load() {
+      view.scrollTop = 0;
+      await load();
+      updateScrollHint();
+    },
     setComposeOpen,
     reset() {
       form.reset();

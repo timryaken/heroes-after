@@ -343,7 +343,7 @@
   /* 手機：地圖放大到可以左右拖著看 */
   .map-frame { width: 100%; box-shadow: none; }
   .map-scroll { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; box-shadow: 0 1.6rem 3rem rgba(0, 0, 0, 0.7); }
-  .map-canvas { width: 170%; }
+  .map-canvas { width: 130%; }
   .journal { --page-w: min(82vw, calc((100dvh - var(--safe-top) - var(--safe-bottom) - 9rem) * 0.72)); }
   /* 手機放不下跨頁：封面翻開後收起來，只看右頁 */
   .journal[data-open='true'] .journal__book { transform: none; }
@@ -399,3 +399,40 @@
   36% { transform: none; }
   60% { box-shadow: 0 0 0 0.75rem rgba(163, 64, 43, 0); }
 }
+.polaroids--single { grid-template-columns: minmax(0, 0.62fr); justify-content: center; }
+
+/* 板夾還沒出場：整個藏在畫面下緣外 */
+.checklist.is-away { transform: rotate(-1.2deg) translateY(calc(100% + 3rem)); }
+
+/* 筆記本：頁面本身可以點來翻頁；右下角捲起一點紙角提示 */
+.journal[data-open='true'] .journal__page,
+.journal[data-open='true'][data-turned='true'] .journal__verso { cursor: pointer; }
+.journal__page::after { content: ''; position: absolute; right: 0; bottom: 0; width: 2.2rem; height: 2.2rem; background: linear-gradient(135deg, transparent 50%, rgba(60, 40, 20, 0.08) 50%, #e4d8bd 58%, #f5eedb 100%); box-shadow: -0.2rem -0.2rem 0.4rem rgba(0, 0, 0, 0.12); border-top-left-radius: 0.4rem; opacity: 0; transition: opacity 200ms ease, width 200ms ease, height 200ms ease; pointer-events: none; }
+.journal[data-open='true'] .journal__page::after { opacity: 1; }
+.journal[data-open='true'] .journal__page:hover::after { width: 3rem; height: 3rem; }
+
+/* 讀者版的「往下捲」提示：滑鼠滾輪圖示＋往下跳的箭頭 */
+.scroll-hint { position: absolute; z-index: 2; left: 50%; bottom: 1.1rem; display: grid; justify-items: center; gap: 0.35rem; margin: 0; padding: 0.55rem 0.9rem 1.2rem; border-radius: 1rem; color: #f4ecd6; background: rgba(31, 26, 20, 0.78); font: 600 0.74rem var(--sans); letter-spacing: 0.08em; transform: translateX(-50%); pointer-events: none; transition: opacity 300ms ease; }
+.scroll-hint i { position: relative; width: 1.1rem; height: 1.7rem; border: 2px solid currentColor; border-radius: 0.6rem; }
+.scroll-hint i::before { content: ''; position: absolute; top: 0.3rem; left: 50%; width: 0.22rem; height: 0.42rem; margin-left: -0.11rem; border-radius: 0.2rem; background: currentColor; animation: scroll-wheel 1.6s ease-in-out infinite; }
+.scroll-hint i::after { content: ''; position: absolute; left: 50%; bottom: -0.85rem; width: 0.45rem; height: 0.45rem; margin-left: -0.25rem; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); animation: scroll-arrow 1.6s ease-in-out infinite; }
+.scroll-hint.is-hidden { opacity: 0; }
+@keyframes scroll-wheel { 0% { opacity: 1; transform: translateY(0); } 70% { opacity: 0; transform: translateY(0.55rem); } 100% { opacity: 0; } }
+@keyframes scroll-arrow { 0%, 100% { opacity: 0.4; transform: translateY(0) rotate(45deg); } 50% { opacity: 1; transform: translateY(0.3rem) rotate(45deg); } }
+@media (max-width: 720px) { .scroll-hint { bottom: 4.6rem; } .scroll-hint i { display: none; } .scroll-hint span::after { content: ' ↓'; } }
+
+/* 圖釘：AI 生成的紅色圖釘照片；釘尖在圖片底部中央，對準要釘的位置 */
+.map-pin,
+.polaroid::before,
+.place-pin__dot { background: url('../assets/images/pushpin.webp') center bottom / contain no-repeat; border-radius: 0; box-shadow: none; filter: drop-shadow(0.22rem 0.3rem 0.18rem rgba(0, 0, 0, 0.45)); }
+.map-pin { width: 1.05rem; height: 1.65rem; }
+.map-pin--tl, .map-pin--tr { top: -0.6rem; }
+.map-pin--bl, .map-pin--br { bottom: 0.4rem; }
+.polaroid::before { top: -0.9rem; width: 0.95rem; height: 1.5rem; margin-left: -0.48rem; }
+.place-pin__dot { position: absolute; left: 50%; bottom: 50%; display: block; width: 1.15rem; height: 1.8rem; margin: 0 0 0 -0.58rem; transform-origin: 50% 100%; }
+.place-pin:hover .place-pin__dot,
+.place-pin.is-selected .place-pin__dot { transform: scale(1.15) rotate(-6deg); }
+.place-pin__name { top: -0.4rem; left: 2.4rem; }
+.place-pin--left .place-pin__name { right: 2.4rem; }
+.place-pin__name b { margin-right: 0.3rem; color: #a3402b; font: 800 0.8rem var(--sans); }
+.place-pin.is-selected .place-pin__name b { color: #f4ecd6; }

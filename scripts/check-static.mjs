@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { BOARD_SAMPLE_POSTS, DESK_TEXTURE, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, SPEAKER_PHOTO, LAPTOP_FRONT, CLIPBOARD, GUANGFU_MAP } from '../js/data.js';
+import { BOARD_SAMPLE_POSTS, DESK_TEXTURE, INTERACTIVE_DESK, INTERACTIVE_DESK_MOBILE, PHOTO_STACK, PLACES, PROLOGUE_SLIDES, RADIO_FRONT, LAPTOP_FRONT, CLIPBOARD, GUANGFU_MAP, LOGOTYPE, PUSHPIN } from '../js/data.js';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(resolve(projectRoot, 'index.html'), 'utf8');
@@ -20,13 +20,14 @@ for (const entry of ['styles/base.css', 'styles/prologue.css', 'styles/desk.css'
 
 const photos = [
   ...PROLOGUE_SLIDES,
-  ...PLACES.flatMap((place) => [place.before, place.after]),
+  ...PLACES.flatMap((place) => [place.before, place.after]).filter(Boolean),
   ...PHOTO_STACK,
-  SPEAKER_PHOTO,
   RADIO_FRONT,
   LAPTOP_FRONT,
   CLIPBOARD,
   GUANGFU_MAP,
+  LOGOTYPE,
+  PUSHPIN,
   DESK_TEXTURE,
   INTERACTIVE_DESK,
   INTERACTIVE_DESK_MOBILE,

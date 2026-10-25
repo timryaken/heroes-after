@@ -31,6 +31,19 @@ export function createChecklistController(root, items, { onOpenItem, onDepart } 
   let shown = null;
   let latest = [];
   let waiting = false;
+  let revealed = false;
+
+  // 板夾一開始收在畫面外；第一次看完桌上的物件後才滑上來提醒。
+  root.classList.add('is-away');
+  root.inert = true;
+
+  function reveal() {
+    if (revealed) return;
+    revealed = true;
+    root.classList.remove('is-away');
+    root.inert = false;
+    setExpanded(true);
+  }
 
   function render(done) {
     const ready = done.length === items.length;
@@ -49,6 +62,7 @@ export function createChecklistController(root, items, { onOpenItem, onDepart } 
   // 新完成一項時，等物件放回桌上（對話框關掉）再把板夾拉上來，玩家才看得到紅筆打勾。
   function pop() {
     waiting = false;
+    reveal();
     setExpanded(true);
     requestAnimationFrame(() => render(latest));
   }
@@ -87,5 +101,5 @@ export function createChecklistController(root, items, { onOpenItem, onDepart } 
   // 手機版預設收合，只露出進度列，避免擋住桌上的物件。
   if (window.matchMedia?.('(max-width: 720px)').matches) setExpanded(false);
 
-  return { update, setExpanded };
+  return { update, setExpanded, reveal };
 }

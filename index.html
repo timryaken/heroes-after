@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#120f0c">
-    <meta name="description" content="《與光赴會》— 記者周思遠出發去了光復。整理他留下的辦公桌，看看他為什麼出發。內部互動原型。">
-    <title>與光赴會｜周思遠的辦公桌</title>
+    <meta name="description" content="《重返·馬太鞍》— 記者周思遠出發去了光復。整理他留下的辦公桌，看看他為什麼出發。內部互動原型。">
+    <title>重返·馬太鞍｜周思遠的辦公桌</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap">
@@ -16,9 +16,9 @@
   </head>
   <body>
     <header class="site-bar" aria-label="網站控制列">
-      <a class="wordmark" href="#experience" aria-label="與光赴會首頁">
-        <span>與光赴會</span>
-        <small>GUANGFU · HUALIEN</small>
+      <a class="wordmark" href="#experience" aria-label="重返·馬太鞍首頁">
+        <img class="wordmark__logo" src="assets/images/logotype.webp" alt="重返·馬太鞍" width="1400" height="242">
+        <small>FATA’AN · GUANGFU</small>
       </a>
       <nav class="site-actions" aria-label="原型控制">
         <button class="icon-button" type="button" data-open-sources aria-label="素材來源" title="素材來源"><span class="info-icon" aria-hidden="true">i</span></button>
@@ -41,6 +41,7 @@
       <button class="prologue__icon prologue__info-toggle" type="button" data-prologue-info-toggle aria-controls="prologue-info" aria-expanded="false" aria-label="照片來源" title="照片來源">i</button>
 
       <div class="prologue__card" data-prologue-card hidden>
+        <img class="prologue__logo" data-prologue-logo src="assets/images/logotype.webp" alt="重返·馬太鞍" hidden>
         <p class="eyebrow" data-prologue-eyebrow></p>
         <div class="day-line">
           <strong class="day-count" data-day-count aria-live="polite">0</strong>
@@ -132,13 +133,13 @@
             <div class="laptop__screen">
               <header class="laptop__bar">
                 <span class="laptop__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-                <p class="laptop__url">光復讀者版｜與光赴會</p>
+                <p class="laptop__url">光復讀者版｜重返·馬太鞍</p>
               </header>
               <div class="laptop__view">
                 <h2 id="computer-title" class="visually-hidden">光復讀者版：大家留給光復的話</h2>
                 <article class="paper" aria-label="讀者版">
                   <header class="paper__masthead">
-                    <p class="paper__meta"><span data-paper-date></span><span>讀者來函</span><span>與光赴會</span></p>
+                    <p class="paper__meta"><span data-paper-date></span><span>讀者來函</span><span>重返·馬太鞍</span></p>
                     <h3 class="paper__title">光復讀者版</h3>
                     <p class="paper__sub">鏟子超人、想去卻沒能去的人、在遠方關心的人，留給光復的話。</p>
                   </header>
@@ -147,6 +148,7 @@
                 </article>
               </div>
 
+              <p class="scroll-hint" data-scroll-hint aria-hidden="true"><span>往下捲，看更多留言</span><i></i></p>
               <button class="laptop__compose" type="button" data-board-compose aria-controls="board-compose" aria-expanded="false"><span aria-hidden="true">✎</span> 投稿我的留言</button>
 
               <section class="compose" id="board-compose" data-board-compose-panel aria-labelledby="compose-title" hidden>
@@ -284,10 +286,6 @@
             <p class="audio-status" data-audio-status role="status"></p>
             <a class="text-button" data-audio-source href="#" target="_blank" rel="noreferrer" hidden>在原平台開啟 ↗</a>
           </section>
-          <figure class="radio-postcard" data-speaker-photo>
-            <img alt="">
-            <figcaption></figcaption>
-          </figure>
         </aside>
       </div>
     </dialog>

@@ -76,3 +76,6 @@ body[data-stage='prologue'] [data-open-sources] { display: none; }
   .prologue__media img { animation: none; transform: none; }
 }
 
+
+.prologue__logo { display: block; width: min(34rem, 78vw); height: auto; margin: 0 auto 1.6rem; }
+.prologue__logo[hidden] { display: none; }

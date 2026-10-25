@@ -19,12 +19,13 @@ function assertPhotoContract(photo) {
   assert.match(photo.sourceUrl, /^https:\/\//);
 }
 
-test('content defines the four places from the material sheet', () => {
-  assert.deepEqual(PLACES.map(({ id }) => id), ['bangcha', 'bixin', 'xiaoguang', 'sugar-factory']);
+test('content defines the four places on the map (wetland has only a present-day photo)', () => {
+  assert.deepEqual(PLACES.map(({ id }) => id), ['bangcha', 'bixin', 'sugar-factory', 'wetland']);
   for (const place of PLACES) {
     assert.ok(place.name && place.era && place.summary);
     assert.ok(Math.abs(place.lat - 23.66) < 0.05 && Math.abs(place.lng - 121.42) < 0.05, `${place.id} 座標應在光復鄉`);
-    assertPhotoContract(place.before);
+    if (place.before) assertPhotoContract(place.before);
+    else assert.equal(place.id, 'wetland');
     if (place.after.placeholder) assert.ok(place.after.label);
     else assertPhotoContract(place.after);
   }
