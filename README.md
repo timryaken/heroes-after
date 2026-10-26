@@ -63,7 +63,7 @@ python3 -m http.server 4173
 ## 更換內容與素材
 
 - 預覽密碼：`js/gate.js`（只存密碼的 SHA-256；同一個分頁輸入過就不再問）。這只是預覽門檻，不是真正的保護。
-- 桌上的小東西（檯燈、窗外、咖啡杯、書架）與記者證：文字在 `js/data.js` 的 `DESK_PROPS`、`PRESS_BADGE`，位置在 `styles/desk.css` 的 `.desk-prop--*`；證件照 `assets/images/press-portrait.jpg` 為 AI 生成的虛構人物。
+- 桌上的小東西（檯燈、窗外、咖啡杯、書架）與記者證：文字在 `js/data.js` 的 `DESK_PROPS`、`PRESS_BADGE`，位置在 `styles/desk.css` 的 `.desk-prop--*`；每個小東西有一顆錯開節奏的小光點，點過就熄掉。記者證畫在桌景裡（掛在軟木板右下角），證件照 `assets/images/press-portrait.jpg` 為 AI 生成的虛構人物，桌景以它為參考重新生成。
 - 讀者版置頂：要先在 Supabase 執行 `supabase/pin.sql`，之後在審核頁「已上架」設定置頂與 ↑ ↓ 順序。
 - 滿意度與抽獎：前台在 `js/feedback.js`，資料表與送出函式在 `supabase/feedback.sql`（要在 Supabase 的 SQL Editor 執行一次），報表在 `admin.html` 的「滿意度與抽獎」分頁。
 - 留言板：連線設定在 `js/board-config.js`，資料存取在 `js/board-api.js`，畫面在 `js/board.js`；示意文是 `js/data.js` 的 `BOARD_SAMPLE_POSTS`；後台結構在 `supabase/schema.sql`；審核頁是 `admin.html` 與 `js/admin.js`。

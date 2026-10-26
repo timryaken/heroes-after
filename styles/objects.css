@@ -355,10 +355,6 @@
   .journal__page { padding: var(--rule) 1rem var(--rule) 1.4rem; }
   .note-page p { font-size: 1.02rem; }
   .note-tape { right: 1rem; }
-  .checklist { --peek: 7.6rem; --cw: min(17rem, 82vw); right: 0.5rem; bottom: 0; transform: rotate(-1.2deg); }
-  .checklist__toggle { gap: 0.4rem; font-size: 0.86rem; letter-spacing: 0.03em; white-space: nowrap; }
-  .checklist__toggle::after { content: none; }
-  .checklist__toggle[aria-expanded='false']::after { content: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -405,6 +401,28 @@
 .checklist.is-collapsed { cursor: pointer; }
 .checklist.is-collapsed:hover,
 .checklist.is-collapsed:focus-within { transform: rotate(-1.2deg) translateY(calc(100% - var(--peek) - 1.1rem)); }
+
+/* 手機：板夾佔滿畫面寬度貼在底部、不歪斜；用九宮格（border-image）切板夾照片，高度跟著內容走，夾子不會變形 */
+@media (max-width: 720px) {
+  .checklist {
+    --cw: 100vw;
+    --peek: calc(var(--cw) * 160 / 564 + 2.6rem);
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    aspect-ratio: auto;
+    padding: 0 0.4rem 0.3rem;
+    border-style: solid;
+    border-width: calc(var(--cw) * 160 / 564) calc(var(--cw) * 40 / 564) calc(var(--cw) * 57 / 564);
+    border-image: url('../assets/images/clipboard.webp') 160 40 57 fill stretch;
+    background: none;
+    transform: none;
+  }
+  .checklist.is-collapsed { transform: translateY(calc(100% - var(--peek))); }
+  .checklist.is-collapsed:hover,
+  .checklist.is-collapsed:focus-within { transform: translateY(calc(100% - var(--peek) - 0.6rem)); }
+  .checklist__toggle { gap: 0.5rem; font-size: 0.95rem; letter-spacing: 0.04em; white-space: nowrap; }
+}
 
 /* 筆記本：頁面本身可以點來翻頁；右下角捲起一點紙角提示 */
 .journal[data-open='true'] .journal__page,
