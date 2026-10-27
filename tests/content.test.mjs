@@ -39,9 +39,9 @@ test('prologue includes sourced disaster, volunteer, and current-day images', ()
   for (const slide of PROLOGUE_SLIDES) assertPhotoContract(slide);
 });
 
-test('story content follows the material sheet: seven notebook pages ending before departure', () => {
-  assert.deepEqual(NOTEBOOK_PAGES.map(({ date }) => date), ['1/1', '1/17', '3/02', '4/21', '6/18', '9/24', '9/25']);
-  assert.ok(NOTEBOOK_PAGES.at(-1).lines.includes('等他回來再給他看。先去光復。'));
+test('story content follows the material sheet: four notebook pages from the disaster to the anniversary', () => {
+  assert.deepEqual(NOTEBOOK_PAGES.map(({ date }) => date), ['2025／風災發生後', '2025／光復採訪期間', '2025／採訪結束後', '2026／風災周年前']);
+  assert.ok(NOTEBOOK_PAGES.at(-1).lines.includes('這次接下任務的人，是林知行。'));
   assert.ok(NOTEBOOK_PAGES.every(({ lines }) => lines.length && lines[0]));
 });
 

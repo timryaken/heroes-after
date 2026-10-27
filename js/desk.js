@@ -86,7 +86,7 @@ export function createStoryContentController(root, { notebookPages = [], photos 
     nextNote.disabled = noteIndex === notebookPages.length - 1;
     // 翻過第一頁後，左邊露出前一頁的背面。
     if (book) book.dataset.turned = String(noteIndex > 0);
-    // 讀到思遠出發前的最後一頁，才算翻閱完筆記。
+    // 讀到最後一頁，才算翻閱完筆記。
     if (noteIndex === notebookPages.length - 1) dispatch(notebook, 'story:notebook-finished');
   }
 

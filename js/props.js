@@ -1,7 +1,9 @@
 // 桌上的小東西（檯燈、窗外、咖啡杯、書架）與掛在軟木板下的記者證：點了跳出一小段手寫文字，增加情境。
 // 小東西的位置寫在 styles/desk.css 的 .desk-prop--*；文字在 js/data.js 的 DESK_PROPS、PRESS_BADGE。
 // 每個小東西有一顆較小、較暗的光點，閃爍節奏和主要物件錯開；點過一次光點就熄掉。
+// 文字泡泡停留時間：短句 4.2 秒，長一點的（像記者證）依字數拉長。
 const SHOW_MS = 4200;
+const MS_PER_CHAR = 90;
 
 export function createDeskProps(root, { props = [], badge } = {}) {
   const stage = root.querySelector('[data-desk-stage]');
@@ -31,7 +33,7 @@ export function createDeskProps(root, { props = [], badge } = {}) {
     bubble.style.left = `${x}px`;
     bubble.style.top = `${y}px`;
     window.clearTimeout(timer);
-    timer = window.setTimeout(hide, SHOW_MS);
+    timer = window.setTimeout(hide, Math.max(SHOW_MS, text.length * MS_PER_CHAR));
   }
 
   // 記者證已經畫在桌景裡，當成一個小東西處理

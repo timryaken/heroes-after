@@ -233,7 +233,7 @@
 .desk-prop--badge { --x: 79.2; --y: 29.8; --w: 5.8; --ar: 0.36; --dx: 50%; --dy: 88%; z-index: 2; }
 
 /* 手寫文字泡泡 */
-.prop-note { position: fixed; z-index: 40; width: max-content; max-width: min(19rem, calc(100vw - 2rem)); margin: 0; padding: 0.65rem 0.9rem; color: #2b1d13; background: #f4ecd6; box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.5); font: 700 1.02rem/1.55 var(--hand); transform: translate(-50%, -100%) rotate(-1.5deg); pointer-events: none; animation: prop-note-in 220ms ease; }
+.prop-note { position: fixed; z-index: 40; width: max-content; max-width: min(21rem, calc(100vw - 2rem)); margin: 0; padding: 0.65rem 0.9rem; color: #2b1d13; white-space: pre-line; background: #f4ecd6; box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.5); font: 700 1.02rem/1.55 var(--hand); transform: translate(-50%, -100%) rotate(-1.5deg); pointer-events: none; animation: prop-note-in 220ms ease; }
 .prop-note::after { content: ''; position: absolute; left: 50%; bottom: -0.45rem; width: 0.9rem; height: 0.9rem; margin-left: -0.45rem; background: inherit; transform: rotate(45deg); }
 .prop-note[hidden] { display: none; }
 @keyframes prop-note-in { from { opacity: 0; transform: translate(-50%, calc(-100% + 0.4rem)) rotate(-1.5deg); } }

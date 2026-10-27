@@ -79,7 +79,7 @@ export function createPrologueController(root, options) {
     } else {
       // 最後一頁用標準字當標題。
       eyebrow.textContent = '';
-      title.textContent = '因為有你們，光復正在回來。\n記者周思遠，也出發去了光復。';
+      title.textContent = '因為有你們，光復正在回來。\n一年後，記者林知行要回到光復。';
     }
   }
 
