@@ -9,7 +9,7 @@ export function mergeListened(clips, listened = [], nextId) {
 const pad = (value) => String(value).padStart(2, '0');
 
 // 收音機：◀◀ ▶▶ 選台、▶ 播放、■ 停止；左旋鈕調台、右旋鈕切換靜音。
-// 錄音嵌入原平台的播放器（YouTube／Facebook），按播放才載入；載入即視為聽過。
+// 錄音嵌入原平台的播放器（YouTube／Facebook），按播放才載入；載入即視為聽過。播放器藏在畫面外，只聽聲音。
 export function createAudioController(root, clips, options = {}) {
   const lcd = root.querySelector('[data-radio-lcd]');
   const channel = root.querySelector('[data-radio-channel]');
@@ -97,7 +97,7 @@ export function createAudioController(root, clips, options = {}) {
     listened = mergeListened(clips, listened, clip.id);
     playing = true;
     render();
-    setStatus('播放器載入中；如果沒有自動播放，請按旁邊播放器上的播放鍵。');
+    setStatus('播放中。');
     onComplete(clip.id, listened);
     return clip;
   }

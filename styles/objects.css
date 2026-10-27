@@ -24,7 +24,7 @@
 .prototype-tag { display: inline-block; margin: 0 0 0.8rem; padding: 0.28rem 0.5rem; border: 1px solid rgba(255,174,118,0.4); color: var(--ember-bright); font-size: 0.67rem; letter-spacing: 0.1em; }
 
 /* ── 收音機：正面照片＋疊在上面的螢幕、按鍵與旋鈕（位置以照片的百分比對齊） ── */
-.radio-stage { grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem); gap: clamp(1rem, 3vw, 2.5rem); width: 100%; max-width: 86rem; margin: 0 auto; }
+.radio-stage { grid-template-columns: minmax(0, 1fr); gap: clamp(1rem, 3vw, 2.5rem); width: 100%; max-width: 86rem; margin: 0 auto; }
 .radio-window { justify-self: center; width: min(100%, calc((100dvh - var(--safe-top) - var(--safe-bottom) - 6rem) * 1.744)); }
 .radio { position: relative; width: 100%; aspect-ratio: 1200 / 688; container-type: inline-size; filter: drop-shadow(0 2.5rem 2.2rem rgba(0, 0, 0, 0.7)); user-select: none; }
 .radio__body { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
@@ -62,7 +62,8 @@
 .radio__knob--volume { left: 87.2%; }
 .radio__knob--volume[aria-pressed='true']::after { background: var(--ember); box-shadow: 0 0 0.6cqw rgba(216, 111, 66, 0.8); }
 
-.radio-side { display: grid; align-content: center; gap: 1.4rem; }
+/* 播放器不顯示，只聽聲音：嵌入的 YouTube／Facebook 播放器移到畫面外（不用 display: none，避免瀏覽器不載入或暫停播放） */
+.radio-side { position: fixed; top: 0; left: -10000px; width: 22rem; opacity: 0; pointer-events: none; }
 .radio-monitor { padding: 1rem; border: 1px solid rgba(255, 214, 170, 0.22); border-radius: 0.8rem; background: linear-gradient(160deg, #1d1611, #0c0a08); box-shadow: 0 1.2rem 2.5rem rgba(0, 0, 0, 0.6); }
 .radio-monitor__speaker { margin: 0 0 0.6rem; color: var(--ink-muted); font-size: 0.76rem; line-height: 1.5; }
 .radio-monitor__idle { margin: 0; padding: 1.4rem 1rem; border: 1px dashed var(--line); color: var(--ink-muted); font-size: 0.85rem; text-align: center; }
